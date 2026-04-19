@@ -132,20 +132,21 @@ main{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;posi
 
 .am-close-btn{position:absolute;top:16px;right:16px;background:none;border:0;color:var(--tx4);font-size:1.3rem;cursor:pointer;padding:4px;line-height:1;border-radius:6px;transition:color .15s}
 .am-close-btn:active{color:var(--tx)}
-.am-dicas-btn{display:flex;align-items:center;gap:6px;width:100%;background:none;border:none;border-top:1px solid var(--bd2);border-bottom:1px solid var(--bd2);color:#a78bfa;font-size:.82rem;font-weight:600;cursor:pointer;padding:10px 2px;margin:8px 0 14px;text-align:left;transition:color .15s}
-.am-dicas-btn.active{color:#7c3aed}
+.am-dicas-btn{display:flex;align-items:center;gap:6px;width:100%;background:none;border:none;border-top:1px solid var(--bd2);border-bottom:1px solid var(--bd2);color:var(--tx3);font-size:.82rem;font-weight:600;cursor:pointer;padding:10px 2px;margin:8px 0 14px;text-align:left;transition:color .15s}
+.am-dicas-btn.active{color:var(--tx);font-weight:700}
 .am-dicas-btn:active{opacity:.7}
 .am-tabs{display:flex;gap:0;margin-bottom:16px;background:#0f172a;border-radius:10px;padding:3px}
 .am-tab{flex:1;padding:9px 8px;background:none;border:0;color:#64748b;font-size:.82rem;font-weight:700;border-radius:8px;cursor:pointer;transition:all .15s}
 .am-tab.active{background:#1e293b;color:#f1f5f9;box-shadow:0 1px 4px rgba(0,0,0,.4)}
 .am-tab:active{transform:scale(.97)}
-.tips-section{margin-bottom:16px}
-.tips-section-title{font-size:.62rem;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:5px}
-.tips-list{display:flex;flex-direction:column;gap:6px}
-.tips-item{font-size:.82rem;color:#cbd5e1;padding:9px 11px;background:#0f172a;border-radius:8px;line-height:1.45;border-left:3px solid transparent}
-.tips-item.hi{border-left-color:#fbbf24}
-.tips-item.nr{border-left-color:#10b981}
-.tips-item.hk{border-left-color:#7c3aed}
+.tips-section{margin-bottom:18px}
+.tips-section-title{font-size:.62rem;font-weight:800;color:var(--tx4);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;display:flex;align-items:center;gap:5px}
+.tips-list{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:5px}
+.tips-item{font-size:.83rem;color:var(--tx2);line-height:1.5;padding-left:14px;position:relative}
+.tips-item::before{content:"•";position:absolute;left:2px;font-size:.9rem}
+.tips-item.hi::before{color:#f59e0b}
+.tips-item.nr::before{color:#10b981}
+.tips-item.hk::before{color:#7c3aed}
 .no-tips{text-align:center;color:#475569;font-size:.82rem;padding:24px 0}
 
 .btn-primary{background:#7c3aed;color:#fff}
@@ -214,7 +215,8 @@ main{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;posi
 .day-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:flex-end;justify-content:center;z-index:110;padding:0}
 .day-modal-box{background:var(--bg3);border-radius:16px 16px 0 0;position:relative;padding:18px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;overflow-x:hidden;border:1px solid var(--bd2)}
 .day-modal-box h3{font-size:1rem;margin-bottom:14px;font-weight:700;color:var(--txs)}
-.day-modal-box input,.day-modal-box textarea,.day-modal-box select{max-width:100%;min-width:0;-webkit-appearance:none;appearance:none;box-sizing:border-box}
+.day-modal-box input,.day-modal-box select{max-width:100%;min-width:0;-webkit-appearance:none;appearance:none;box-sizing:border-box;min-height:42px}
+.day-modal-box textarea{max-width:100%;min-width:0;box-sizing:border-box}
 .day-modal-box select,.day-modal-box textarea{width:100%;padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;margin-bottom:10px;outline:none;font-family:inherit}
 .day-modal-box select:focus,.day-modal-box textarea:focus{border-color:#7c3aed}
 .day-modal-box label{display:block;font-size:.65rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
@@ -226,7 +228,7 @@ main{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;posi
 .tab-bar{position:fixed;bottom:0;left:0;right:0;background:var(--bg4);border-top:1px solid var(--bd);display:flex;z-index:95;padding-bottom:env(safe-area-inset-bottom)}
 .tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 2px 6px;background:none;border:0;color:var(--tx4);font-size:.56rem;font-weight:700;cursor:pointer;gap:3px;letter-spacing:.3px;text-transform:uppercase;transition:color .15s;-webkit-tap-highlight-color:transparent}
 .tab-btn .ti{width:22px;height:22px;display:block}
-.tab-btn.active{color:var(--park-color,#7c3aed)}
+.tab-btn.active{color:var(--park-color,#ec4899)}
 .tab-btn:active{transform:scale(.9)}
 /* ===== HOME ===== */
 .home-view{padding:14px 14px 80px}
@@ -1377,6 +1379,7 @@ function _applyTabChrome(tab){
   document.getElementById('homeView').classList.toggle('hidden',tab!=='home');
   document.getElementById('mapView').classList.toggle('hidden',tab!=='map');
   document.getElementById('listView').classList.toggle('hidden',tab!=='list');
+  document.getElementById('dmReset').classList.toggle('hidden',!parkOnly);
 }
 function setView(v,opts){ setTab(v,opts); }
 
@@ -2152,7 +2155,7 @@ function renderTipsHtml(attrId){
       <div class="tips-list">${items.map(i=>`<div class="tips-item ${cls}">${escapeHtml(i)}</div>`).join('')}</div>
     </div>`;
   };
-  return sec('Destaques','✨',t.h,'hi')+sec('Nas redondezas','📍',t.n,'nr')+sec('Hacks','🎯',t.k,'hk');
+  return '<div style="padding-top:4px">'+sec('Destaques','✨',t.h,'hi')+sec('Nas redondezas','📍',t.n,'nr')+sec('Hacks','🎯',t.k,'hk')+'</div>';
 }
 
 function openAttrModal(parkId, attrId){
@@ -2360,7 +2363,7 @@ function doReset(){
 // Theme
 (function(){
   const saved=localStorage.getItem('orlando_theme');
-  if(saved==='light') document.body.classList.add('light');
+  if(saved==='light'||!saved) document.body.classList.add('light');
   const btn=document.getElementById('themeToggle');
   function syncBtn(){btn.innerHTML=document.body.classList.contains('light')?ico('moon'):ico('sun');}
   syncBtn();
