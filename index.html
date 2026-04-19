@@ -1369,11 +1369,17 @@ function renderHome(){
     });
   });
 
-  const allUpcoming=(state.generalEvents||[])
+  // Eventos gerais + day.events de dias sem parque — mesclados e sincronizados
+  const dayEventsNoPark=(state.trip||[]).flatMap(d=>{
+    if(d.parkId||!d.events?.length||d.date<today) return [];
+    return d.events.map(e=>({key:'gen',date:d.date,time:e.time||'',notes:'',text:e.text,emoji:(EV_TYPES.find(t=>t.v===e.type)||{emoji:'📌'}).emoji,id:e.id}));
+  });
+  const allUpcoming=[...(state.generalEvents||[])
     .filter(e=>!e.date||e.date>=today)
+    .map(e=>({key:'gen',date:e.date,time:e.time||'',notes:e.notes||'',text:e.text,emoji:e.emoji||'📌',id:e.id})),
+    ...dayEventsNoPark]
     .sort((a,b)=>(a.date||'').localeCompare(b.date||''))
-    .slice(0,8)
-    .map(e=>({key:'gen',date:e.date,time:e.time||'',notes:e.notes||'',text:e.text,emoji:e.emoji||'📌',id:e.id}));
+    .slice(0,20);
 
   const eventsHtml=allUpcoming.map(item=>{
     const dayIdx=item.date?(state.trip||TRIP_DEFAULT).findIndex(d=>d.date===item.date):-1;
