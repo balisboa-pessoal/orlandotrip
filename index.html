@@ -105,7 +105,6 @@ main{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;posi
 .prio-row{display:flex;gap:4px;margin-top:8px}
 .prio-btn{flex:1;padding:6px 8px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx3);border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer;transition:all .15s}
 .prio-btn[data-p="must"].active{background:#b45309;border-color:#f59e0b;color:#fff}
-.prio-btn[data-p="yes"].active{background:#166534;border-color:#22c55e;color:#fff}
 .prio-btn[data-p="skip"].active{background:#7f1d1d;border-color:#ef4444;color:#fff}
 .prio-btn:active{transform:scale(.96)}
 .attr-card.skipped{opacity:.45}
@@ -130,6 +129,25 @@ main{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;posi
 .modal-actions{display:flex;gap:8px;justify-content:flex-end}
 .modal-actions button{padding:8px 14px;border:0;border-radius:6px;cursor:pointer;font-weight:600;font-size:.82rem}
 .btn-cancel{background:var(--bd2);color:var(--tx2)}
+
+.am-close-btn{position:absolute;top:16px;right:16px;background:none;border:0;color:var(--tx4);font-size:1.3rem;cursor:pointer;padding:4px;line-height:1;border-radius:6px;transition:color .15s}
+.am-close-btn:active{color:var(--tx)}
+.am-dicas-btn{display:flex;align-items:center;gap:6px;width:100%;background:none;border:none;border-top:1px solid var(--bd2);border-bottom:1px solid var(--bd2);color:#a78bfa;font-size:.82rem;font-weight:600;cursor:pointer;padding:10px 2px;margin:8px 0 14px;text-align:left;transition:color .15s}
+.am-dicas-btn.active{color:#7c3aed}
+.am-dicas-btn:active{opacity:.7}
+.am-tabs{display:flex;gap:0;margin-bottom:16px;background:#0f172a;border-radius:10px;padding:3px}
+.am-tab{flex:1;padding:9px 8px;background:none;border:0;color:#64748b;font-size:.82rem;font-weight:700;border-radius:8px;cursor:pointer;transition:all .15s}
+.am-tab.active{background:#1e293b;color:#f1f5f9;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.am-tab:active{transform:scale(.97)}
+.tips-section{margin-bottom:16px}
+.tips-section-title{font-size:.62rem;font-weight:800;color:#64748b;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;display:flex;align-items:center;gap:5px}
+.tips-list{display:flex;flex-direction:column;gap:6px}
+.tips-item{font-size:.82rem;color:#cbd5e1;padding:9px 11px;background:#0f172a;border-radius:8px;line-height:1.45;border-left:3px solid transparent}
+.tips-item.hi{border-left-color:#fbbf24}
+.tips-item.nr{border-left-color:#10b981}
+.tips-item.hk{border-left-color:#7c3aed}
+.no-tips{text-align:center;color:#475569;font-size:.82rem;padding:24px 0}
+
 .btn-primary{background:#7c3aed;color:#fff}
 /* ===== MAP SVG MARKERS ===== */
 .attr-marker{cursor:pointer;transition:all .2s}
@@ -194,7 +212,7 @@ main{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;posi
 .must-check-row input[type=checkbox]{width:16px;height:16px;accent-color:#7c3aed;flex:none}
 .must-check-row span{font-size:.8rem;color:var(--tx)}
 .day-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:flex-end;justify-content:center;z-index:110;padding:0}
-.day-modal-box{background:var(--bg3);border-radius:16px 16px 0 0;padding:18px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;border:1px solid var(--bd2)}
+.day-modal-box{background:var(--bg3);border-radius:16px 16px 0 0;position:relative;padding:18px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;overflow-x:hidden;border:1px solid var(--bd2)}
 .day-modal-box h3{font-size:1rem;margin-bottom:14px;font-weight:700;color:var(--txs)}
 .day-modal-box select,.day-modal-box textarea{width:100%;padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;margin-bottom:10px;outline:none;font-family:inherit}
 .day-modal-box select:focus,.day-modal-box textarea:focus{border-color:#7c3aed}
@@ -863,6 +881,91 @@ const DINING_TIPS = [
 ];
 
 // ====== STATE ======
+
+// ====== ATTR TIPS (highlights · nas redondezas · hacks) ======
+const ATTR_TIPS={
+/* ─── MAGIC KINGDOM ─── */
+mk1:{h:['Coaster no escuro com campo de estrelas no teto','Trilha sonora épica e efeitos de luz únicos'],n:['TRON logo ao lado — combine os dois de manhã','Buzz Lightyear a poucos passos'],k:['Melhor após 20h — efeitos mais bonitos à noite','Sem Single Rider, mas a fila cai muito depois das 20h','Lightning Lane Individual disponível']},
+mk2:{h:['Coaster ao ar livre mais rápido da Disney','Aceleração de lançamento — de 0 a 100 km/h em segundos','Vista incrível do parque durante o trajeto'],n:['Space Mountain logo ao lado','Speedway e Buzz na mesma área'],k:['Prioridade absoluta no rope drop','Virtual Queue ou ILL no app Disney às 7h','Vai chover? Fila cobre parcialmente']},
+mk3:{h:['Ride interativo — você atira nos alvos com canhão de laser','Competição de pontuação entre o grupo'],n:['TRON e Space Mountain a 2 min','Tomorrowland Speedway próximo'],k:['Alvos Z (joystick da nave) valem 100k pts cada — segredo do jogo','Mantenha o botão apertado continuamente para mais tiros','Fila costuma ser rápida no fim do dia']},
+mk5:{h:['Coaster mais popular do Magic Kingdom','Vagonetes de madeira que balançam nos trilhos','Música dos 7 anões durante o trajeto'],n:['Peter Pan a 3 min','Small World ao lado'],k:['PRIORIDADE NO ROPE DROP — fila chega a 2h às 10h','Sem Single Rider','ILL disponível — considere se for tarde']},
+mk6:{h:['Sensação de voar sobre Londres à noite','Vista do Big Ben e do Rio Tâmisa','Clássico da Disney desde 1971'],n:['Seven Dwarfs a poucos metros','PhilharMagic logo atrás'],k:['Fila dura o dia todo — vá de manhã cedo ou via ILL','Ramp de embarque em pé — não aceita cadeiras de roda facilmente','Vista do castelo durante o voo']},
+mk7:{h:['Clássico desde 1966, presente em todos os parques Disney do mundo','Ar condicionado poderoso — ótimo no calor','Música grudenta em 300 idiomas'],n:['Peter Pan ao lado','PhilharMagic próximo'],k:['Quase sempre walk-on ou fila curta','Ideal para descansar no calor do dia','Vista do castelo no final']},
+mk8:{h:['Show 4D com Mickey e personagens clássicos','Cenas de A Bela e a Fera, Rei Leão, Aladdin e mais','Efeitos de água e vento'],n:['Small World logo ao lado','Peter Pan a 2 min'],k:['Fila quase sempre curta','Ótimo para escapar do calor de 11h-16h','Crianças menores podem assustar com os efeitos 4D']},
+mk12:{h:['999 fantasmas felizes te esperam','Quarto de alongamento é puro teatro','Um dos rides mais detalhados da Disney'],n:['Pirates of the Caribbean a 5 min','Jungle Cruise próximo'],k:['Fila moderada — boa opção durante pico do dia','À noite a atmosfera fica ainda melhor','Doom Buggy comporta 2-3 pessoas']},
+mk13:{h:['Clássico de 1967 — aventura de barco pelos piratas','Cenários riquíssimos, renovados com Jack Sparrow','Animatrônicos incríveis'],n:['Jungle Cruise a 2 min','Haunted Mansion próximo'],k:['Fila quase sempre rápida — vá a qualquer hora','Ótimo para pausas durante pico','Saída perto do Liberty Square Riverboat']},
+mk14:{h:['Skipper fazendo piadas ao vivo — cada viagem é diferente','Animais animatrônicos clássicos','Um dos rides mais queridos pelos Cast Members'],n:['Pirates a 2 min','Magic Carpets próximo'],k:['Skippers à tarde fazem piadas mais soltas','Fila razoável — melhor de manhã ou no fim do dia','Jingle Cruise versão natalina em dezembro']},
+mk16:{h:['Substitui o Splash Mountain em 2024 com tema Tiana','Primeira atração da Disney com protagonista Black','Queda d\'água que molha de verdade'],n:['Big Thunder Mountain ao lado (fechado até 03/mai)','Frontierland Shootin\' Arcade próximo'],k:['Rope drop ou após 19h para menores esperas','Você VAI se molhar — poncho ou roupa de secagem rápida','Embarque do lado direito molha menos']},
+mk19:{h:['Melhor show de fogos temático da Disney','Projeções no castelo sincronizadas com a música','Emocionante mesmo para quem já viu'],n:['Main Street inteira é bom ponto de vista','Tomorrowland oferece perspectiva lateral'],k:['Chegue 30-45 min antes para lugar bom na Main Street','Ponte entre Tomorrowland e Fantasyland tem boa vista com menos gente','App Disney mostra horário exato do dia']},
+/* ─── EPCOT ─── */
+ep1:{h:['Ícone do Epcot — a esfera geodésica de 54m','Passeio pela história da comunicação humana','Narração personalizada baseada nas suas respostas'],n:['Guardians of the Galaxy a 5 min','Mission SPACE ao lado'],k:['Fila quase sempre rápida — ótimo para qualquer hora','Boa pedida em dias chuvosos','Tire foto na entrada com a esfera ao fundo']},
+ep2:{h:['Único coaster reverso de lançamento da Disney','Trilha sonora dos Guardiões sincronizada com o percurso','Cada execução usa uma música diferente da playlist'],n:['Test Track ao lado','Mission SPACE próximo'],k:['Virtual Queue no app Disney às 7h — ESSENCIAL','Ou ILL — mas esgota rápido','Fila individual pode passar de 2h sem VQ']},
+ep3:{h:['Você projeta um carro e o testa em velocidade','Simulação de colisão, temperatura e terreno','Percurso ao ar livre em alta velocidade'],n:['Guardians ao lado','Mission SPACE a 2 min'],k:['SINGLE RIDER disponível — corta 60-90% da espera','Sem Single Rider a fila chega a 75 min no pico','Testado o design é sorteado de forma divertida']},
+ep4:{h:['Simulador centrífugo real — você sente o G-force','Opção Orange = intensa (4G), Green = suave','Versão Orange é uma das mais radicais da Disney'],n:['Test Track ao lado','Guardians a 2 min'],k:['Escolha Green se tiver enjoo fácil ou pressão alta','Orange: não coma pesado antes','Pode causar tontura — sente na borda se preocupado']},
+ep5:{h:['Sobrevoo virtual de pontos turísticos do mundo','Smells matching the scenery — laranja na Califórnia, pinheiros nas Rockies','Sensação de voo em triângulo suspenso'],n:['Living with the Land logo abaixo','Nemo próximo'],k:['Fila cai bastante após 15h','ILL disponível','Sente na fila A ou B — vista idêntica em todas as fileiras']},
+ep6:{h:['Passeio de barco em estufa de cultivo real','Você vê como a Disney produz parte da sua própria comida','Peixes, plantas hidropônicas e experimentos'],n:['Soarin\' logo acima','Nemo próximo'],k:['Fila quase sempre curta — 15-20 min','Última atração a fechar, boa para o fim do dia','Pode comprar produtos da estufa no parque']},
+ep7:{h:['Figment — personagem cult da Disney','Percurso com efeitos de cheiro e som','Visual psicodélico e memorável'],n:['Nemo logo ao lado'],k:['Walk-on quase sempre','Ótimo para crianças e fãs nostálgicos']},
+ep8:{h:['Passeio no clamshell com os personagens de Nemo','Belo aquário com peixes reais após o ride'],n:['Imagination ao lado','Soarin\' próximo'],k:['Fila curta — boa pedida no calor','O aquário após o ride não precisa de ingresso extra']},
+ep9:{h:['Ride ambientado no pavilhão da Noruega','História original com Anna, Elsa e Olaf','Pequena queda de água ao final'],n:['Gran Fiesta Tour a 5 min','Ratatouille no pavilhão da França'],k:['Rope drop ou após 18h para fila menor','Combina com visita ao pavilhão norueguês e lojas']},
+ep10:{h:['Perspectiva de rato — você é pequenino na cozinha','Cenografia francesíssima e muito detalhada','Hit do Epcot desde a abertura'],n:['Frozen no pavilhão da Noruega','Luminous no lago central'],k:['Rope drop ou ILL — fila de 70-90 min no pico','Sem Single Rider','Combine com crepe no pavilhão da França']},
+ep11:{h:['Passeio de barco relaxante pelo México','Música chicana clássica e cenografia do pavilhão','Quase sempre walk-on'],n:['Frozen próximo'],k:['Walk-on na maioria dos horários','Ótimo para o calor do meio-dia','Margarita no pavilhão mexicano antes ou depois!']},
+ep12:{h:['Show de fogos, lasers e projeções no lago central','Substitui o lendário IllumiNations','Cobre toda a orla do World Showcase'],n:['Todo o World Showcase'],k:['Chegue 30 min antes para lugar na grade','Pavilhão da França ou Japão têm boa vista com menos gente','Verifique horário no app Disney — muda por dia']},
+/* ─── HOLLYWOOD STUDIOS ─── */
+hs1:{h:['Experiência mais imersiva da Disney — período de pré-show é parte da atração','Você é capturado pelos Stormtroopers e resgatado pela Resistência','Dura ~18 min com vários ambientes físicos e projeções'],n:['Millennium Falcon a 3 min','Slinky Dog em Toy Story Land'],k:['ROPE DROP ABSOLUTO — fila de 2-3h às 10h','Chegue 45 min antes da abertura','Sem Single Rider — todos precisam passar pelo pré-show']},
+hs2:{h:['Você pilota o Millennium Falcon — copiloto ou artilheiro','Resultado do ride depende do seu desempenho','Interior 1:1 do Falcon é incrível'],n:['Rise of the Resistance a 3 min'],k:['SINGLE RIDER disponível — espera cai muito','Prefira ser copiloto (esquerda) para controlar melhor a nave','Tiro certeiro nos inimigos dá pontos extras']},
+hs3:{h:['Coaster mais popular de Toy Story Land','Vista de toda a área temática durante o percurso','Curvas e ladeiras no estilo brinquedo de quintal'],n:['Toy Story Mania ao lado'],k:['Rope drop ou após 18h — fila de 75-90 min no pico','Sem Single Rider','Combine com Toy Story Mania no mesmo bloco']},
+hs4:{h:['Jogo de arremesso 4D com 5 mini-games diferentes','Competição de pontuação entre o grupo','Pode andar várias vezes com resultados diferentes'],n:['Slinky Dog ao lado'],k:['Fila reduz após 15h','Dica de pontuação: mire nos alvos em movimento para mais pontos']},
+hs6:{h:['Hotel Haunted Hollywood de 13 andares','Queda de elevador com variação aleatória — nunca é igual','Vista do parque durante a subida'],n:['Rock n Roller coaster ao lado (fechado)'],k:['SINGLE RIDER! Espera de 15-20 min vs 45-60 min','Melhor no fim do tarde quando a fila diminui','Não recomendado para medo de alturas ou claustrofobia']},
+hs8:{h:['Primeiro ride de Mickey Mouse da história da Disney','Você entra literalmente dentro de um desenho animado','Efeitos especiais e cenografia muito criativa'],n:['Slinky Dog e Toy Story Land próximos'],k:['Fila moderada — boa pedida entre as manhã e tarde','Ótimo para o calor — totalmente indoor','Experiência diferente das outras atrações de HS']},
+hs9:{h:['50+ combinações possíveis — cada viagem é diferente','Você entra no universo Star Wars em primeira pessoa','Inclui personagens de todos os filmes'],n:['Indiana Jones Stunt a 2 min'],k:['Fila raramente passa de 40 min','Vale fazer 2x para ter experiência diferente','Dica: escolha missão cuidadosamente no início do ride']},
+hs10:{h:['Show ao vivo com explosões e efeitos pirotécnicos reais','Bastidores revelados ao vivo pelo "diretor"','Indiana Jones aparece ao vivo — não é animatrônico'],n:['Star Tours a 2 min'],k:['Chegue 20 min antes para sentar perto do centro','Primeiras filas levam respingos de água','Dura 30 min — bom para descanso dos pés']},
+hs11:{h:['Show 3D clássico com Os Muppets','Efeitos físicos: água, ar, coisa tocando nas pernas','Humor inteligente para adultos e crianças'],n:['Grand Avenue próximo'],k:['Quase sempre walk-on ou fila mínima','Ótimo para escapar do calor entre as 11h-16h']},
+hs13:{h:['Show aquático e de fogo mais impressionante da Disney','Mickey luta contra vilões em cenário épico','Dura 30 min com efeitos de água, fogo e projeção'],n:['Tower of Terror próximo'],k:['Pacote de jantar Fantasmic! garante lugar reservado — reserve com meses de antecedência','Sem pacote: chegue 45-60 min antes','Chuva pode cancelar — verifique condições']},
+/* ─── ANIMAL KINGDOM ─── */
+ak1:{h:['Experiência mais imersiva de qualquer parque do mundo','Você monta um banshee voador — sensação física é real','Pandora iluminada à noite é de tirar o fôlego'],n:['Na\'vi River Journey a 2 min'],k:['ROPE DROP — PRIORIDADE MÁXIMA. Fila bate 4h facilmente','Sem Single Rider','Saiam direto para cá ao entrar no parque — sem parar para nada','Se alguém tiver medo de espaços fechados: avise antes do ride']},
+ak2:{h:['Floresta bioluminescente de tirar o fôlego','Passeio de barco calmo e visual dos sonhos','Espiritual e contemplativo — diferente de qualquer outro ride'],n:['FoP a 2 min'],k:['Faça logo após FoP no rope drop','Fila cai no fim do dia','Duração curta (4 min) mas muito memorável']},
+ak3:{h:['Coaster que vai para frente E para trás','Yeti animatrônico (o maior da Disney — mesmo que "às escuras")','Vista das montanhas de Everest durante a subida'],n:['Kali River Rapids a 5 min'],k:['SINGLE RIDER — economiza 60-90 min de fila','À noite tem menos fila e mais adrenalina','Aviso: tem drop e é escuro — não indicado para quem tem medo']},
+ak4:{h:['Você VAI se molhar — talvez muito','Rafting em corredeiras de rio com 6 pessoas por bote','Temática de conservação ambiental'],n:['Everest a 5 min'],k:['Poncho ou troca de roupa é essencial','Melhor no dia mais quente — vai agradecer depois','Bolsos: guarde tudo em sacos plásticos ou armários pagos']},
+ak5:{h:['Safari real com animais africanos soltos no campo','Girafas, elefantes, hipopótamos, leões e mais','Motoristas contam histórias durante o percurso'],n:['Festival of the Lion King a 3 min'],k:['MANHÃ: animais mais ativos e luz boa para fotos','Anoitecer: iluminação dourada mas animais mais distantes','Duração de 20 min — boa pedida em qualquer horário']},
+ak6:{h:['Um dos melhores shows ao vivo da Disney','Dançarinos acrobatas, fantoche gigante do Simba','Timon e Pumba ao vivo com humor']  ,n:['Safaris a 3 min'],k:['Chegue 15-20 min antes para boa vista — arena circular','Todas as seções têm boa visibilidade','Ótimo para descanso e emoção garantida']},
+ak7:{h:['Ride intenso no escuro com dinossauros ameaçadores','Baseado no filme original do parque','Sacudidas bruscas e sustos garantidos'],n:['TriceraTop Spin ao lado'],k:['Fila razoável — boa pedida entre 14h-17h','Não indicado para crianças menores','Coloque bem o cinto — é bem agitado']},
+ak9:{h:['Show 4D dentro da Árvore da Vida — o tronco tem 325 animais esculpidos','Insetos em tamanho humano te perseguem','Efeitos físicos: jatos de ar, vibração, algo nas pernas'],n:['Discovery Island ao redor'],k:['Fila curta — ótimo para qualquer hora','A fila pela Árvore da Vida é parte da experiência','Crianças menores podem assustar com insetos em tamanho real']},
+ak10:{h:['Musical ao vivo com personagens de Nemo','Fantoches enormes com manipuladores visíveis — belíssimo','Técnica de teatro "black light" deslumbrante'],n:['DINOSAUR próximo'],k:['Fila curta — pedida tranquila','Mostra horários no app Animal Kingdom']},
+/* ─── UNIVERSAL STUDIOS FLORIDA ─── */
+usf1:{h:['Ride mais imersivo de Harry Potter — dragão, fogo e água reais','Carrinho que vira, balança e desce em 180°','Gringotts em escala real ao redor de você'],n:['Hogwarts Express (King\'s Cross) a 2 min','Diagon Alley inteiro para explorar'],k:['ROPE DROP — fila de 90-120 min às 10h','Butterbeer gelado logo na saída — experimente!','Percorra Diagon Alley antes ou depois — não precisa de fila']},
+usf2:{h:['Trem que conecta dois mundos de Harry Potter','Experiências COMPLETAMENTE diferentes em cada sentido','Interior do Hogwarts Express fiel ao filme'],n:['Gringotts ao lado'],k:['Exige ingresso dos 2 parques (Universal Studios + IOA)','Faça nos 2 sentidos para ver as 2 histórias diferentes','Fila mais curta no final do dia']},
+usf3:{h:['Coaster de lançamento vertical — acelera para o lado também','Você escolhe a trilha sonora — 30+ opções','Hidden tracks acessíveis por código secreto'],n:['Transformers ao lado','Minion Mayhem próximo'],k:['SINGLE RIDER — espera de 15 min vs 60 min','Hidden songs: no assento, segure botão de cima durante 5s antes de sair','Uma das melhores músicas secretas: "Bohemian Rhapsody"']},
+usf4:{h:['Batalha 3D entre Autobots e Decepticons','Efeitos físicos: calor, vento, sacudidas','Ride similar ao Spider-Man mas mais moderno'],n:['Rip Ride Rockit ao lado'],k:['Single Rider disponível','Fila cai bastante no fim do dia']},
+usf5:{h:['Você vira um Minion — missão de recrutamento','Kevin, Stuart e Bob ao vivo e em 3D','Humor hilário para adultos e crianças'],n:['Transformers ao lado'],k:['Fila moderada — bom qualquer hora','Loja de Minions na saída tem items exclusivos']},
+usf6:{h:['Coaster indoor no escuro com chama de fogo real','Sistema de transporte de múmias como efeito de surprise','Um dos melhores rides noturnos da Universal'],n:['Jimmy Fallon ao lado'],k:['SINGLE RIDER — espera cai muito','Ótimo no fim do dia quando fila diminui','Não indicado para recém-alimentados — tem inversões']},
+usf7:{h:['Simulador com humor de talk show americano','Tecnologia de movimento com plateia virtual','Jimmy Fallon com carisma e efeitos especiais'],n:['Mummy ao lado'],k:['Sistema de Virtual Line — puxe no app','Fila moderada no geral']},
+usf9:{h:['Jogo de arremesso com aliens na rua principal','Veículo que gira e você atira com blaster','Competição de pontuação entre o grupo'],n:['Simpsons ao lado'],k:['Dica de pontuação: mire nos aliens Z e J que ficam acima da porta — valem 100k','Fila cai bastante no fim do dia']},
+usf10:{h:['Springfield em tamanho real com todos os personagens','Ride de vídeo dentro do Krusty Land — hilário','Lard Lad Donuts, Duff Beer e Kwik-E-Mart ao redor'],n:['MIB Alien Attack ao lado'],k:['Donuts do Lard Lad são deliciosos — come um!','Fila razoável — boa opção às 14h-16h','Explore Springfield antes ou depois do ride']},
+usf12:{h:['Clássico de Spielberg de 1990 — nostálgico','Você voa com E.T. até o planeta natal dele','Final personalizado com seu nome — E.T. te diz tchau'],n:['MIB ao lado'],k:['Fila curta quase sempre','Fã de Spielberg? Não pule!']},
+usf14:{h:['Show noturno com projeções, lasers e fogos na lagoa','Personagens de várias franquias da Universal','Melhor visto da orla principal'],n:['Todos os lands com vista para a lagoa'],k:['Chegue 20-30 min antes','A orla entre New York e San Francisco tem boa vista','Verifique o horário no app Universal']},
+/* ─── ISLANDS OF ADVENTURE ─── */
+ioa1:{h:['MELHOR RIDE DE ORLANDO. Ponto final.','Criaturas mágicas reais, fogo físico, queda surpresa','18 minutos de pura magia — o pré-show na fila faz parte'],n:['Forbidden Journey a 3 min','Flight of the Hippogriff ao lado'],k:['ROPE DROP OBRIGATÓRIO — fila de 2-3h às 9h','Chegue 45-60 min antes da abertura','Sem Single Rider','Separe tempo para Hogsmeade — Butterbeer, Olivarinhos, Honeydukes']},
+ioa2:{h:['Você voa dentro do castelo de Hogwarts','Pré-show com Hermione, Rony e Dumbledore','A fila pelo castelo já vale a visita'],n:['Hagrid\'s ao lado'],k:['SINGLE RIDER disponível — economiza 45-60 min','A fila pelo castelo tem detalhes incríveis — não pule','Faça depois do Hagrid\'s no rope drop']},
+ioa3:{h:['Vista panorâmica de Hogsmeade durante o percurso','Primeiro coaster de Harry Potter no mundo','Hipogrifo inclina 360°'],n:['Hagrid\'s ao lado','Forbidden Journey a 2 min'],k:['Fila raramente passa de 30 min','Bom aquecimento antes do Hagrid\'s','Vista de cima do Hogwarts Castle é linda']},
+ioa5:{h:['Coaster de lançamento com rugido real — você ouve a 200m','0-70km/h na saída','Um dos mais rápidos da Universal'],n:['Spider-Man ao lado'],k:['Melhor à noite — luzes do parque durante o trajeto','Single Rider disponível','Efeitos de som externo são impressionantes']},
+ioa6:{h:['Ride clássico que inventou o gênero de simulador 3D','Você persegue o Duende Verde junto com o Spidey','Tecnologia mais antiga mas execução perfeita'],n:['Hulk ao lado','Dr. Doom próximo'],k:['Single Rider disponível','Fila quase sempre menor que o Hulk','Ótimo para o meio do dia']},
+ioa7:{h:['Drop tower com vista para o Marvel Island','Queda livre de 60m com aceleração real','Breve mas intenso'],n:['Spider-Man e Hulk ao redor'],k:['Fila quase sempre curta — walk-on em vários horários','Boa pedida rápida enquanto espera a fila do Hulk cair']},
+ioa9:{h:['Você VAI se molhar — garantido','Bote redondo com 8 pessoas em corredeiras','Elementos de Popeye em todo o percurso'],n:['Ripsaw Falls ao lado'],k:['Poncho OBRIGATÓRIO ou roupa de troca','Sentar num lugar específico molha menos... mas não muito','Lockers disponíveis perto do embarque']},
+ioa10:{h:['Clássico flume com queda de 15m','Log flume tradicional com boa história','A queda final é surpreendentemente grande'],n:['Popeye Barges ao lado'],k:['Poncho recomendado','Você MOLHA — principalmente na queda final','Melhor no calor do dia — vai refrescar bem']},
+ioa11:{h:['Top coaster de Orlando — 0 a 112 km/h','Inversões, giros e overbanked turns sobre a lagoa','Vista do Universal de cima é incrível'],n:['River Adventure ao lado'],k:['SINGLE RIDER — fila de 20 min vs 75 min','Melhor à noite com iluminação do parque','Não coma pesado antes — tem inversões']},
+ioa12:{h:['Barco de exploração com dinossauros — Jurassic Park original','Queda de 25 m ao final — você se molha bastante','Atmosfera do filme original perfeitamente recriada'],n:['VelociCoaster ao lado'],k:['Poncho recomendado para a queda final','Fila cai no fim do tarde','Combine com VelociCoaster no mesmo bloco']},
+ioa14:{h:['Ride no escuro com King Kong em 3D','Kong em escala real — olho no olho com o macaco gigante','Múltiplos ambientes com inimigos dinossauros'],n:['Jurassic Park River Adventure ao lado'],k:['Fila moderada — boa pedida às 14h-16h','Crianças menores podem assustar com Kong em close']},
+/* ─── EPIC UNIVERSE ─── */
+epu1:{h:['Coaster duplo que "corre" um contra o outro','Vista de todo o Celestial Park durante o trajeto','Temática espacial e galáctica impressionante'],n:['Battle at the Ministry a 5 min','Stardust Café próximo'],k:['Rope drop — parque novo = filas imensas em 2025-2026','Dos dois trilhos, o esquerdo tem mais giros']},
+epu3:{h:['Kart físico + óculos AR que coloca Mario Kart na pista real','Power-Up Band interage com o ambiente físico do land','Super Nintendo World é visualmente perfeito — cada detalhe do jogo recriado'],n:['Mine-Cart Madness ao lado'],k:['Power-Up Band (~$40) melhora muito a experiência — considere comprar','Rope drop absoluto — anunciado como o mais concorrido do EPU','O land inteiro é visitável sem fila — explore antes do ride']},
+epu4:{h:['Coaster de DK com mecanismo de lançamento único','Inclui seções indoor e outdoor com música do jogo','Visual de Donkey Kong Country fidelíssimo'],n:['Mario Kart ao lado'],k:['Rope drop — alto interesse do público','O briefing na fila é longo e faz parte da experiência']},
+epu6:{h:['Ride de Harry Potter ambientado no Ministério da Magia','Feitiços físicos e viagem no tempo no enredo','Atmosfera anos 1900 em Paris — muito diferente dos outros mundos HP'],n:['Stardust Racers ao lado','Celestial Park para explorar'],k:['Rope drop para este parque novo','Fãs de HP não podem perder — temática completamente nova','Compare com Gringotts e Forbidden Journey — todos diferentes']},
+epu7:{h:['Horror ride com monstros clássicos da Universal: Frankenstein, Drácula','Susto garantido — intenso e escuro','Atmosfera de Universal Monsters perfeitamente recriada'],n:['Curse of the Werewolf ao lado'],k:['Não indicado para sensíveis a sustos','Novo parque = filas imprevisíveis']},
+epu8:{h:['Coaster de velocidade com tema licantropo','Loop e inversões rápidas','Parte do Dark Universe — land mais dark do EPU'],n:['Monsters Unchained ao lado'],k:['Combine com Monsters no mesmo bloco','Mais acessível que Monsters para quem tem medo de susto']},
+epu9:{h:['Simulador de voo em dragão sobre a Ilha de Berk','Vista panorâmica de Isola di Berk e do parque','Como ser um dragon trainer — filmagem imersiva'],n:['Dragon Racer ao lado'],k:['Vista incrível — posição do banco importa','Fila geralmente menor que os top rides do EPU']},
+epu10:{h:['Coaster familiar com temática de Soluço e Banguela','Velocidade e curvas adequadas para o grupo todo','Isle of Berk é um dos lands mais bonitos do EPU'],n:['Wing Gliders ao lado'],k:['Geralmente fila menor que outros coasters do EPU','Bom para intercalar com rides mais intensos']},
+epu11:{h:['Ride aquático temático de Como Treinar o Seu Dragão','Você vai se molhar — dragões custem água!','Cenografia de Berk ao redor durante o percurso'],n:['Dragon Racer ao lado'],k:['Poncho recomendado','Melhor no calor do dia']},
+};
 const STORAGE_KEY='orlando_trip_v2';
 let state = loadState();
 if(!state.trip) state.trip = JSON.parse(JSON.stringify(TRIP_DEFAULT));
@@ -1138,7 +1241,6 @@ function renderList(){
     const prio = (state.priorities?.[p.id]||{})[a.id] || '';
     const prioRow = a.closed ? '' : `<div class="prio-row">
       <button class="prio-btn ${prio==='must'?'active':''}" data-p="must" data-prio="${a.id}">${ico('star','ico-sm')} Must</button>
-      <button class="prio-btn ${prio==='yes'?'active':''}" data-p="yes" data-prio="${a.id}">${ico('check','ico-sm')} Sim</button>
       <button class="prio-btn ${prio==='skip'?'active':''}" data-p="skip" data-prio="${a.id}">${ico('skip','ico-sm')} Pular</button>
     </div>`;
     return `
@@ -1369,17 +1471,11 @@ function renderHome(){
     });
   });
 
-  // Eventos gerais + day.events de dias sem parque — mesclados e sincronizados
-  const dayEventsNoPark=(state.trip||[]).flatMap(d=>{
-    if(d.parkId||!d.events?.length||d.date<today) return [];
-    return d.events.map(e=>({key:'gen',date:d.date,time:e.time||'',notes:'',text:e.text,emoji:(EV_TYPES.find(t=>t.v===e.type)||{emoji:'📌'}).emoji,id:e.id}));
-  });
-  const allUpcoming=[...(state.generalEvents||[])
+  const allUpcoming=(state.generalEvents||[])
     .filter(e=>!e.date||e.date>=today)
-    .map(e=>({key:'gen',date:e.date,time:e.time||'',notes:e.notes||'',text:e.text,emoji:e.emoji||'📌',id:e.id})),
-    ...dayEventsNoPark]
     .sort((a,b)=>(a.date||'').localeCompare(b.date||''))
-    .slice(0,20);
+    .slice(0,20)
+    .map(e=>({key:'gen',date:e.date,time:e.time||'',notes:e.notes||'',text:e.text,emoji:e.emoji||'📌',id:e.id}));
 
   const eventsHtml=allUpcoming.map(item=>{
     const dayIdx=item.date?(state.trip||TRIP_DEFAULT).findIndex(d=>d.date===item.date):-1;
@@ -1446,11 +1542,12 @@ function openAddGenModal(prefillDate){
   const box=document.createElement('div');
   box.className='day-modal';
   box.innerHTML=`<div class="day-modal-box">
-    <h3>Adicionar evento</h3>
+    <button class="am-close-btn" id="genClose">✕</button>
+    <h3 style="padding-right:32px">Adicionar evento</h3>
     <label>Data</label>
-    <input type="date" id="genDate" value="${prefillDate||''}" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;margin-bottom:10px;outline:none">
+    <input type="date" id="genDate" value="${prefillDate||''}" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;min-width:0;margin-bottom:10px;outline:none">
     <label>Horário (opcional)</label>
-    <input type="time" id="genTime" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;margin-bottom:10px;outline:none">
+    <input type="time" id="genTime" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;min-width:0;margin-bottom:10px;outline:none">
     <label>Tipo</label>
     <select id="genType" style="margin-bottom:10px">${typeOpts}</select>
     <label>Descrição</label>
@@ -1458,12 +1555,11 @@ function openAddGenModal(prefillDate){
     <label>Observações (opcional)</label>
     <input type="text" id="genNotes" placeholder="Ex: Confirmação #1234, trazer documento..." style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;margin-bottom:14px;outline:none">
     <div style="display:flex;gap:8px">
-      <button id="genSave" class="btn-primary" style="flex:1;padding:10px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Salvar</button>
-      <button id="genCancel" class="btn-cancel" style="padding:10px 16px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Cancelar</button>
+      <button id="genSave" class="btn-primary" style="width:100%;padding:10px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Salvar</button>
     </div>
   </div>`;
   document.body.appendChild(box);
-  box.querySelector('#genCancel').onclick=()=>box.remove();
+  box.querySelector('#genClose').onclick=()=>box.remove();
   box.addEventListener('click',e=>{if(e.target===box) box.remove();});
   box.querySelector('#genSave').onclick=()=>{
     const text=box.querySelector('#genText').value.trim();
@@ -1563,7 +1659,7 @@ function buildPlan(day){
 
   const pool=park.attractions.filter(a=>prios[a.id]!=='skip' && !a.closed).map(a=>({
     ...a,
-    pri: musts.has(a.id)?4:(prios[a.id]==='must'?3:(prios[a.id]==='yes'?2:1)),
+    pri: musts.has(a.id)?4:(prios[a.id]==='must'?3:1),
     rope:(opt.ropeOrder||[]).indexOf(a.id),
     night:(opt.nightRides||[]).includes(a.id)
   }));
@@ -1715,22 +1811,22 @@ function openDayEditModal(){
   const box=document.createElement('div');
   box.className='day-modal';
   box.innerHTML=`<div class="day-modal-box">
-    <h3>Editar dia</h3>
+    <button class="am-close-btn" id="dmClose2">✕</button>
+    <h3 style="padding-right:32px">Editar dia</h3>
     <label>Data</label>
     <input type="date" id="dmDate" value="${day.date}" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;margin-bottom:4px;outline:none">
     <div id="dmDateWarn" style="font-size:.75rem;color:#ef4444;margin-bottom:10px;display:none"></div>
     <label>Parque</label>
     <select id="dmPark">${parkOptions}</select>
     <label>Abertura</label>
-    <input type="time" id="dmOpen" value="${day.open||''}" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;margin-bottom:10px;outline:none">
+    <input type="time" id="dmOpen" value="${day.open||''}" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;min-width:0;margin-bottom:10px;outline:none">
     <label>Fechamento</label>
-    <input type="time" id="dmClose" value="${day.close||''}" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;margin-bottom:10px;outline:none">
+    <input type="time" id="dmClose" value="${day.close||''}" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;min-width:0;margin-bottom:10px;outline:none">
     <label>Nota / observações</label>
     <textarea id="dmNote" rows="2" placeholder="Check-in, lembretes...">${escapeHtml(day.note||'')}</textarea>
     ${park?`<label>Must-do deste dia</label><div class="must-checks">${mustChecks}</div>`:''}
     <div style="display:flex;gap:8px;margin-top:14px">
-      <button id="dmSave" class="btn-primary" style="flex:1;padding:10px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Salvar</button>
-      <button id="dmCancel" class="btn-cancel" style="padding:10px 16px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Cancelar</button>
+      <button id="dmSave" class="btn-primary" style="width:100%;padding:10px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Salvar</button>
     </div>
   </div>`;
   document.body.appendChild(box);
@@ -1750,7 +1846,7 @@ function openDayEditModal(){
     }
   };
 
-  box.querySelector('#dmCancel').onclick=()=>box.remove();
+  box.querySelector('#dmClose2').onclick=()=>box.remove();
   box.addEventListener('click',e=>{if(e.target===box) box.remove();});
   box.querySelector('#dmSave').onclick=()=>{
     const newDate=box.querySelector('#dmDate').value;
@@ -1764,7 +1860,7 @@ function openDayEditModal(){
     d.note=box.querySelector('#dmNote').value;
     d.musts=[];
     box.querySelectorAll('.must-cb:checked').forEach(cb=>d.musts.push(cb.dataset.must));
-    saveState();box.remove();renderDayBody();renderPlanOverlay();toast('Dia atualizado');
+    saveState();box.remove();renderDayBody();renderPlanOverlay();renderHome();toast('Dia atualizado');
   };
 }
 
@@ -1773,22 +1869,22 @@ function openAddEventModal(day){
   const box=document.createElement('div');
   box.className='day-modal';
   box.innerHTML=`<div class="day-modal-box">
-    <h3>Adicionar evento</h3>
+    <button class="am-close-btn" id="aevClose">✕</button>
+    <h3 style="padding-right:32px">Adicionar evento</h3>
     <label>Horário</label>
-    <input type="time" id="aevTime" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;margin-bottom:10px;outline:none">
+    <input type="time" id="aevTime" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;min-width:0;margin-bottom:10px;outline:none">
     <label>Tipo</label>
     <select id="aevType" style="margin-bottom:10px">${typeOpts}</select>
     <label>Duração (min)</label>
-    <input type="number" id="aevDur" min="5" max="480" step="5" value="30" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;margin-bottom:10px;outline:none">
+    <input type="number" id="aevDur" min="5" max="480" step="5" value="30" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;min-width:0;margin-bottom:10px;outline:none">
     <label>Descrição</label>
     <textarea id="aevText" rows="2" placeholder="Ex: Almoço Be Our Guest, Lightning Lane..." style="resize:vertical;margin-bottom:14px"></textarea>
     <div style="display:flex;gap:8px">
-      <button id="aevSave" class="btn-primary" style="flex:1;padding:10px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Salvar</button>
-      <button id="aevCancel" class="btn-cancel" style="padding:10px 16px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Cancelar</button>
+      <button id="aevSave" class="btn-primary" style="width:100%;padding:10px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Salvar</button>
     </div>
   </div>`;
   document.body.appendChild(box);
-  box.querySelector('#aevCancel').onclick=()=>box.remove();
+  box.querySelector('#aevClose').onclick=()=>box.remove();
   box.addEventListener('click',e=>{if(e.target===box)box.remove();});
   box.querySelector('#aevSave').onclick=()=>{
     const text=box.querySelector('#aevText').value.trim();
@@ -1801,7 +1897,7 @@ function openAddEventModal(day){
       type:box.querySelector('#aevType').value,
       duration:parseInt(box.querySelector('#aevDur').value)||30
     });
-    saveState();box.remove();renderDayBody();toast('Evento adicionado');
+    saveState();box.remove();renderDayBody();renderHome();toast('Evento adicionado');
   };
 }
 
@@ -1998,11 +2094,12 @@ function openEditGenEventModal(evId){
   const box=document.createElement('div');
   box.className='day-modal';
   box.innerHTML=`<div class="day-modal-box">
-    <h3>Editar evento</h3>
+    <button class="am-close-btn" id="geClose">✕</button>
+    <h3 style="padding-right:32px">Editar evento</h3>
     <label>Data</label>
-    <input type="date" id="geDate" value="${ev.date||''}" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;margin-bottom:10px;outline:none">
+    <input type="date" id="geDate" value="${ev.date||''}" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;min-width:0;margin-bottom:10px;outline:none">
     <label>Horário</label>
-    <input type="time" id="geTime" value="${ev.time||''}" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;margin-bottom:10px;outline:none">
+    <input type="time" id="geTime" value="${ev.time||''}" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;min-width:0;margin-bottom:10px;outline:none">
     <label>Tipo</label>
     <select id="geType" style="margin-bottom:10px">${typeOpts}</select>
     <label>Descrição</label>
@@ -2010,12 +2107,11 @@ function openEditGenEventModal(evId){
     <label>Observações</label>
     <input type="text" id="geNotes" value="${escapeHtml(ev.notes||'')}" placeholder="Confirmação, detalhes..." style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;margin-bottom:14px;outline:none">
     <div style="display:flex;gap:8px">
-      <button id="geSave" class="btn-primary" style="flex:1;padding:10px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Salvar</button>
-      <button id="geCancel" class="btn-cancel" style="padding:10px 16px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Cancelar</button>
+      <button id="geSave" class="btn-primary" style="width:100%;padding:10px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Salvar</button>
     </div>
   </div>`;
   document.body.appendChild(box);
-  box.querySelector('#geCancel').onclick=()=>box.remove();
+  box.querySelector('#geClose').onclick=()=>box.remove();
   box.addEventListener('click',e=>{if(e.target===box)box.remove();});
   box.querySelector('#geSave').onclick=()=>{
     const text=box.querySelector('#geText').value.trim();
@@ -2045,38 +2141,72 @@ function maybeUpdatePlan(){
 }
 
 // ====== ATTR MODAL (from plan) ======
+function renderTipsHtml(attrId){
+  const t=ATTR_TIPS[attrId];
+  if(!t) return '<div class="no-tips">Sem dicas cadastradas para esta atração ainda.</div>';
+  const sec=(title,emoji,items,cls)=>{
+    if(!items||!items.length) return '';
+    return `<div class="tips-section">
+      <div class="tips-section-title">${emoji} ${title}</div>
+      <div class="tips-list">${items.map(i=>`<div class="tips-item ${cls}">${escapeHtml(i)}</div>`).join('')}</div>
+    </div>`;
+  };
+  return sec('Destaques','✨',t.h,'hi')+sec('Nas redondezas','📍',t.n,'nr')+sec('Hacks','🎯',t.k,'hk');
+}
+
 function openAttrModal(parkId, attrId){
   const park=getPark(parkId);
   const attr=park.attractions.find(a=>a.id===attrId);
   if(!attr) return;
   const s=attrState(parkId,attrId);
   const prio=(state.priorities?.[parkId]||{})[attrId]||'';
-  const icon=iconOf(attrId);
 
   const box=document.createElement('div');
   box.className='day-modal';
   box.innerHTML=`<div class="day-modal-box">
-    <h3><span style="display:inline-flex;align-items:center;gap:6px;vertical-align:middle">${attrTypeIco(attrId,'ico-lg')} ${escapeHtml(attr.name)}</span></h3>
-    <div style="font-size:.75rem;color:#94a3b8;margin-bottom:12px">${escapeHtml(attr.land)} · ${labelType(attr.type)}</div>
-    <label>Hora na fila</label>
-    <input type="time" id="amTime" value="${s.time||''}" style="padding:8px 10px;background:#0f172a;border:1px solid #334155;color:#e2e8f0;border-radius:6px;font-size:1rem;width:100%;margin-bottom:10px;outline:none">
-    <label>Espera estimada</label>
-    <input type="text" id="amQueue" inputmode="numeric" placeholder="ex: 45 min" value="${escapeHtml(s.queue||'')}" style="padding:8px 10px;background:#0f172a;border:1px solid #334155;color:#e2e8f0;border-radius:6px;font-size:1rem;width:100%;margin-bottom:10px;outline:none">
-    <label>Notas</label>
-    <textarea id="amNotes" rows="3" placeholder="Lightning Lane, quem vai, dicas..." style="resize:vertical">${escapeHtml(s.notes||'')}</textarea>
-    <label style="margin-top:4px;display:block">Prioridade</label>
-    <div style="display:flex;gap:6px;margin-bottom:14px;margin-top:6px">
-      <button class="prio-btn ${prio==='must'?'active':''}" data-p="must" style="flex:1">${ico('star','ico-sm')} Must</button>
-      <button class="prio-btn ${prio==='yes'?'active':''}" data-p="yes" style="flex:1">${ico('check','ico-sm')} Sim</button>
-      <button class="prio-btn ${prio==='skip'?'active':''}" data-p="skip" style="flex:1">${ico('skip','ico-sm')} Pular</button>
+    <button class="am-close-btn" id="amClose">✕</button>
+    <h3 style="padding-right:32px"><span style="display:inline-flex;align-items:center;gap:6px;vertical-align:middle">${attrTypeIco(attrId,'ico-lg')} ${escapeHtml(attr.name)}</span></h3>
+    <div style="font-size:.75rem;color:#94a3b8;margin-top:6px">${escapeHtml(attr.land)} · ${labelType(attr.type)}</div>
+    ${ATTR_TIPS[attrId]?`<button class="am-dicas-btn" id="amDicasBtn">💡 Dicas desta atração</button>`:'<div style="margin-bottom:14px"></div>'}
+    <div id="amTabEdit">
+      <label>Hora na fila</label>
+      <input type="time" id="amTime" value="${s.time||''}" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.9rem;width:100%;min-width:0;margin-bottom:10px;outline:none">
+      <label>Espera estimada</label>
+      <input type="text" id="amQueue" inputmode="numeric" placeholder="ex: 45 min" value="${escapeHtml(s.queue||'')}" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.9rem;width:100%;min-width:0;margin-bottom:10px;outline:none">
+      <label>Notas</label>
+      <textarea id="amNotes" rows="3" placeholder="Lightning Lane, quem vai, dicas..." style="resize:vertical">${escapeHtml(s.notes||'')}</textarea>
+      <label style="margin-top:4px;display:block">Prioridade</label>
+      <div style="display:flex;gap:6px;margin-bottom:14px;margin-top:6px">
+        <button class="prio-btn ${prio==='must'?'active':''}" data-p="must" style="flex:1">${ico('star','ico-sm')} Must</button>
+        <button class="prio-btn ${prio==='skip'?'active':''}" data-p="skip" style="flex:1">${ico('skip','ico-sm')} Pular</button>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button id="amSave" class="btn-primary" style="flex:1;padding:11px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Salvar</button>
+        <button id="amClear" style="padding:11px 14px;border:1px solid #ef4444;background:transparent;color:#ef4444;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Limpar</button>
+      </div>
     </div>
-    <div style="display:flex;gap:8px">
-      <button id="amSave" class="btn-primary" style="flex:1;padding:10px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Salvar</button>
-      <button id="amClear" style="padding:10px 14px;border:1px solid #ef4444;background:transparent;color:#ef4444;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Limpar</button>
-      <button id="amCancel" class="btn-cancel" style="padding:10px 16px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Fechar</button>
+    <div id="amTabTips" class="hidden">
+      ${renderTipsHtml(attrId)}
     </div>
   </div>`;
   document.body.appendChild(box);
+
+  // Fecha com X
+  const closeModal=()=>box.remove();
+  box.querySelector('#amClose').onclick=closeModal;
+  box.addEventListener('click',e=>{if(e.target===box) closeModal();});
+
+  // Toggle dicas
+  const dicasBtn=box.querySelector('#amDicasBtn');
+  if(dicasBtn){
+    dicasBtn.onclick=()=>{
+      const showingTips=!box.querySelector('#amTabTips').classList.contains('hidden');
+      box.querySelector('#amTabEdit').classList.toggle('hidden',!showingTips);
+      box.querySelector('#amTabTips').classList.toggle('hidden',showingTips);
+      dicasBtn.classList.toggle('active',!showingTips);
+      dicasBtn.textContent=showingTips?'💡 Dicas':'← Editar';
+    };
+  }
 
   let selectedPrio=prio;
   box.querySelectorAll('.prio-btn').forEach(b=>{
@@ -2085,13 +2215,11 @@ function openAttrModal(parkId, attrId){
       box.querySelectorAll('.prio-btn').forEach(x=>x.classList.toggle('active',x.dataset.p===selectedPrio));
     };
   });
-  box.querySelector('#amCancel').onclick=()=>box.remove();
   box.querySelector('#amClear').onclick=()=>{
     s.time='';s.queue='';s.notes='';s.done=false;
     if(state.priorities[parkId]) delete state.priorities[parkId][attrId];
-    saveState();box.remove();renderDayBody();maybeUpdatePlan();toast('Atração limpa');
+    saveState();closeModal();renderDayBody();maybeUpdatePlan();toast('Atração limpa');
   };
-  box.addEventListener('click',e=>{if(e.target===box) box.remove();});
   box.querySelector('#amSave').onclick=()=>{
     s.time=box.querySelector('#amTime').value;
     s.queue=box.querySelector('#amQueue').value;
@@ -2099,8 +2227,7 @@ function openAttrModal(parkId, attrId){
     if(!state.priorities[parkId]) state.priorities[parkId]={};
     if(selectedPrio) state.priorities[parkId][attrId]=selectedPrio;
     else delete state.priorities[parkId][attrId];
-    saveState();box.remove();
-    renderDayBody();toast('Atração atualizada');
+    saveState();closeModal();renderDayBody();toast('Atração atualizada');
   };
 }
 
