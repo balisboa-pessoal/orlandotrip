@@ -1,0 +1,2328 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#1e3a8a">
+<title>Orlando Trip Planner</title>
+<style>
+/* ===== CSS VARIABLES ===== */
+:root{
+  --bg:#0f172a;--bg2:#111827;--bg3:#1e293b;--bg4:#0b1220;--bg-dim:#1a2234;--bg-in:#0f172a;--btn:#1f2937;
+  --bd:#1f2937;--bd2:#334155;--bd3:#374151;
+  --tx:#e2e8f0;--tx2:#cbd5e1;--tx3:#94a3b8;--tx4:#64748b;--txs:#f1f5f9;--txn:#fff;
+  --sh:rgba(0,0,0,.4);
+  --time-c:#fbbf24;--tip-txt-c:#fbbf24;
+  --tips-bg:#1e1b4b;--tips-bd:#4c1d95;--tips-tx:#ddd6fe;--tips-b:#fbbf24;
+  --meal-bg:#422006;--meal-bd:#78350f;--meal-tx:#fde68a;
+  --show-bg:#2e1065;--show-bd:#7c3aed;--show-tx:#ddd6fe;
+  --tip-bg:#0c4a6e;--tip-bd:#0891b2;--tip-tx:#bae6fd;
+  color-scheme:dark;
+}
+body.light{
+  --bg:#f8fafc;--bg2:#f0f4f8;--bg3:#ffffff;--bg4:#ffffff;--bg-dim:#e8eef4;--bg-in:#f1f5f9;--btn:#edf2f7;
+  --bd:#d1d9e0;--bd2:#c8d3dc;--bd3:#94a3b8;
+  --tx:#1e293b;--tx2:#334155;--tx3:#475569;--tx4:#64748b;--txs:#0f172a;--txn:#0f172a;
+  --sh:rgba(0,0,0,.1);
+  --time-c:#b45309;--tip-txt-c:#92400e;
+  --tips-bg:#eff6ff;--tips-bd:#93c5fd;--tips-tx:#1e3a8a;--tips-b:#b45309;
+  --meal-bg:#fef9c3;--meal-bd:#ca8a04;--meal-tx:#713f12;
+  --show-bg:#faf5ff;--show-bd:#9333ea;--show-tx:#4a1d96;
+  --tip-bg:#f0f9ff;--tip-bd:#0284c7;--tip-tx:#0c4a6e;
+  color-scheme:light;
+}
+/* ===== BASE ===== */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--tx);overscroll-behavior:none;overflow:hidden}
+body{display:flex;flex-direction:column;height:100%;height:100dvh;transition:background .2s,color .2s}
+/* ===== HEADER ===== */
+header{background:linear-gradient(135deg,#1e3a8a,#7c2d92);padding:10px 14px;box-shadow:0 2px 8px var(--sh);position:sticky;top:0;z-index:96;overflow:hidden;display:flex;align-items:center;justify-content:space-between;gap:8px}
+.header-left{flex:1;min-width:0}
+header h1{font-size:1.05rem;font-weight:700;letter-spacing:.3px;display:flex;align-items:center;gap:8px;color:#fff}
+header h1 .logo{font-size:1.2rem}
+.sub{font-size:.68rem;opacity:.75;margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#fff}
+.theme-btn{padding:6px 8px;background:rgba(255,255,255,.15);border:0;color:#fff;border-radius:8px;font-size:1rem;cursor:pointer;flex:none;line-height:1;transition:background .15s}
+.theme-btn:active{transform:scale(.9)}
+/* ===== PARK TABS ===== */
+.park-tabs{display:flex;gap:6px;overflow-x:auto;padding:8px 10px;background:var(--bg2);border-bottom:1px solid var(--bd);position:sticky;top:52px;z-index:40;scrollbar-width:none}
+.park-tabs::-webkit-scrollbar{display:none}
+.park-tab{flex:none;padding:7px 12px;background:var(--btn);border:1px solid var(--bd3);border-radius:999px;color:var(--tx2);font-size:.78rem;font-weight:600;white-space:nowrap;cursor:pointer;transition:all .15s}
+.park-tab.active{background:var(--park-color,#7c3aed);border-color:var(--park-color,#7c3aed);color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.15)}
+.park-tab:active{transform:scale(.96)}
+/* ===== MAIN ===== */
+main{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;position:relative}
+.back-chip{display:flex;align-items:center;gap:6px;padding:9px 14px;background:#7c3aed;color:#fff;border:0;border-radius:999px;font-weight:700;font-size:.82rem;cursor:pointer;margin-bottom:12px;box-shadow:0 2px 8px rgba(124,58,237,.4);animation:slideIn .2s}
+.back-chip:active{transform:scale(.96)}
+@keyframes slideIn{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:translateY(0)}}
+.park-header{padding:10px 14px;background:var(--bg);border-bottom:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.park-title{font-size:.95rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.park-badge{width:10px;height:10px;border-radius:50%;background:var(--park-color,#7c3aed)}
+.gps-btn{padding:6px 10px;background:var(--bg3);border:1px solid var(--bd2);border-radius:6px;color:var(--tx2);font-size:.72rem;cursor:pointer;display:flex;align-items:center;gap:5px}
+.gps-btn.active{background:#047857;border-color:#10b981;color:#fff}
+.gps-btn:active{transform:scale(.96)}
+.content{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain}
+/* ===== MAP ===== */
+.map-wrap{position:relative;padding:12px 12px 90px;background:var(--bg)}
+.map-svg{width:100%;height:auto;background:#1e293b;border-radius:12px;display:block;touch-action:manipulation}
+.map-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;font-size:.7rem}
+.legend-item{display:flex;align-items:center;gap:4px;background:var(--bg3);padding:4px 8px;border-radius:999px;color:var(--tx2);border:1px solid var(--bd)}
+.legend-dot{width:8px;height:8px;border-radius:50%}
+.gps-status{font-size:.72rem;color:var(--tx3);margin-top:8px;padding:8px 10px;background:var(--bg3);border-radius:6px;border:1px solid var(--bd)}
+.gps-status.ok{color:#6ee7b7;background:#064e3b;border-color:#065f46}
+.gps-status.err{color:#fca5a5;background:#7f1d1d;border-color:#991b1b}
+/* ===== LIST ===== */
+.stats-bar{display:flex;gap:8px;padding:8px 12px;background:var(--bg2);border-bottom:1px solid var(--bd);font-size:.72rem;color:var(--tx3)}
+.stat{display:flex;gap:4px;align-items:center}
+.stat-num{color:var(--txn);font-weight:700}
+.attr-list{padding:10px 12px 80px}
+.filter-row{display:flex;gap:6px;margin-bottom:10px;align-items:center}
+.search{flex:1;padding:9px 12px;background:var(--btn);border:1px solid var(--bd3);color:var(--tx);border-radius:8px;font-size:.85rem;outline:none}
+.search:focus{border-color:#7c3aed}
+.filter-btn{padding:9px 10px;background:var(--btn);border:1px solid var(--bd3);border-radius:8px;color:var(--tx2);font-size:.75rem;cursor:pointer}
+.filter-btn.active{background:#7c3aed;border-color:#7c3aed;color:#fff}
+.attr-card{background:var(--bg3);border:1px solid var(--bd2);border-radius:10px;padding:12px;margin-bottom:10px;transition:all .15s}
+.attr-card.done{opacity:.6;background:var(--bg-dim)}
+.attr-row1{display:flex;gap:10px;align-items:flex-start}
+.attr-check{width:22px;height:22px;border:2px solid var(--tx4);border-radius:6px;flex:none;cursor:pointer;display:flex;align-items:center;justify-content:center;background:transparent;margin-top:2px}
+.attr-check.checked{background:#10b981;border-color:#10b981}
+.attr-check.checked::after{content:"✓";color:#fff;font-weight:800;font-size:.95rem}
+.attr-info{flex:1;min-width:0}
+.attr-name{font-size:.92rem;font-weight:700;color:var(--txs);line-height:1.25}
+.attr-meta{display:flex;gap:8px;flex-wrap:wrap;font-size:.7rem;color:var(--tx3);margin-top:3px}
+.attr-tag{padding:2px 7px;border-radius:999px;background:var(--bd2);font-weight:600;color:var(--tx2)}
+.attr-tag.thrill{background:#7f1d1d;color:#fecaca}
+.attr-tag.family{background:#065f46;color:#a7f3d0}
+.attr-tag.kids{background:#1e40af;color:#bfdbfe}
+.attr-tag.water{background:#0c4a6e;color:#bae6fd}
+.attr-tag.show{background:#581c87;color:#e9d5ff}
+.attr-land{font-size:.7rem;color:var(--tx2);opacity:.8}
+.prio-row{display:flex;gap:4px;margin-top:8px}
+.prio-btn{flex:1;padding:6px 8px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx3);border-radius:6px;font-size:.72rem;font-weight:700;cursor:pointer;transition:all .15s}
+.prio-btn[data-p="must"].active{background:#b45309;border-color:#f59e0b;color:#fff}
+.prio-btn[data-p="yes"].active{background:#166534;border-color:#22c55e;color:#fff}
+.prio-btn[data-p="skip"].active{background:#7f1d1d;border-color:#ef4444;color:#fff}
+.prio-btn:active{transform:scale(.96)}
+.attr-card.skipped{opacity:.45}
+.attr-row2{margin-top:10px;display:flex;flex-direction:column;gap:8px;width:100%;overflow:hidden}
+.attr-row2-top{display:flex;gap:8px;width:100%}
+.attr-row2-top .field{flex:1;min-width:0;overflow:hidden}
+.field label{display:block;font-size:.65rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+.field input{width:100%;min-width:0;padding:7px 9px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:1rem;outline:none}
+.field input:focus{border-color:#7c3aed}
+.field.full{width:100%}
+.attr-notes{width:100%;min-height:38px;padding:7px 9px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.8rem;outline:none;resize:vertical;font-family:inherit}
+.attr-notes:focus{border-color:#7c3aed}
+.distance{font-size:.7rem;color:var(--tx3);font-weight:600}
+.distance.near{color:#6ee7b7}
+/* ===== MODAL ===== */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
+.modal.show{display:flex}
+.modal-content{background:var(--bg3);border-radius:14px;padding:18px;max-width:420px;width:100%;max-height:85vh;overflow-y:auto;border:1px solid var(--bd2)}
+.modal h2{font-size:1rem;margin-bottom:10px;color:var(--txs)}
+.modal p{font-size:.85rem;color:var(--tx2);margin-bottom:12px;line-height:1.5}
+.modal textarea{width:100%;min-height:180px;padding:10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.75rem;font-family:ui-monospace,Menlo,monospace;margin-bottom:10px}
+.modal-actions{display:flex;gap:8px;justify-content:flex-end}
+.modal-actions button{padding:8px 14px;border:0;border-radius:6px;cursor:pointer;font-weight:600;font-size:.82rem}
+.btn-cancel{background:var(--bd2);color:var(--tx2)}
+.btn-primary{background:#7c3aed;color:#fff}
+/* ===== MAP SVG MARKERS ===== */
+.attr-marker{cursor:pointer;transition:all .2s}
+.attr-marker:hover{filter:brightness(1.3)}
+.attr-marker.checked circle{fill:#10b981;opacity:.8}
+.attr-marker.scheduled circle{stroke:#fbbf24;stroke-width:2.5}
+.user-dot{fill:#3b82f6;stroke:#fff;stroke-width:2}
+.user-pulse{fill:#3b82f6;opacity:.25;animation:pulse 2s infinite}
+@keyframes pulse{0%{r:12;opacity:.6}100%{r:28;opacity:0}}
+.hidden{display:none!important}
+/* ===== PLAN OVERLAY ===== */
+.plan-overlay{position:fixed;top:52px;left:0;right:0;bottom:0;background:var(--bg);z-index:90;display:flex;flex-direction:column;overflow:hidden;animation:fadeIn .2s}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.plan-header{display:flex;align-items:center;padding:10px 12px;background:linear-gradient(135deg,#7c3aed,#ec4899);gap:10px;box-shadow:0 2px 8px var(--sh)}
+.plan-header h2{font-size:1rem;flex:1;font-weight:700;color:#fff}
+.btn-close{background:rgba(255,255,255,.22);border:0;color:#fff;padding:8px 12px;border-radius:8px;cursor:pointer;font-size:.84rem;font-weight:700}
+.btn-close:active{transform:scale(.96)}
+.day-tabs{display:flex;gap:8px;overflow-x:auto;padding:14px 12px 12px;background:var(--bg2);border-bottom:1px solid var(--bd);scrollbar-width:none}
+.day-tabs::-webkit-scrollbar{display:none}
+.day-tab{flex:none;padding:8px 10px;background:var(--btn);border:1px solid var(--bd3);border-radius:10px;color:var(--tx2);font-size:.7rem;cursor:pointer;text-align:center;line-height:1.25;min-width:56px}
+.day-tab.active{background:var(--park-color,#7c3aed);border-color:var(--park-color,#7c3aed);color:#fff;box-shadow:0 0 0 2px rgba(255,255,255,.15)}
+.day-tab .d-dow{font-size:.6rem;opacity:.8;display:block}
+.day-tab .d-date{font-weight:800;font-size:.82rem;display:block}
+.day-tab .d-park{font-size:.6rem;display:block;margin-top:2px;opacity:.9}
+.day-body{flex:1;min-height:0;overflow-y:auto;padding:12px 14px 100px;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain}
+.day-summary{background:var(--bg3);border:1px solid var(--bd2);padding:14px;border-radius:10px;margin-bottom:10px}
+.day-summary h3{font-size:1.05rem;margin-bottom:4px;color:var(--txs)}
+.day-tips{background:var(--tips-bg);border:1px solid var(--tips-bd);padding:11px 12px;border-radius:8px;font-size:.8rem;color:var(--tips-tx);margin-bottom:12px;line-height:1.5}
+.day-tips b{color:var(--tips-b)}
+.must-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;align-items:center}
+.must-chip{padding:5px 9px;background:linear-gradient(135deg,#7c2d92,#ec4899);color:#fff;border-radius:999px;font-size:.7rem;font-weight:700;display:inline-flex;gap:4px;align-items:center}
+.plan-step{display:flex;gap:10px;margin-bottom:8px}
+.step-time{flex:0 0 48px;text-align:right;font-weight:800;font-size:.82rem;color:var(--time-c);padding-top:10px;letter-spacing:.3px}
+.step-card{flex:1;background:var(--bg3);border:1px solid var(--bd2);padding:10px 12px;border-radius:10px;min-width:0}
+.step-card.meal{background:#422006;border-color:#78350f;color:#fde68a}
+.step-card.meal .step-head,.step-card.meal .step-sub,.step-card.meal .step-tip-txt{color:#fde68a}
+.step-card.show{background:#2e1065;border-color:#7c3aed;color:#e9d5ff}
+.step-card.show .step-head,.step-card.show .step-sub,.step-card.show .step-tip-txt{color:#e9d5ff}
+.step-card.tip{background:#0c4a6e;border-color:#0891b2;font-size:.82rem;color:#bae6fd;padding:10px 12px}
+.step-card.tip .step-head,.step-card.tip .step-sub,.step-card.tip .step-tip-txt{color:#bae6fd}
+.step-head{display:flex;gap:8px;align-items:center;font-weight:700;font-size:.9rem;line-height:1.2;color:var(--txs)}
+.step-emoji{font-size:1.2rem;flex:none}
+.step-sub{font-size:.7rem;color:var(--tx3);margin-top:4px}
+.step-tip-txt{font-size:.72rem;color:var(--tip-txt-c);margin-top:4px;font-style:italic;line-height:1.35}
+.regen-btn{display:block;width:100%;padding:12px;color:#fff;border:0;border-radius:10px;font-weight:700;font-size:.92rem;margin:4px 0 12px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.3)}
+.regen-btn:active{transform:scale(.97)}
+.no-park{text-align:center;padding:40px 20px;color:var(--tx3);font-size:.9rem}
+.day-edit-btn{padding:6px 12px;background:var(--bg3);border:1px solid var(--bd2);color:var(--tx3);border-radius:6px;font-size:.75rem;font-weight:600;cursor:pointer;white-space:nowrap}
+.day-edit-btn:active{transform:scale(.96)}
+.add-event-form{background:var(--bg3);border:1px solid var(--bd2);border-radius:10px;padding:12px;margin-bottom:10px}
+.add-event-form h4{font-size:.75rem;font-weight:700;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px}
+.add-event-row{display:flex;gap:6px;margin-bottom:8px;align-items:center}
+.add-event-row input,.add-event-row select{flex:1;padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.82rem;outline:none;min-width:0}
+.add-event-row input:focus,.add-event-row select:focus{border-color:#7c3aed}
+.add-event-row input[type=time]{flex:0 0 100px}
+.btn-add-ev{padding:8px 14px;background:#7c3aed;border:0;color:#fff;border-radius:6px;font-weight:700;font-size:.82rem;cursor:pointer;white-space:nowrap}
+.btn-add-ev:active{transform:scale(.96)}
+.step-card .del-ev{float:right;background:none;border:0;color:var(--tx4);font-size:.9rem;cursor:pointer;padding:0 2px;line-height:1}
+.step-card .del-ev:hover{color:#ef4444}
+.must-checks{display:flex;flex-direction:column;gap:6px;max-height:220px;overflow-y:auto}
+.must-check-row{display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--bg-in);border-radius:6px;cursor:pointer}
+.must-check-row input[type=checkbox]{width:16px;height:16px;accent-color:#7c3aed;flex:none}
+.must-check-row span{font-size:.8rem;color:var(--tx)}
+.day-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:flex-end;justify-content:center;z-index:110;padding:0}
+.day-modal-box{background:var(--bg3);border-radius:16px 16px 0 0;padding:18px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;border:1px solid var(--bd2)}
+.day-modal-box h3{font-size:1rem;margin-bottom:14px;font-weight:700;color:var(--txs)}
+.day-modal-box select,.day-modal-box textarea{width:100%;padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;margin-bottom:10px;outline:none;font-family:inherit}
+.day-modal-box select:focus,.day-modal-box textarea:focus{border-color:#7c3aed}
+.day-modal-box label{display:block;font-size:.65rem;color:var(--tx3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px}
+/* ===== TOAST ===== */
+.toast{position:fixed;bottom:70px;left:50%;transform:translateX(-50%);background:#10b981;color:#fff;padding:10px 16px;border-radius:999px;font-size:.82rem;font-weight:600;z-index:200;opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+.toast.err{background:#ef4444}
+/* ===== TAB BAR ===== */
+.tab-bar{position:fixed;bottom:0;left:0;right:0;background:var(--bg4);border-top:1px solid var(--bd);display:flex;z-index:95;padding-bottom:env(safe-area-inset-bottom)}
+.tab-btn{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:8px 2px 6px;background:none;border:0;color:var(--tx4);font-size:.56rem;font-weight:700;cursor:pointer;gap:3px;letter-spacing:.3px;text-transform:uppercase;transition:color .15s;-webkit-tap-highlight-color:transparent}
+.tab-btn .ti{width:22px;height:22px;display:block}
+.tab-btn.active{color:var(--park-color,#7c3aed)}
+.tab-btn:active{transform:scale(.9)}
+/* ===== HOME ===== */
+.home-view{padding:14px 14px 80px}
+.home-cd{background:linear-gradient(135deg,#0f2460,#1e3a8a,#7c2d92,#0f2460);background-size:300% 300%;border-radius:14px;padding:20px 16px 16px;margin-bottom:14px;text-align:center;animation:cdGrad 6s ease infinite;position:relative;overflow:hidden}
+@keyframes cdGrad{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+.home-cd::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at 60% 20%,rgba(255,255,255,.07) 0%,transparent 70%);pointer-events:none}
+.cd-units{display:flex;justify-content:center;gap:12px;margin-bottom:8px}
+.cd-unit{display:flex;flex-direction:column;align-items:center;min-width:52px}
+.cd-val{font-size:clamp(2rem,7vw,3.2rem);font-weight:800;line-height:1;color:#fff;letter-spacing:-1px;font-variant-numeric:tabular-nums;transition:opacity .15s}
+.cd-val.flip{animation:cdFlip .25s ease}
+@keyframes cdFlip{0%{transform:translateY(-8px);opacity:0}100%{transform:translateY(0);opacity:1}}
+.cd-sep{font-size:clamp(1.6rem,5vw,2.6rem);font-weight:800;color:rgba(255,255,255,.4);align-self:flex-start;padding-top:4px;line-height:1}
+.cd-lbl{font-size:.6rem;color:rgba(255,255,255,.55);text-transform:uppercase;letter-spacing:.6px;margin-top:4px;font-weight:600}
+.home-cd .cd-l{font-size:.82rem;color:rgba(255,255,255,.8);margin-top:2px;font-weight:600}
+.home-cd .cd-d{font-size:.7rem;color:rgba(255,255,255,.45);margin-top:3px}
+.cd-progress{height:3px;background:rgba(255,255,255,.15);border-radius:99px;margin-top:14px;overflow:hidden}
+.cd-progress-bar{height:100%;background:linear-gradient(90deg,rgba(255,255,255,.5),rgba(255,255,255,.9));border-radius:99px;transition:width 1s linear}
+.cd-big-emoji{font-size:clamp(2.5rem,10vw,4rem);line-height:1;margin-bottom:8px}
+.home-cd .cd-msg{font-size:clamp(.9rem,3vw,1.1rem);font-weight:700;color:#fff;margin-bottom:4px}
+.home-card{background:var(--bg3);border:1px solid var(--bd2);border-radius:12px;padding:14px;margin-bottom:10px}
+.home-card-label{font-size:.62rem;color:var(--tx4);text-transform:uppercase;letter-spacing:.5px;font-weight:700;margin-bottom:10px}
+.home-park-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.home-park-dot{width:10px;height:10px;border-radius:50%;flex:none}
+.home-park-name{font-size:.98rem;font-weight:700;color:var(--txs)}
+.home-park-time{font-size:.78rem;color:var(--tx3);margin-bottom:10px;padding-left:20px}
+.home-must{display:flex;align-items:center;gap:8px;font-size:.82rem;color:var(--tx);padding:5px 0;border-bottom:1px solid var(--bg)}
+.home-must:last-of-type{border:0}
+.home-action{display:block;width:100%;padding:11px;background:var(--park-color,#7c3aed);border:0;color:#fff;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer;margin-top:10px}
+.home-action:active{transform:scale(.97)}
+.home-stats{display:flex;gap:8px;margin-bottom:10px}
+.home-stat{flex:1;background:var(--bg3);border:1px solid var(--bd2);border-radius:10px;padding:12px 8px;text-align:center;cursor:pointer;transition:border-color .15s}
+.home-stat:active{transform:scale(.96)}
+.home-stat:hover{border-color:var(--park-color,#7c3aed)}
+.home-stat .sn{font-size:1.8rem;font-weight:800;color:var(--txn);line-height:1}
+.home-stat .sl{font-size:.6rem;color:var(--tx4);text-transform:uppercase;letter-spacing:.4px;margin-top:4px}
+.home-note{background:var(--bg3);border:1px solid var(--bd2);border-radius:10px;padding:11px 13px;margin-bottom:8px;display:flex;gap:10px;align-items:flex-start}
+.home-note .ni{font-size:1.1rem;flex:none;padding-top:1px}
+.home-note .nb{flex:1;font-size:.82rem;color:var(--tx2);line-height:1.45}
+.home-note .nl{font-size:.6rem;color:var(--tx4);text-transform:uppercase;letter-spacing:.4px;margin-bottom:2px;display:block}
+.home-tools{display:flex;gap:8px;margin-top:4px}
+.home-tool-btn{flex:1;padding:9px 6px;background:var(--bg3);border:1px solid var(--bd2);color:var(--tx3);border-radius:8px;font-size:.72rem;font-weight:600;cursor:pointer;text-align:center}
+.home-tool-btn:active{transform:scale(.96)}
+.data-menu-item{display:block;width:100%;padding:12px 16px;background:none;border:0;text-align:left;font-size:.85rem;color:var(--tx);cursor:pointer;border-bottom:1px solid var(--bd)}
+.data-menu-item:last-child{border:0}
+.data-menu-item:hover{background:var(--bg2)}
+.alarm-btn{padding:4px 7px;background:none;border:1px solid var(--bd2);border-radius:6px;font-size:.85rem;cursor:pointer;line-height:1;flex:none;transition:all .15s}
+.alarm-btn.armed{background:#b45309;border-color:#f59e0b}
+.alarm-btn:active{transform:scale(.9)}
+/* ===== RESPONSIVE ===== */
+@media(min-width:600px){
+  .attr-list,.home-view{max-width:580px;margin-left:auto;margin-right:auto;padding-left:20px;padding-right:20px}
+  .map-wrap{max-width:580px;margin-left:auto;margin-right:auto}
+  .day-body{max-width:580px;margin:0 auto}
+  .tab-btn{font-size:.62rem;padding:8px 10px 6px}
+  .tab-btn .ti{font-size:1.15rem}
+  .home-cd .cd-n{font-size:3rem}
+}
+@media(min-width:900px){
+  .attr-list,.home-view{max-width:680px;padding-left:24px;padding-right:24px}
+  .map-wrap,.day-body{max-width:680px}
+  .tab-bar{justify-content:center}
+  .tab-btn{min-width:90px;font-size:.68rem}
+  .plan-overlay .day-body{padding-left:24px;padding-right:24px}
+}
+@media(min-width:1200px){
+  .attr-list,.home-view{max-width:760px;padding-left:32px;padding-right:32px}
+  .map-wrap,.day-body{max-width:760px}
+  .tab-btn{min-width:100px}
+  .day-modal-box,.modal-content{max-width:540px}
+}
+.ico{width:16px;height:16px;display:inline-block;vertical-align:middle;flex:none;stroke:currentColor}
+.ico-sm{width:13px;height:13px}
+.ico-lg{width:20px;height:20px}
+.ico-xl{width:28px;height:28px}
+svg.ico,svg.ico-sm,svg.ico-lg,svg.ico-xl{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;overflow:visible}
+</style>
+</head>
+<body>
+<header>
+  <div class="header-left">
+    <svg viewBox="0 0 230 52" xmlns="http://www.w3.org/2000/svg" style="height:42px;width:auto;display:block;overflow:visible">
+      <!-- Mickey ears -->
+      <circle cx="196" cy="16" r="11" fill="rgba(255,255,255,.1)" stroke="rgba(255,255,255,.45)" stroke-width="1.8"/>
+      <circle cx="185" cy="7"  r="7"  fill="rgba(255,255,255,.1)" stroke="rgba(255,255,255,.45)" stroke-width="1.8"/>
+      <circle cx="207" cy="7"  r="7"  fill="rgba(255,255,255,.1)" stroke="rgba(255,255,255,.45)" stroke-width="1.8"/>
+      <!-- Orlando -->
+      <text x="6" y="36"
+        font-family="Georgia,'Times New Roman',serif"
+        font-style="italic" font-weight="700" font-size="34"
+        fill="white" letter-spacing="0.5">Orlando</text>
+      <!-- underline swirl -->
+      <path d="M6 41 Q90 49 168 41" fill="none" stroke="rgba(255,255,255,.22)" stroke-width="1.2" stroke-linecap="round"/>
+      <!-- trip planner -->
+      <text x="9" y="51"
+        font-family="-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
+        font-size="10" fill="rgba(255,255,255,.65)" letter-spacing="4.5">trip planner</text>
+    </svg>
+  </div>
+  <div style="display:flex;gap:6px;flex:none">
+    <button class="theme-btn" id="themeToggle" title="Alternar tema"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></button>
+    <button class="theme-btn" id="dataMenuBtn" title="Dados">⋯</button>
+  </div>
+</header>
+<div id="dataMenu" style="display:none;position:fixed;top:52px;right:10px;z-index:200;background:var(--bg3);border:1px solid var(--bd2);border-radius:10px;box-shadow:0 4px 16px var(--sh);min-width:160px;overflow:hidden">
+  <button class="data-menu-item" id="dmExport"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg> Exportar backup</button>
+  <button class="data-menu-item" id="dmImport"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg> Importar backup</button>
+  <button class="data-menu-item" id="dmReset" style="color:#ef4444"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="stroke:#ef4444"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg> Limpar parque</button>
+</div>
+
+<nav class="park-tabs" id="parkTabs"></nav>
+
+<main>
+  <div id="parkHeader" class="park-header hidden">
+    <div class="park-title"><span class="park-badge" id="parkBadge"></span><span id="parkName"></span></div>
+    <button class="gps-btn" id="gpsBtn" title="Ativar GPS"><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2C8.68 2 6 4.68 6 8c0 5.25 6 13 6 13s6-7.75 6-13c0-3.32-2.68-6-6-6z"/><circle cx="12" cy="8" r="2"/></svg> GPS</button>
+  </div>
+  <div id="statsBar" class="stats-bar hidden">
+    <div class="stat">Concluídas: <span class="stat-num" id="statDone">0</span></div>
+    <div class="stat">Agendadas: <span class="stat-num" id="statSched">0</span></div>
+    <div class="stat">Total: <span class="stat-num" id="statTotal">0</span></div>
+  </div>
+
+  <div class="content" id="content">
+    <div id="homeView" class="home-view"></div>
+    <div id="mapView" class="map-wrap hidden">
+      <svg class="map-svg" id="parkMap" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet"></svg>
+      <div class="gps-status" id="gpsStatus">GPS desativado. Toque em GPS para mostrar sua localização no mapa (precisa estar perto do parque).</div>
+      <div class="map-legend" id="mapLegend"></div>
+    </div>
+    <div id="listView" class="attr-list hidden">
+      <button class="back-chip hidden" id="backToMap">← Voltar ao mapa</button>
+      <div class="filter-row">
+        <input type="text" class="search" id="search" placeholder="Buscar atração...">
+        <button class="filter-btn" id="filterPending" data-f="pending">Pendentes</button>
+        <button class="filter-btn" id="filterScheduled" data-f="scheduled">Agendadas</button>
+      </div>
+      <div class="filter-row" style="margin-bottom:10px">
+        <button class="filter-btn" id="btnAdultMode" style="flex:1;font-weight:700"><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a8.38 8.38 0 0013 0"/></svg> Modo adulto (pula infantis)</button>
+        <button class="filter-btn" id="btnClearPrios"><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 102.13-9.36L1 10"/></svg> Limpar prioridades</button>
+      </div>
+      <div id="attrContainer"></div>
+    </div>
+  </div>
+</main>
+
+<nav class="tab-bar" id="tabBar">
+  <button class="tab-btn" data-tab="home">
+    <!-- Mickey head -->
+    <svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <circle cx="8" cy="8.5" r="3.2"/>
+      <circle cx="16" cy="8.5" r="3.2"/>
+      <circle cx="12" cy="15" r="5.5"/>
+    </svg>
+    Início
+  </button>
+  <button class="tab-btn" data-tab="map">
+    <!-- Mapa dobrado -->
+    <svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <polyline points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/>
+      <line x1="8" y1="2" x2="8" y2="18"/>
+      <line x1="16" y1="6" x2="16" y2="22"/>
+    </svg>
+    Mapa
+  </button>
+  <button class="tab-btn" data-tab="list">
+    <!-- Roller coaster loop -->
+    <svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M2 19 C4 12 7 9 10 9 C13 9 13 13.5 16 13.5 A3.5 3.5 0 0 0 16 6.5 C13 6.5 13 11 10 11"/>
+      <line x1="2" y1="19" x2="22" y2="19"/>
+      <line x1="5" y1="19" x2="5" y2="21"/>
+      <line x1="19" y1="19" x2="19" y2="21"/>
+    </svg>
+    Atrações
+  </button>
+  <button class="tab-btn" data-tab="plan">
+    <!-- Calendário -->
+    <svg class="ti" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+      <rect x="3" y="4" width="18" height="18" rx="2"/>
+      <line x1="16" y1="2" x2="16" y2="6"/>
+      <line x1="8" y1="2" x2="8" y2="6"/>
+      <line x1="3" y1="10" x2="21" y2="10"/>
+      <line x1="8" y1="14" x2="8.01" y2="14" stroke-width="2" stroke-linecap="round"/>
+      <line x1="12" y1="14" x2="12.01" y2="14" stroke-width="2" stroke-linecap="round"/>
+      <line x1="16" y1="14" x2="16.01" y2="14" stroke-width="2" stroke-linecap="round"/>
+      <line x1="8" y1="18" x2="8.01" y2="18" stroke-width="2" stroke-linecap="round"/>
+      <line x1="12" y1="18" x2="12.01" y2="18" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+    Roteiro
+  </button>
+</nav>
+
+<div class="plan-overlay hidden" id="planOverlay">
+  <div class="day-tabs" id="dayTabs"></div>
+  <div class="day-body" id="dayBody"></div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="modal-content">
+    <h2 id="modalTitle">Título</h2>
+    <p id="modalDesc"></p>
+    <textarea id="modalText"></textarea>
+    <div class="modal-actions">
+      <button class="btn-cancel" id="modalCancel">Cancelar</button>
+      <button class="btn-primary" id="modalOk">OK</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ====== SVG ICON SYSTEM ======
+function ico(name,cls='ico'){
+  const p={a:`class="${cls}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"`};
+  const d={
+    edit:`<svg ${p.a}><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>`,
+    trash:`<svg ${p.a}><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6"/><path d="M9 6V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>`,
+    download:`<svg ${p.a}><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>`,
+    upload:`<svg ${p.a}><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>`,
+    sun:`<svg ${p.a}><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>`,
+    moon:`<svg ${p.a}><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>`,
+    pin:`<svg ${p.a}><path d="M12 2C8.68 2 6 4.68 6 8c0 5.25 6 13 6 13s6-7.75 6-13c0-3.32-2.68-6-6-6z"/><circle cx="12" cy="8" r="2"/></svg>`,
+    bell:`<svg ${p.a}><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>`,
+    bellOff:`<svg ${p.a}><path d="M13.73 21a2 2 0 01-3.46 0"/><path d="M18.63 13A17.89 17.89 0 0118 8"/><path d="M6.26 6.26A5.86 5.86 0 006 8c0 7-3 9-3 9h14"/><path d="M18 8a6 6 0 00-9.33-5"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`,
+    clock:`<svg ${p.a}><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+    hourglass:`<svg ${p.a}><path d="M5 22h14M5 2h14"/><path d="M17 22v-4.172a2 2 0 00-.586-1.414L12 12l-4.414 4.414A2 2 0 007 17.828V22"/><path d="M7 2v4.172a2 2 0 00.586 1.414L12 12l4.414-4.414A2 2 0 0017 6.172V2"/></svg>`,
+    notes:`<svg ${p.a}><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>`,
+    star:`<svg ${p.a}><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+    warning:`<svg ${p.a}><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>`,
+    check:`<svg ${p.a}><polyline points="20 6 9 17 4 12"/></svg>`,
+    skip:`<svg ${p.a}><polygon points="5 4 15 12 5 20 5 4"/><line x1="19" y1="5" x2="19" y2="19"/></svg>`,
+    fork:`<svg ${p.a}><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 002-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 00-5 5v6c0 1.1.9 2 2 2h3v7"/></svg>`,
+    masks:`<svg ${p.a}><path d="M2 10s3-3 3-8h14c0 5 3 8 3 8v3c0 5-4 9-10 9S2 18 2 13z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><circle cx="9" cy="9" r="1" fill="currentColor"/><circle cx="15" cy="9" r="1" fill="currentColor"/></svg>`,
+    bag:`<svg ${p.a}><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>`,
+    bed:`<svg ${p.a}><path d="M2 4v16M2 8h18a2 2 0 012 2v10M2 17h20"/><path d="M6 8v9"/></svg>`,
+    plane:`<svg ${p.a}><path d="M17.8 19.2L16 11l3.5-3.5C21 6 21 4 19.5 2.5S18 2 16.5 3.5L13 7 4.8 5.2a.5.5 0 00-.5.1L3 6.5c-.2.2-.1.5.1.7l5.9 3.5L6 12 4 11l-1 1 3 3 3 3 1-1-1-2 1.5-2.5 3.5 5.9c.2.2.5.3.7.1l1.2-1.3a.5.5 0 00.1-.5z"/></svg>`,
+    home2:`<svg ${p.a}><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+    coaster:`<svg ${p.a}><path d="M2 19C4 12 7 9 10 9c3 0 3 4.5 6 4.5A3.5 3.5 0 0016 6.5c-3 0-3 4.5-6 4.5"/><line x1="2" y1="19" x2="22" y2="19"/><line x1="5" y1="19" x2="5" y2="21"/><line x1="19" y1="19" x2="19" y2="21"/></svg>`,
+    restroom:`<svg ${p.a}><circle cx="8" cy="4" r="2"/><path d="M5 22V11L3 6h10l-2 5v11"/><circle cx="17" cy="4" r="2"/><path d="M15 22V13h4v9M17 13V6"/></svg>`,
+    ticket:`<svg ${p.a}><path d="M2 9a2 2 0 012-2h16a2 2 0 012 2v1a2 2 0 000 4v1a2 2 0 01-2 2H4a2 2 0 01-2-2v-1a2 2 0 000-4V9z"/><line x1="9" y1="7" x2="9" y2="17" stroke-dasharray="2 2.5"/></svg>`,
+    compass:`<svg ${p.a}><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg>`,
+    lightning:`<svg ${p.a}><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+    wave:`<svg ${p.a}><path d="M2 12s2-6 5-6 5 12 8 12 5-6 5-6"/></svg>`,
+    sparkles:`<svg ${p.a}><path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5z"/><path d="M5 3l.5 1.5L7 5l-1.5.5L5 7l-.5-1.5L3 5l1.5-.5z"/><path d="M19 17l.5 1.5 1.5.5-1.5.5L19 21l-.5-1.5-1.5-.5 1.5-.5z"/></svg>`,
+    plus:`<svg ${p.a}><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>`,
+    kids:`<svg ${p.a}><circle cx="12" cy="12" r="10"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>`,
+  };
+  return d[name]||'';
+}
+// ====== PARK DATA ======
+// Coordinates are approximate real-world lat/lng. x/y are positions on a 400x400 schematic map.
+const PARKS = [
+  {
+    id:'mk', name:'Magic Kingdom', short:'MK', color:'#ec4899', gate:{x:200,y:365},
+    bounds:{minLat:28.4155,maxLat:28.4195,minLng:-81.5835,maxLng:-81.5790},
+    lands:[
+      {name:'Main Street U.S.A.',color:'#fbbf24',path:'M170,260 L230,260 L230,320 L170,320 Z'},
+      {name:'Adventureland',color:'#22c55e',path:'M70,200 L170,200 L170,320 L70,320 Z'},
+      {name:'Frontierland',color:'#a16207',path:'M30,100 L140,100 L140,200 L70,200 Z'},
+      {name:'Liberty Square',color:'#9333ea',path:'M140,120 L200,120 L200,200 L140,200 Z'},
+      {name:'Fantasyland',color:'#ec4899',path:'M150,40 L280,40 L280,180 L200,180 L200,120 L150,120 Z'},
+      {name:'Tomorrowland',color:'#06b6d4',path:'M280,80 L370,80 L370,260 L280,260 L280,80 Z'}
+    ],
+    attractions:[
+      {id:'mk1',name:'Space Mountain',land:'Tomorrowland',type:'thrill',x:335,y:150,lat:28.4184,lng:-81.5793},
+      {id:'mk2',name:'TRON Lightcycle Run',land:'Tomorrowland',type:'thrill',x:330,y:100,lat:28.4191,lng:-81.5797},
+      {id:'mk3',name:'Buzz Lightyear\'s Space Ranger Spin',land:'Tomorrowland',type:'family',x:305,y:200,lat:28.4178,lng:-81.5797},
+      {id:'mk4',name:'Tomorrowland Speedway',land:'Tomorrowland',type:'family',x:300,y:120,lat:28.4186,lng:-81.5801},
+      {id:'mk5',name:'Seven Dwarfs Mine Train',land:'Fantasyland',type:'thrill',x:235,y:80,lat:28.4190,lng:-81.5811},
+      {id:'mk6',name:'Peter Pan\'s Flight',land:'Fantasyland',type:'family',x:205,y:140,lat:28.4183,lng:-81.5816},
+      {id:'mk7',name:'It\'s a Small World',land:'Fantasyland',type:'family',x:180,y:100,lat:28.4187,lng:-81.5818},
+      {id:'mk8',name:'Mickey\'s PhilharMagic',land:'Fantasyland',type:'show',x:210,y:170,lat:28.4181,lng:-81.5816},
+      {id:'mk9',name:'Under the Sea ~ Little Mermaid',land:'Fantasyland',type:'family',x:265,y:100,lat:28.4188,lng:-81.5807},
+      {id:'mk10',name:'The Many Adventures of Winnie the Pooh',land:'Fantasyland',type:'kids',x:250,y:150,lat:28.4184,lng:-81.5810},
+      {id:'mk11',name:'Mad Tea Party',land:'Fantasyland',type:'family',x:275,y:150,lat:28.4184,lng:-81.5806},
+      {id:'mk12',name:'Haunted Mansion',land:'Liberty Square',type:'family',x:165,y:145,lat:28.4184,lng:-81.5823},
+      {id:'mk13',name:'Pirates of the Caribbean',land:'Adventureland',type:'family',x:110,y:260,lat:28.4173,lng:-81.5830},
+      {id:'mk14',name:'Jungle Cruise',land:'Adventureland',type:'family',x:135,y:240,lat:28.4175,lng:-81.5826},
+      {id:'mk15',name:'Magic Carpets of Aladdin',land:'Adventureland',type:'kids',x:90,y:280,lat:28.4171,lng:-81.5830},
+      {id:'mk16',name:'Tiana\'s Bayou Adventure',land:'Frontierland',type:'thrill',x:60,y:145,lat:28.4183,lng:-81.5832},
+      {id:'mk17',name:'Big Thunder Mountain Railroad',land:'Frontierland',type:'thrill',x:95,y:120,lat:28.4188,lng:-81.5828,closed:true,closedNote:'🚧 Refurbishment até 03/mai/2026 — vocês não pegam aberto'},
+      {id:'mk18',name:'Country Bear Jamboree',land:'Frontierland',type:'show',x:115,y:175,lat:28.4180,lng:-81.5825},
+      {id:'mk19',name:'Happily Ever After (fogos)',land:'Main Street',type:'show',x:200,y:290,lat:28.4170,lng:-81.5815}
+    ]
+  },
+  {
+    id:'ep', name:'Epcot', short:'EP', color:'#3b82f6', gate:{x:200,y:52},
+    bounds:{minLat:28.3695,maxLat:28.3780,minLng:-81.5540,maxLng:-81.5450},
+    lands:[
+      {name:'World Celebration',color:'#3b82f6',path:'M150,150 L250,150 L250,250 L150,250 Z'},
+      {name:'World Discovery',color:'#a855f7',path:'M250,100 L370,100 L370,250 L250,250 Z'},
+      {name:'World Nature',color:'#22c55e',path:'M30,100 L150,100 L150,250 L30,250 Z'},
+      {name:'World Showcase',color:'#f59e0b',path:'M40,250 L370,250 L370,370 L40,370 Z'}
+    ],
+    attractions:[
+      {id:'ep1',name:'Spaceship Earth',land:'World Celebration',type:'family',x:200,y:180,lat:28.3747,lng:-81.5494},
+      {id:'ep2',name:'Guardians of the Galaxy: Cosmic Rewind',land:'World Discovery',type:'thrill',x:315,y:130,lat:28.3753,lng:-81.5478},
+      {id:'ep3',name:'Test Track',land:'World Discovery',type:'thrill',x:330,y:200,lat:28.3739,lng:-81.5467},
+      {id:'ep4',name:'Mission: SPACE',land:'World Discovery',type:'thrill',x:285,y:170,lat:28.3745,lng:-81.5473},
+      {id:'ep5',name:'Soarin\' Around the World',land:'World Nature',type:'family',x:85,y:160,lat:28.3758,lng:-81.5503},
+      {id:'ep6',name:'Living with the Land',land:'World Nature',type:'family',x:100,y:200,lat:28.3755,lng:-81.5502},
+      {id:'ep7',name:'Journey Into Imagination',land:'World Nature',type:'family',x:80,y:220,lat:28.3751,lng:-81.5506},
+      {id:'ep8',name:'The Seas with Nemo & Friends',land:'World Nature',type:'kids',x:115,y:120,lat:28.3765,lng:-81.5502},
+      {id:'ep9',name:'Frozen Ever After',land:'Norway (Showcase)',type:'family',x:140,y:285,lat:28.3722,lng:-81.5496},
+      {id:'ep10',name:'Remy\'s Ratatouille Adventure',land:'France (Showcase)',type:'family',x:95,y:325,lat:28.3702,lng:-81.5495},
+      {id:'ep11',name:'Gran Fiesta Tour (Mexico)',land:'Mexico (Showcase)',type:'family',x:180,y:275,lat:28.3726,lng:-81.5490},
+      {id:'ep12',name:'Luminous (fogos)',land:'World Showcase Lagoon',type:'show',x:200,y:310,lat:28.3713,lng:-81.5482}
+    ]
+  },
+  {
+    id:'hs', name:'Hollywood Studios', short:'HS', color:'#f43f5e', gate:{x:200,y:375},
+    bounds:{minLat:28.3540,maxLat:28.3610,minLng:-81.5620,maxLng:-81.5540},
+    lands:[
+      {name:'Hollywood Boulevard',color:'#fbbf24',path:'M160,280 L240,280 L240,360 L160,360 Z'},
+      {name:'Sunset Boulevard',color:'#ef4444',path:'M240,220 L370,220 L370,370 L240,370 Z'},
+      {name:'Echo Lake',color:'#06b6d4',path:'M100,220 L200,220 L200,280 L100,280 Z'},
+      {name:'Grand Avenue',color:'#a16207',path:'M30,220 L100,220 L100,340 L30,340 Z'},
+      {name:'Galaxy\'s Edge (Star Wars)',color:'#7c3aed',path:'M30,60 L180,60 L180,220 L30,220 Z'},
+      {name:'Toy Story Land',color:'#22c55e',path:'M180,60 L300,60 L300,180 L180,180 Z'},
+      {name:'Animation Courtyard',color:'#ec4899',path:'M200,180 L300,180 L300,280 L200,280 Z'}
+    ],
+    attractions:[
+      {id:'hs1',name:'Star Wars: Rise of the Resistance',land:'Galaxy\'s Edge',type:'thrill',x:80,y:100,lat:28.3594,lng:-81.5609},
+      {id:'hs2',name:'Millennium Falcon: Smugglers Run',land:'Galaxy\'s Edge',type:'thrill',x:120,y:160,lat:28.3590,lng:-81.5608},
+      {id:'hs3',name:'Slinky Dog Dash',land:'Toy Story Land',type:'thrill',x:230,y:110,lat:28.3587,lng:-81.5599},
+      {id:'hs4',name:'Toy Story Mania!',land:'Toy Story Land',type:'family',x:265,y:140,lat:28.3585,lng:-81.5594},
+      {id:'hs5',name:'Alien Swirling Saucers',land:'Toy Story Land',type:'kids',x:210,y:140,lat:28.3588,lng:-81.5603},
+      {id:'hs6',name:'The Twilight Zone Tower of Terror',land:'Sunset Boulevard',type:'thrill',x:345,y:280,lat:28.3555,lng:-81.5580},
+      {id:'hs7',name:'Rock \'n\' Roller Coaster',land:'Sunset Boulevard',type:'thrill',x:345,y:340,lat:28.3552,lng:-81.5586,closed:true,closedNote:'🚧 Fechada desde 2/mar/2026 — retematização para Muppets, reabre no verão'},
+      {id:'hs8',name:'Mickey & Minnie\'s Runaway Railway',land:'Hollywood Boulevard',type:'family',x:200,y:330,lat:28.3568,lng:-81.5594},
+      {id:'hs9',name:'Star Tours – The Adventures Continue',land:'Echo Lake',type:'family',x:130,y:260,lat:28.3575,lng:-81.5604},
+      {id:'hs10',name:'Indiana Jones Epic Stunt Spectacular',land:'Echo Lake',type:'show',x:170,y:240,lat:28.3572,lng:-81.5600},
+      {id:'hs11',name:'Muppet*Vision 3D',land:'Grand Avenue',type:'show',x:60,y:285,lat:28.3570,lng:-81.5615},
+      {id:'hs12',name:'Disney Junior Play & Dance!',land:'Animation Courtyard',type:'kids',x:255,y:220,lat:28.3580,lng:-81.5590},
+      {id:'hs13',name:'Fantasmic!',land:'Sunset Boulevard',type:'show',x:320,y:370,lat:28.3547,lng:-81.5585}
+    ]
+  },
+  {
+    id:'ak', name:'Animal Kingdom', short:'AK', color:'#16a34a', gate:{x:200,y:375},
+    bounds:{minLat:28.3530,maxLat:28.3640,minLng:-81.5950,maxLng:-81.5870},
+    lands:[
+      {name:'Oasis / Discovery Island',color:'#22c55e',path:'M150,160 L260,160 L260,260 L150,260 Z'},
+      {name:'Pandora – The World of Avatar',color:'#3b82f6',path:'M30,80 L180,80 L180,200 L30,200 Z'},
+      {name:'Africa',color:'#a16207',path:'M30,200 L150,200 L150,340 L30,340 Z'},
+      {name:'Asia',color:'#ef4444',path:'M150,260 L260,260 L260,370 L150,370 Z'},
+      {name:'DinoLand U.S.A.',color:'#7c3aed',path:'M260,200 L380,200 L380,370 L260,370 Z'},
+      {name:'Rafiki\'s Planet Watch',color:'#f59e0b',path:'M100,40 L200,40 L200,80 L100,80 Z'}
+    ],
+    attractions:[
+      {id:'ak1',name:'Avatar Flight of Passage',land:'Pandora',type:'thrill',x:80,y:140,lat:28.3561,lng:-81.5933},
+      {id:'ak2',name:'Na\'vi River Journey',land:'Pandora',type:'family',x:140,y:150,lat:28.3556,lng:-81.5925},
+      {id:'ak3',name:'Expedition Everest',land:'Asia',type:'thrill',x:235,y:290,lat:28.3569,lng:-81.5893},
+      {id:'ak4',name:'Kali River Rapids',land:'Asia',type:'thrill',x:175,y:310,lat:28.3575,lng:-81.5905},
+      {id:'ak5',name:'Kilimanjaro Safaris',land:'Africa',type:'family',x:70,y:260,lat:28.3596,lng:-81.5929},
+      {id:'ak6',name:'Festival of the Lion King',land:'Africa',type:'show',x:95,y:290,lat:28.3590,lng:-81.5921},
+      {id:'ak7',name:'DINOSAUR',land:'DinoLand',type:'thrill',x:315,y:260,lat:28.3576,lng:-81.5885},
+      {id:'ak8',name:'TriceraTop Spin',land:'DinoLand',type:'kids',x:290,y:300,lat:28.3570,lng:-81.5883},
+      {id:'ak9',name:'It\'s Tough to be a Bug!',land:'Discovery Island',type:'show',x:210,y:210,lat:28.3581,lng:-81.5913},
+      {id:'ak10',name:'Finding Nemo: The Big Blue',land:'DinoLand',type:'show',x:335,y:330,lat:28.3564,lng:-81.5884},
+      {id:'ak11',name:'Feathered Friends in Flight',land:'Asia',type:'show',x:210,y:345,lat:28.3566,lng:-81.5900}
+    ]
+  },
+  {
+    id:'usf', name:'Universal Studios Florida', short:'USF', color:'#f97316', gate:{x:200,y:368},
+    bounds:{minLat:28.4730,maxLat:28.4830,minLng:-81.4700,maxLng:-81.4620},
+    lands:[
+      {name:'Production Central',color:'#3b82f6',path:'M150,250 L280,250 L280,370 L150,370 Z'},
+      {name:'New York',color:'#ef4444',path:'M150,130 L290,130 L290,250 L150,250 Z'},
+      {name:'San Francisco',color:'#f59e0b',path:'M40,130 L150,130 L150,250 L40,250 Z'},
+      {name:'Diagon Alley (Wizarding World)',color:'#7c3aed',path:'M40,30 L180,30 L180,130 L40,130 Z'},
+      {name:'World Expo',color:'#06b6d4',path:'M180,30 L330,30 L330,130 L180,130 Z'},
+      {name:'Springfield / Simpsons',color:'#fbbf24',path:'M290,130 L380,130 L380,280 L290,280 Z'},
+      {name:'Hollywood',color:'#ec4899',path:'M40,250 L150,250 L150,370 L40,370 Z'}
+    ],
+    attractions:[
+      {id:'usf1',name:'Harry Potter and the Escape from Gringotts',land:'Diagon Alley',type:'thrill',x:100,y:85,lat:28.4796,lng:-81.4681},
+      {id:'usf2',name:'Hogwarts Express – King\'s Cross Station',land:'Diagon Alley',type:'family',x:150,y:100,lat:28.4790,lng:-81.4675},
+      {id:'usf3',name:'Hollywood Rip Ride Rockit',land:'Production Central',type:'thrill',x:170,y:280,lat:28.4767,lng:-81.4665},
+      {id:'usf4',name:'TRANSFORMERS: The Ride 3D',land:'Production Central',type:'thrill',x:220,y:320,lat:28.4762,lng:-81.4660},
+      {id:'usf5',name:'Despicable Me Minion Mayhem',land:'Production Central',type:'family',x:255,y:290,lat:28.4764,lng:-81.4655},
+      {id:'usf6',name:'Revenge of the Mummy',land:'New York',type:'thrill',x:230,y:180,lat:28.4778,lng:-81.4658},
+      {id:'usf7',name:'Race Through New York (Jimmy Fallon)',land:'New York',type:'family',x:195,y:210,lat:28.4774,lng:-81.4663},
+      {id:'usf8',name:'Fast & Furious: Supercharged',land:'San Francisco',type:'thrill',x:85,y:180,lat:28.4780,lng:-81.4690},
+      {id:'usf9',name:'MEN IN BLACK Alien Attack',land:'World Expo',type:'thrill',x:255,y:80,lat:28.4802,lng:-81.4658},
+      {id:'usf10',name:'The Simpsons Ride',land:'Springfield',type:'thrill',x:330,y:170,lat:28.4785,lng:-81.4648},
+      {id:'usf11',name:'Kang & Kodos\' Twirl \'n\' Hurl',land:'Springfield',type:'kids',x:340,y:225,lat:28.4779,lng:-81.4645},
+      {id:'usf12',name:'E.T. Adventure',land:'World Expo',type:'family',x:210,y:70,lat:28.4807,lng:-81.4665},
+      {id:'usf13',name:'Animal Actors on Location!',land:'Hollywood',type:'show',x:90,y:290,lat:28.4763,lng:-81.4690},
+      {id:'usf14',name:'Cinematic Celebration (noturno)',land:'Lagoon',type:'show',x:200,y:250,lat:28.4770,lng:-81.4670}
+    ]
+  },
+  {
+    id:'ioa', name:'Islands of Adventure', short:'IOA', color:'#eab308', gate:{x:200,y:238},
+    bounds:{minLat:28.4690,maxLat:28.4770,minLng:-81.4745,maxLng:-81.4665},
+    lands:[
+      {name:'Port of Entry',color:'#a16207',path:'M170,170 L230,170 L230,240 L170,240 Z'},
+      {name:'Marvel Super Hero Island',color:'#ef4444',path:'M230,110 L370,110 L370,220 L230,220 Z'},
+      {name:'Toon Lagoon',color:'#06b6d4',path:'M240,220 L370,220 L370,330 L240,330 Z'},
+      {name:'Jurassic Park',color:'#16a34a',path:'M140,280 L240,280 L240,370 L100,370 L100,320 Z'},
+      {name:'Skull Island',color:'#374151',path:'M30,280 L100,280 L100,360 L30,360 Z'},
+      {name:'The Wizarding World – Hogsmeade',color:'#7c3aed',path:'M30,150 L170,150 L170,280 L30,280 Z'},
+      {name:'Seuss Landing',color:'#ec4899',path:'M30,30 L230,30 L230,150 L30,150 Z'}
+    ],
+    attractions:[
+      {id:'ioa1',name:'Hagrid\'s Magical Creatures Motorbike Adventure',land:'Hogsmeade',type:'thrill',x:60,y:190,lat:28.4725,lng:-81.4740},
+      {id:'ioa2',name:'Harry Potter and the Forbidden Journey',land:'Hogsmeade',type:'thrill',x:110,y:230,lat:28.4720,lng:-81.4730},
+      {id:'ioa3',name:'Flight of the Hippogriff',land:'Hogsmeade',type:'family',x:140,y:200,lat:28.4722,lng:-81.4725},
+      {id:'ioa4',name:'Hogwarts Express – Hogsmeade Station',land:'Hogsmeade',type:'family',x:60,y:160,lat:28.4728,lng:-81.4738},
+      {id:'ioa5',name:'The Incredible Hulk Coaster',land:'Marvel',type:'thrill',x:340,y:140,lat:28.4738,lng:-81.4672},
+      {id:'ioa6',name:'The Amazing Adventures of Spider-Man',land:'Marvel',type:'thrill',x:280,y:175,lat:28.4734,lng:-81.4678},
+      {id:'ioa7',name:'Doctor Doom\'s Fearfall',land:'Marvel',type:'thrill',x:310,y:195,lat:28.4731,lng:-81.4675},
+      {id:'ioa8',name:'Storm Force Accelatron',land:'Marvel',type:'family',x:255,y:200,lat:28.4733,lng:-81.4682},
+      {id:'ioa9',name:'Popeye & Bluto\'s Bilge-Rat Barges',land:'Toon Lagoon',type:'water',x:275,y:265,lat:28.4720,lng:-81.4680},
+      {id:'ioa10',name:'Dudley Do-Right\'s Ripsaw Falls',land:'Toon Lagoon',type:'water',x:325,y:280,lat:28.4717,lng:-81.4673},
+      {id:'ioa11',name:'Jurassic World VelociCoaster',land:'Jurassic Park',type:'thrill',x:200,y:330,lat:28.4702,lng:-81.4695},
+      {id:'ioa12',name:'Jurassic Park River Adventure',land:'Jurassic Park',type:'water',x:165,y:310,lat:28.4705,lng:-81.4700},
+      {id:'ioa13',name:'Pteranodon Flyers',land:'Jurassic Park',type:'kids',x:220,y:350,lat:28.4698,lng:-81.4690,closed:true,closedNote:'🚧 Fechada desde 27/fev, reabre 14/mai/2026 — fora do seu período'},
+      {id:'ioa14',name:'Skull Island: Reign of Kong',land:'Skull Island',type:'thrill',x:65,y:320,lat:28.4710,lng:-81.4725},
+      {id:'ioa15',name:'The Cat in the Hat',land:'Seuss Landing',type:'family',x:80,y:90,lat:28.4753,lng:-81.4720},
+      {id:'ioa16',name:'The High in the Sky Seuss Trolley',land:'Seuss Landing',type:'kids',x:130,y:70,lat:28.4757,lng:-81.4712},
+      {id:'ioa17',name:'One Fish, Two Fish, Red Fish, Blue Fish',land:'Seuss Landing',type:'kids',x:175,y:90,lat:28.4754,lng:-81.4705},
+      {id:'ioa18',name:'Caro-Seuss-el',land:'Seuss Landing',type:'kids',x:190,y:120,lat:28.4750,lng:-81.4702}
+    ]
+  },
+  {
+    id:'epu', name:'Epic Universe', short:'EPU', color:'#8b5cf6', gate:{x:200,y:368},
+    bounds:{minLat:28.4700,maxLat:28.4780,minLng:-81.4470,maxLng:-81.4380},
+    lands:[
+      {name:'Celestial Park',color:'#fbbf24',path:'M150,160 L250,160 L250,260 L150,260 Z'},
+      {name:'Super Nintendo World',color:'#ef4444',path:'M30,40 L180,40 L180,160 L30,160 Z'},
+      {name:'The Wizarding World – Ministry of Magic',color:'#7c3aed',path:'M180,40 L370,40 L370,160 L180,160 Z'},
+      {name:'Dark Universe (Monsters)',color:'#374151',path:'M30,260 L170,260 L170,370 L30,370 Z'},
+      {name:'How to Train Your Dragon – Isle of Berk',color:'#06b6d4',path:'M250,160 L370,160 L370,370 L170,370 L170,260 L250,260 Z'}
+    ],
+    attractions:[
+      {id:'epu1',name:'Stardust Racers',land:'Celestial Park',type:'thrill',x:200,y:210,lat:28.4742,lng:-81.4427},
+      {id:'epu2',name:'Constellation Carousel',land:'Celestial Park',type:'kids',x:175,y:230,lat:28.4740,lng:-81.4430},
+      {id:'epu3',name:'Mario Kart: Bowser\'s Challenge',land:'Super Nintendo World',type:'family',x:80,y:100,lat:28.4764,lng:-81.4452},
+      {id:'epu4',name:'Mine-Cart Madness (Donkey Kong)',land:'Super Nintendo World',type:'thrill',x:130,y:120,lat:28.4760,lng:-81.4445},
+      {id:'epu5',name:'Yoshi\'s Adventure',land:'Super Nintendo World',type:'kids',x:60,y:130,lat:28.4758,lng:-81.4456},
+      {id:'epu6',name:'Harry Potter and the Battle at the Ministry',land:'Ministry of Magic',type:'thrill',x:230,y:100,lat:28.4765,lng:-81.4430},
+      {id:'epu7',name:'Monsters Unchained: Legend of Dr. Pretorius',land:'Dark Universe',type:'thrill',x:80,y:310,lat:28.4720,lng:-81.4452},
+      {id:'epu8',name:'Curse of the Werewolf',land:'Dark Universe',type:'thrill',x:130,y:330,lat:28.4716,lng:-81.4445},
+      {id:'epu9',name:'Hiccup\'s Wing Gliders',land:'Isle of Berk',type:'thrill',x:310,y:260,lat:28.4728,lng:-81.4395},
+      {id:'epu10',name:'Dragon Racer\'s Rally',land:'Isle of Berk',type:'family',x:270,y:310,lat:28.4720,lng:-81.4400},
+      {id:'epu11',name:'Fyre Drill',land:'Isle of Berk',type:'water',x:330,y:330,lat:28.4715,lng:-81.4390}
+    ]
+  }
+];
+
+// ====== ATTRACTION ICONS & SHORT NAMES ======
+const ICONS = {
+  // Magic Kingdom
+  mk1:{i:'🚀',s:'Space Mtn'}, mk2:{i:'🏍️',s:'TRON'}, mk3:{i:'👾',s:'Buzz Lightyear'},
+  mk4:{i:'🏎️',s:'Speedway'}, mk5:{i:'⛏️',s:'7 Dwarfs'}, mk6:{i:'🧚',s:'Peter Pan'},
+  mk7:{i:'🌍',s:'Small World'}, mk8:{i:'🎼',s:'PhilharMagic'}, mk9:{i:'🧜‍♀️',s:'Little Mermaid'},
+  mk10:{i:'🐻',s:'Winnie the Pooh'}, mk11:{i:'🍵',s:'Mad Tea'}, mk12:{i:'👻',s:'Haunted Mansion'},
+  mk13:{i:'🏴‍☠️',s:'Pirates'}, mk14:{i:'🛶',s:'Jungle Cruise'}, mk15:{i:'🧞',s:'Aladdin'},
+  mk16:{i:'🐸',s:'Tiana\'s Bayou'}, mk17:{i:'🚂',s:'Big Thunder'}, mk18:{i:'🪕',s:'Country Bears'},
+  mk19:{i:'🎆',s:'Happily Ever After'},
+  // Epcot
+  ep1:{i:'🌐',s:'Spaceship Earth'}, ep2:{i:'🌌',s:'Guardians'}, ep3:{i:'🏎️',s:'Test Track'},
+  ep4:{i:'👨‍🚀',s:'Mission: SPACE'}, ep5:{i:'🪂',s:'Soarin\''}, ep6:{i:'🌾',s:'Living Land'},
+  ep7:{i:'🎨',s:'Imagination'}, ep8:{i:'🐠',s:'Nemo'}, ep9:{i:'❄️',s:'Frozen'},
+  ep10:{i:'🐭',s:'Ratatouille'}, ep11:{i:'🎺',s:'Gran Fiesta'}, ep12:{i:'🎇',s:'Luminous'},
+  // Hollywood Studios
+  hs1:{i:'⚔️',s:'Rise of Resistance'}, hs2:{i:'🛸',s:'Smugglers Run'}, hs3:{i:'🐕',s:'Slinky Dog'},
+  hs4:{i:'🎯',s:'Toy Story Mania'}, hs5:{i:'👽',s:'Alien Saucers'}, hs6:{i:'🏨',s:'Tower of Terror'},
+  hs7:{i:'🎸',s:'Rock n Roller'}, hs8:{i:'🚂',s:'Runaway Railway'}, hs9:{i:'🌠',s:'Star Tours'},
+  hs10:{i:'🪃',s:'Indy Stunt'}, hs11:{i:'🐸',s:'Muppets'}, hs12:{i:'🎶',s:'Disney Jr'},
+  hs13:{i:'💫',s:'Fantasmic!'},
+  // Animal Kingdom
+  ak1:{i:'🐉',s:'Flight of Passage'}, ak2:{i:'🌿',s:'Na\'vi River'}, ak3:{i:'🏔️',s:'Everest'},
+  ak4:{i:'🌊',s:'Kali Rapids'}, ak5:{i:'🦁',s:'Safaris'}, ak6:{i:'🎭',s:'Lion King'},
+  ak7:{i:'🦖',s:'DINOSAUR'}, ak8:{i:'🦕',s:'TriceraTop'}, ak9:{i:'🐛',s:'Tough to be a Bug'},
+  ak10:{i:'🐟',s:'Finding Nemo'}, ak11:{i:'🦜',s:'Feathered Friends'},
+  // Universal Studios Florida
+  usf1:{i:'🐲',s:'Gringotts'}, usf2:{i:'🚂',s:'Hogwarts Express KC'}, usf3:{i:'🎸',s:'Rip Ride Rockit'},
+  usf4:{i:'🤖',s:'Transformers'}, usf5:{i:'🟡',s:'Minion Mayhem'}, usf6:{i:'🧟',s:'Mummy'},
+  usf7:{i:'🎤',s:'Jimmy Fallon'}, usf8:{i:'🏎️',s:'Fast & Furious'}, usf9:{i:'👽',s:'MIB'},
+  usf10:{i:'🍩',s:'Simpsons'}, usf11:{i:'🛸',s:'Kang & Kodos'}, usf12:{i:'🚴',s:'E.T.'},
+  usf13:{i:'🐕',s:'Animal Actors'}, usf14:{i:'🎆',s:'Cinematic'},
+  // Islands of Adventure
+  ioa1:{i:'🏍️',s:'Hagrid'}, ioa2:{i:'🧙',s:'Forbidden Journey'}, ioa3:{i:'🦅',s:'Hippogriff'},
+  ioa4:{i:'🚂',s:'Hogwarts Express HS'}, ioa5:{i:'💚',s:'Hulk'}, ioa6:{i:'🕷️',s:'Spider-Man'},
+  ioa7:{i:'🎢',s:'Dr. Doom'}, ioa8:{i:'⚡',s:'Storm Force'}, ioa9:{i:'🚤',s:'Popeye Barges'},
+  ioa10:{i:'💦',s:'Ripsaw Falls'}, ioa11:{i:'🦖',s:'VelociCoaster'}, ioa12:{i:'🦕',s:'River Adventure'},
+  ioa13:{i:'🦎',s:'Pteranodon'}, ioa14:{i:'🦍',s:'Kong'}, ioa15:{i:'🎩',s:'Cat in the Hat'},
+  ioa16:{i:'🚋',s:'Seuss Trolley'}, ioa17:{i:'🐟',s:'One Fish'}, ioa18:{i:'🎠',s:'Caro-Seuss-el'},
+  // Epic Universe
+  epu1:{i:'🌠',s:'Stardust Racers'}, epu2:{i:'✨',s:'Constellation'}, epu3:{i:'🏎️',s:'Mario Kart'},
+  epu4:{i:'⛏️',s:'Mine-Cart'}, epu5:{i:'🦖',s:'Yoshi'}, epu6:{i:'🧙',s:'Battle Ministry'},
+  epu7:{i:'🧛',s:'Monsters Unchained'}, epu8:{i:'🐺',s:'Werewolf'}, epu9:{i:'🐲',s:'Wing Gliders'},
+  epu10:{i:'🐉',s:'Dragon Racer'}, epu11:{i:'🔥',s:'Fyre Drill'}
+};
+function iconOf(id){return ICONS[id]||{i:'📍',s:''}}
+function attrTypeIco(id,cls){
+  // Look up the attraction type from all parks and return an SVG icon
+  for(const p of PARKS){
+    const a=p.attractions.find(x=>x.id===id);
+    if(a){
+      const typeIcoMap={thrill:'lightning',family:'sparkles',kids:'kids',water:'wave',show:'masks'};
+      return ico(typeIcoMap[a.type]||'pin',cls||'ico');
+    }
+  }
+  return ico('pin',cls||'ico');
+}
+
+// baseWait = espera típica no pico (min) · rideDur = duração real da atração (min)
+const WAIT_DATA={
+  mk1:{w:60,d:3}, mk2:{w:90,d:3}, mk3:{w:25,d:5}, mk4:{w:20,d:5}, mk5:{w:90,d:4},
+  mk6:{w:70,d:4}, mk7:{w:20,d:12}, mk8:{w:15,d:20}, mk9:{w:20,d:8}, mk10:{w:30,d:5},
+  mk11:{w:20,d:3}, mk12:{w:45,d:9}, mk13:{w:25,d:15}, mk14:{w:40,d:10}, mk15:{w:15,d:3},
+  mk16:{w:60,d:10}, mk17:{w:50,d:4}, mk18:{w:10,d:20}, mk19:{w:0,d:20},
+  ep1:{w:30,d:15}, ep2:{w:80,d:5}, ep3:{w:55,d:5}, ep4:{w:35,d:5}, ep5:{w:60,d:5},
+  ep6:{w:25,d:14}, ep7:{w:15,d:6}, ep8:{w:15,d:6}, ep9:{w:65,d:5}, ep10:{w:70,d:5},
+  ep11:{w:15,d:9}, ep12:{w:0,d:25},
+  hs1:{w:80,d:18}, hs2:{w:55,d:5}, hs3:{w:75,d:3}, hs4:{w:45,d:5}, hs5:{w:25,d:3},
+  hs6:{w:45,d:12}, hs7:{w:40,d:3}, hs8:{w:50,d:5}, hs9:{w:30,d:5}, hs10:{w:0,d:30},
+  hs11:{w:15,d:17}, hs12:{w:0,d:25}, hs13:{w:0,d:30},
+  ak1:{w:120,d:5}, ak2:{w:70,d:5}, ak3:{w:50,d:4}, ak4:{w:40,d:7}, ak5:{w:35,d:20},
+  ak6:{w:0,d:30}, ak7:{w:30,d:4}, ak8:{w:15,d:3}, ak9:{w:15,d:9}, ak10:{w:10,d:25},
+  ak11:{w:0,d:25},
+  usf1:{w:90,d:5}, usf2:{w:30,d:5}, usf3:{w:55,d:2}, usf4:{w:35,d:5}, usf5:{w:40,d:5},
+  usf6:{w:45,d:4}, usf7:{w:25,d:5}, usf8:{w:30,d:5}, usf9:{w:30,d:5}, usf10:{w:35,d:5},
+  usf11:{w:15,d:3}, usf12:{w:25,d:5}, usf13:{w:0,d:20}, usf14:{w:0,d:20},
+  ioa1:{w:120,d:12}, ioa2:{w:60,d:5}, ioa3:{w:30,d:3}, ioa4:{w:30,d:5}, ioa5:{w:50,d:2},
+  ioa6:{w:35,d:5}, ioa7:{w:30,d:2}, ioa8:{w:15,d:3}, ioa9:{w:35,d:6}, ioa10:{w:40,d:5},
+  ioa11:{w:75,d:2}, ioa12:{w:40,d:7}, ioa13:{w:30,d:3}, ioa14:{w:50,d:5},
+  ioa15:{w:20,d:8}, ioa16:{w:15,d:7}, ioa17:{w:10,d:3}, ioa18:{w:10,d:3},
+  epu1:{w:70,d:3}, epu2:{w:15,d:3}, epu3:{w:75,d:5}, epu4:{w:80,d:4}, epu5:{w:30,d:8},
+  epu6:{w:90,d:5}, epu7:{w:65,d:5}, epu8:{w:55,d:3}, epu9:{w:60,d:3},
+  epu10:{w:40,d:4}, epu11:{w:35,d:6}
+};
+
+// ====== MODO ADULTO — atrações tipicamente infantis demais para adultos priorizarem ======
+const ADULT_SKIPS = [
+  // Magic Kingdom
+  'mk4',  // Tomorrowland Speedway
+  'mk10', // Winnie the Pooh
+  'mk11', // Mad Tea Party
+  'mk15', // Magic Carpets of Aladdin
+  'mk9',  // Little Mermaid
+  // Epcot
+  'ep7',  // Journey Into Imagination
+  'ep8',  // Nemo & Friends
+  // Hollywood Studios
+  'hs5',  // Alien Swirling Saucers
+  'hs12', // Disney Junior Play & Dance
+  // Animal Kingdom
+  'ak8',  // TriceraTop Spin
+  'ak11', // Feathered Friends in Flight
+  // Universal Studios
+  'usf11',// Kang & Kodos
+  'usf13',// Animal Actors
+  // Islands of Adventure – Seuss Landing inteira + Storm Force
+  'ioa8', // Storm Force Accelatron
+  'ioa15','ioa16','ioa17','ioa18', // Seuss Landing
+  // Epic Universe
+  'epu2', // Constellation Carousel
+  'epu5'  // Yoshi's Adventure
+];
+
+// ====== BANHEIROS (aproximados — distribuídos pelas áreas principais) ======
+const RESTROOMS = {
+  mk: [{x:200,y:305},{x:100,y:220},{x:75,y:135},{x:180,y:85},{x:260,y:170},{x:330,y:210},{x:140,y:280}],
+  ep: [{x:190,y:175},{x:290,y:150},{x:95,y:180},{x:155,y:300},{x:275,y:285},{x:90,y:320},{x:340,y:200}],
+  hs: [{x:200,y:320},{x:120,y:250},{x:85,y:120},{x:265,y:165},{x:310,y:300},{x:245,y:230}],
+  ak: [{x:200,y:195},{x:105,y:165},{x:95,y:250},{x:195,y:300},{x:305,y:240},{x:60,y:310}],
+  usf:[{x:100,y:90},{x:245,y:100},{x:280,y:170},{x:310,y:230},{x:85,y:200},{x:210,y:320},{x:95,y:315}],
+  ioa:[{x:195,y:195},{x:110,y:80},{x:85,y:225},{x:285,y:155},{x:310,y:265},{x:180,y:335},{x:65,y:330}],
+  epu:[{x:200,y:195},{x:100,y:85},{x:270,y:100},{x:305,y:255},{x:95,y:315},{x:310,y:335}]
+};
+
+// ====== OPTIMIZER DATA (rope-drop order, night-good rides, tips) ======
+const OPT = {
+  mk:{
+    ropeOrder:['mk5','mk2','mk6','mk7','mk12'], // 7 Dwarfs, TRON, Peter Pan, Small World, Haunted Mansion
+    nightRides:['mk1','mk2','mk17','mk13'],      // Space Mtn, TRON, Big Thunder, Pirates
+    shows:[{id:'mk19',time:'21:00',note:'Fogos Happily Ever After'}],
+    tips:'Chegue 45 min antes da abertura. Ordem do rope drop: 7 Dwarfs → TRON (ou use virtual queue/ILL) → Peter Pan. Space Mountain e Big Thunder são ótimas após 20h. Evite Fantasyland nos horários 11h-16h.'
+  },
+  ep:{
+    ropeOrder:['ep2','ep10','ep9','ep3','ep5'], // Guardians, Remy, Frozen, Test Track, Soarin'
+    nightRides:['ep2','ep3'],
+    shows:[{id:'ep12',time:'21:00',note:'Luminous (fogos) – chegue 30 min antes'}],
+    tips:'Guardians of the Galaxy usa Virtual Queue (puxe às 7h no app oficial) ou ILL pago. Remy e Frozen enchem rápido — faça no rope drop. Test Track tem Single Rider (espera cai MUITO).'
+  },
+  hs:{
+    ropeOrder:['hs1','hs3','hs8','hs2','hs4'], // Rise, Slinky, Runaway Railway, Falcon, Toy Mania
+    nightRides:['hs6','hs7'],
+    shows:[{id:'hs10',time:'13:00',note:'Indiana Jones – chegue 20 min antes'},{id:'hs13',time:'20:30',note:'Fantasmic!'}],
+    tips:'Rise of the Resistance é TOP prioridade. Slinky Dog pula para 90+ min em 30 min. Toy Story Land congestiona cedo. Rock n Roller e Tower of Terror esvaziam à noite.'
+  },
+  ak:{
+    ropeOrder:['ak1','ak2','ak3'], // FoP, Na'vi, Everest
+    nightRides:['ak3'],
+    shows:[{id:'ak6',time:'12:00',note:'Festival of the Lion King'}],
+    tips:'Avatar Flight of Passage tem a maior espera de Orlando — vá DIRETO no rope drop. Na\'vi River Journey logo em seguida. Everest tem Single Rider (economiza 60-90 min). Parque fecha cedo (geralmente 20h).'
+  },
+  usf:{
+    ropeOrder:['usf1','usf3','usf4','usf9','usf10'],
+    nightRides:['usf6','usf3'],
+    shows:[{id:'usf14',time:'21:00',note:'Cinematic Celebration'}],
+    tips:'Gringotts passa de 90 min depois das 10h. Rip Ride Rockit tem Single Rider. Simpsons e MIB aguentam bem durante o dia. Se tem Express Pass use nos coasters.'
+  },
+  ioa:{
+    ropeOrder:['ioa1','ioa11','ioa2','ioa5','ioa6'], // Hagrid, VelociCoaster, Forbidden Journey, Hulk, Spider-Man
+    nightRides:['ioa11','ioa5'],
+    shows:[],
+    tips:'Hagrid\'s Motorbike chega a 2-3h de espera — rope drop é OBRIGATÓRIO. VelociCoaster em segundo (tem Single Rider). Forbidden Journey tem Single Rider também. Use ponchos ou sacos para ripsaw/popeye (molha MUITO).'
+  },
+  epu:{
+    ropeOrder:['epu6','epu1','epu3','epu4','epu9'],
+    nightRides:['epu1'],
+    shows:[],
+    tips:'Parque novo — grande demanda. Battle at the Ministry e Stardust Racers são as mais concorridas. Mario Kart tem fila interativa (o tempo anunciado engana para mais). Super Nintendo World pode usar Power-Up Band.'
+  }
+};
+
+// ====== TRIP CALENDAR (default, editable) ======
+const TRIP_DEFAULT = [
+  {date:'2026-04-27', dow:'Seg', parkId:null,  open:'',      close:'',      musts:[], note:'✈️ Voo SP → Miami → Orlando'},
+  {date:'2026-04-28', dow:'Ter', parkId:null,  open:'',      close:'',      musts:[], note:'Chegada em Orlando · Check-in Wyndham 16h'},
+  {date:'2026-04-29', dow:'Qua', parkId:'mk',  open:'08:30', close:'22:00', musts:['mk2','mk5'], earlyEntry:true, note:'Disney Day 01 · Wyndham dá 30min early entry (08:30)'},
+  {date:'2026-04-30', dow:'Qui', parkId:'hs',  open:'08:30', close:'21:00', musts:['hs1','hs2'], earlyEntry:true, note:'Disney Day 02 · Star Wars · Early Entry 08:30'},
+  {date:'2026-05-01', dow:'Sex', parkId:null,  open:'',      close:'',      musts:[], note:'🎪 Cirque du Soleil às 20h (Disney Springs) — dia de descanso / piscina'},
+  {date:'2026-05-02', dow:'Sáb', parkId:'ep',  open:'08:30', close:'21:00', musts:['ep2'], earlyEntry:true, note:'Disney Day 03 · Guardians · Early Entry 08:30'},
+  {date:'2026-05-03', dow:'Dom', parkId:'ak',  open:'07:30', close:'18:00', musts:['ak1'], earlyEntry:true, note:'Disney Day 04 · Avatar · Early Entry 07:30 (parque fecha cedo 18h)'},
+  {date:'2026-05-04', dow:'Seg', parkId:null,  open:'',      close:'',      musts:[], note:'Check-out Wyndham 11h · Check-in Universal (Endless Summer Dockside)'},
+  {date:'2026-05-05', dow:'Ter', parkId:'ioa', open:'09:00', close:'19:00', musts:['ioa1','ioa11'], note:'Universal Day 01 · Islands of Adventure'},
+  {date:'2026-05-06', dow:'Qua', parkId:'usf', open:'09:00', close:'19:00', musts:['usf1'], note:'Universal Day 02 · Universal Studios'},
+  {date:'2026-05-07', dow:'Qui', parkId:'epu', open:'09:00', close:'20:00', musts:['epu1','epu6'], note:'Universal Day 03 · Epic Universe'},
+  {date:'2026-05-08', dow:'Sex', parkId:null,  open:'',      close:'',      musts:[], note:'🎫 Ingresso Universal unlimited 14 dias — dia livre para voltar ao favorito'},
+  {date:'2026-05-09', dow:'Sáb', parkId:null,  open:'',      close:'',      musts:[], note:'🎂 Aniversário Moni · combine jantar especial / Disney Springs'},
+  {date:'2026-05-10', dow:'Dom', parkId:null,  open:'',      close:'',      musts:[], note:'Dia livre · Universal ou Disney Springs'},
+  {date:'2026-05-11', dow:'Seg', parkId:null,  open:'',      close:'',      musts:[], note:'✈️ Check-out Universal · Voo Orlando → SP'}
+];
+
+// Restaurantes com personagens (do PDF) — para referência dentro do app
+const DINING_TIPS = [
+  {name:'Be Our Guest',park:'Magic Kingdom',note:'Réplica do castelo da Bela e a Fera · ~75USD/pessoa'},
+  {name:'Cinderella\'s Royal Table',park:'Magic Kingdom',note:'Dentro do castelo da Cinderela · ~100USD/pessoa · reservar cedo!'},
+  {name:'The Crystal Palace',park:'Magic Kingdom',note:'Encontro com Pooh · comida fraquinha'},
+  {name:'Akershus Royal Banquet',park:'Epcot (Noruega)',note:'Princesas · café da manhã ou almoço'},
+  {name:'Garden Grill',park:'Epcot',note:'Mickey e Minnie, mas sem ambientação temática'},
+  {name:'Hollywood & Vine',park:'Hollywood Studios',note:'Comida boa · Mickey, Minnie e personagens'},
+  {name:'Tusker House',park:'Animal Kingdom',note:'Personagens vestidos de safari · comida ok'},
+  {name:'Chef Mickey\'s',park:'Hotel Contemporary',note:'Buffet com Mickey e turma'},
+  {name:'Storybook Dining',park:'Wilderness Lodge',note:'Ambiente Branca de Neve · personagens'},
+  {name:'Cape May Cafe',park:'Beach Club',note:'Mickey e Donald em vestido de praia'},
+  {name:'The Boathouse',park:'Disney Springs',note:'Frutos do mar · ambiente bonito · sem personagens'}
+];
+
+// ====== STATE ======
+const STORAGE_KEY='orlando_trip_v2';
+let state = loadState();
+if(!state.trip) state.trip = JSON.parse(JSON.stringify(TRIP_DEFAULT));
+if(!state.priorities) state.priorities = {};
+if(!state.alarms) state.alarms = {};
+if(!state.generalEvents) state.generalEvents = [];
+let currentPark = state.currentPark || PARKS[0].id;
+let currentTab = 'home';
+let prevTab = 'home';
+let currentDay = 0;
+let searchQuery = '';
+let activeFilter = null;
+let gpsWatchId = null;
+
+// Limpa eventos migrados e notas dos dias sem parque
+if(state.migratedNotes !== 'v2'){
+  state.generalEvents=[];
+  state.trip.forEach(d=>{ if(!d.parkId) d.note=''; });
+  state.migratedNotes='v2';
+  saveState();
+}
+// Fix: dia 08/mai não deveria ter parque
+const _day08=state.trip.find(d=>d.date==='2026-05-08');
+if(_day08&&_day08.parkId){_day08.parkId=null;_day08.open='';_day08.close='';saveState();}
+
+// Pré-popula eventos da viagem
+if(state.defaultEventsMigrated!=='v3'){
+  const _evs=[
+    {date:'2026-04-27',time:'23:15',text:'Voo São Paulo → Miami',type:'flight',emoji:'✈️'},
+    {date:'2026-04-28',time:'08:30',text:'Voo Miami → Orlando',type:'flight',emoji:'✈️'},
+    {date:'2026-04-28',time:'16:00',text:'Check-in Wyndham Lake Buena Vista',type:'hotel',emoji:'🏨'},
+    {date:'2026-05-01',time:'20:00',text:'Cirque du Soleil — Disney Springs',type:'show',emoji:'🎭'},
+    {date:'2026-05-04',time:'11:00',text:'Check-out Wyndham Lake Buena Vista',type:'hotel',emoji:'🏨'},
+    {date:'2026-05-04',time:'16:00',text:'Check-in Universal Endless Summer Resort',type:'hotel',emoji:'🏨'},
+    {date:'2026-05-09',time:'',text:'Aniversário Mô — Bar Helios, Universal Helios Grand Hotel',type:'celebrate',emoji:'🎉'},
+    {date:'2026-05-11',time:'11:00',text:'Check-out Universal Endless Summer Resort',type:'hotel',emoji:'🏨'},
+    {date:'2026-05-11',time:'22:00',text:'Voo Orlando → Brasília',type:'flight',emoji:'✈️'},
+    {date:'2026-05-12',time:'11:30',text:'Voo Brasília → São Paulo',type:'flight',emoji:'✈️'},
+  ];
+  // Remove eventuais duplicatas da migração anterior, depois adiciona tudo limpo
+  state.generalEvents=state.generalEvents.filter(e=>!_evs.some(d=>d.date===e.date&&d.text===e.text));
+  _evs.forEach(e=>state.generalEvents.push({id:Date.now()+Math.random()*9999|0,...e}));
+  state.defaultEventsMigrated='v3';
+  saveState();
+}
+
+// Pré-marca must-dos do calendário nas prioridades
+if(!state.mustsMigrated){
+  if(!state.priorities) state.priorities={};
+  state.trip.forEach(day=>{
+    if(!day.parkId||!day.musts?.length) return;
+    if(!state.priorities[day.parkId]) state.priorities[day.parkId]={};
+    day.musts.forEach(id=>{
+      if(!state.priorities[day.parkId][id])
+        state.priorities[day.parkId][id]='must';
+    });
+  });
+  state.mustsMigrated=true;
+  saveState();
+}
+let currentPosition = null;
+
+function loadState(){
+  try{
+    const s=localStorage.getItem(STORAGE_KEY);
+    if(s) return JSON.parse(s);
+  }catch(e){}
+  return {currentPark:null, data:{}};
+}
+function saveState(){
+  try{
+    state.currentPark=currentPark;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+  }catch(e){toast('Erro ao salvar: '+e.message,true)}
+}
+function attrState(parkId,attrId){
+  if(!state.data[parkId]) state.data[parkId]={};
+  if(!state.data[parkId][attrId]) state.data[parkId][attrId]={done:false,time:'',queue:'',notes:''};
+  return state.data[parkId][attrId];
+}
+
+// ====== RENDER ======
+function getPark(id){return PARKS.find(p=>p.id===id)}
+
+function renderTabs(){
+  const tabs=document.getElementById('parkTabs');
+  tabs.innerHTML='';
+  PARKS.forEach(p=>{
+    const b=document.createElement('button');
+    b.className='park-tab'+(p.id===currentPark?' active':'');
+    b.textContent=p.short+' · '+p.name;
+    b.style.setProperty('--park-color',p.color);
+    b.onclick=()=>{currentPark=p.id;saveState();renderAll()};
+    tabs.appendChild(b);
+  });
+}
+
+function renderHeader(){
+  const p=getPark(currentPark);
+  document.getElementById('parkName').textContent=p.name;
+  document.getElementById('parkBadge').style.background=p.color;
+  document.documentElement.style.setProperty('--park-color',p.color);
+}
+
+function renderStats(){
+  const p=getPark(currentPark);
+  let done=0,sched=0;
+  p.attractions.forEach(a=>{
+    const s=attrState(p.id,a.id);
+    if(s.done) done++;
+    if(s.time) sched++;
+  });
+  document.getElementById('statDone').textContent=done;
+  document.getElementById('statSched').textContent=sched;
+  document.getElementById('statTotal').textContent=p.attractions.length;
+}
+
+function typeColor(t){
+  return ({thrill:'#ef4444',family:'#10b981',kids:'#3b82f6',water:'#06b6d4',show:'#a855f7'})[t]||'#94a3b8';
+}
+
+function renderMap(){
+  const p=getPark(currentPark);
+  const svg=document.getElementById('parkMap');
+  let html='';
+  // Background
+  html+='<rect x="0" y="0" width="400" height="400" fill="#1e293b" rx="12"/>';
+  // Lands
+  p.lands.forEach(l=>{
+    html+=`<path d="${l.path}" fill="${l.color}" fill-opacity="0.35" stroke="${l.color}" stroke-width="1.5" stroke-opacity="0.6"/>`;
+    // label
+    const bb=pathCenter(l.path);
+    html+=`<text x="${bb.x}" y="${bb.y}" fill="#f1f5f9" font-size="8" font-weight="700" text-anchor="middle" opacity="0.65" pointer-events="none">${escapeHtml(l.name)}</text>`;
+  });
+  // Park title
+  html+=`<text x="200" y="18" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" opacity="0.7">${escapeHtml(p.name)}</text>`;
+  // Restrooms
+  (RESTROOMS[p.id]||[]).forEach(r=>{
+    html+=`<g opacity="0.85">`;
+    html+=`<rect x="${r.x-7}" y="${r.y-5}" width="14" height="10" rx="3" fill="#0ea5e9" stroke="#fff" stroke-width="1"/>`;
+    html+=`<text x="${r.x}" y="${r.y+3.5}" font-size="6" font-weight="700" text-anchor="middle" fill="#fff" pointer-events="none" font-family="system-ui,sans-serif">WC</text>`;
+    html+=`</g>`;
+  });
+  // Attractions (emoji icon + short name label)
+  p.attractions.forEach(a=>{
+    const s=attrState(p.id,a.id);
+    const meta=iconOf(a.id);
+    const cls='attr-marker'+(s.done?' checked':'')+(s.time?' scheduled':'')+(a.closed?' closed':'');
+    const color=a.closed?'#64748b':typeColor(a.type);
+    const isMust=!a.closed&&(state.priorities?.[p.id]||{})[a.id]==='must';
+    html+=`<g class="${cls}" data-attr="${a.id}" ${a.closed?'opacity="0.55"':''}>`;
+    html+=`<rect x="${a.x-26}" y="${a.y-14}" width="52" height="34" fill="transparent"/>`;
+    if(s.time) html+=`<text x="${a.x}" y="${a.y-12}" fill="#fbbf24" font-size="6.5" font-weight="800" text-anchor="middle" paint-order="stroke" stroke="#0f172a" stroke-width="1.5">${s.time}</text>`;
+    html+=`<circle class="pin-bg" cx="${a.x}" cy="${a.y}" r="${isMust?10:8.5}" fill="${isMust?'#fbbf24':color}" stroke="#fff" stroke-width="${isMust?2.2:1.8}"/>`;
+    html+=`<text x="${a.x}" y="${a.y+3.2}" font-size="${isMust?11:10}" text-anchor="middle" pointer-events="none">${meta.i}</text>`;
+    if(isMust) html+=`<text x="${a.x+8}" y="${a.y-8}" font-size="8" text-anchor="middle" pointer-events="none">⭐</text>`;
+    if(a.closed){
+      html+=`<line x1="${a.x-8}" y1="${a.y-8}" x2="${a.x+8}" y2="${a.y+8}" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>`;
+    }
+    if(s.done && !a.closed) html+=`<circle cx="${a.x+8}" cy="${a.y-6}" r="5" fill="#10b981" stroke="#fff" stroke-width="1"/><polyline points="${a.x+5},${a.y-6} ${a.x+7.5},${a.y-3.5} ${a.x+12},${a.y-9}" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+    if(meta.s){
+      const labelText = a.closed ? '* '+meta.s : meta.s;
+      html+=`<text class="pin-label" x="${a.x}" y="${a.y+18}" fill="${a.closed?'#fca5a5':'#fff'}" font-size="6.5" font-weight="700" text-anchor="middle" paint-order="stroke" stroke="#0f172a" stroke-width="2" stroke-linejoin="round" pointer-events="none">${escapeHtml(labelText)}</text>`;
+    }
+    html+=`</g>`;
+  });
+  // Entrance/gate marker
+  if(p.gate){
+    const g=p.gate;
+    html+=`<g class="gate-marker">`;
+    html+=`<circle cx="${g.x}" cy="${g.y}" r="11" fill="#fbbf24" stroke="#fff" stroke-width="2"/>`;
+    html+=`<text x="${g.x}" y="${g.y+4}" font-size="11" text-anchor="middle" pointer-events="none">🎟️</text>`;
+    html+=`<text x="${g.x}" y="${g.y+22}" fill="#fbbf24" font-size="7" font-weight="800" text-anchor="middle" paint-order="stroke" stroke="#0f172a" stroke-width="2" pointer-events="none">ENTRADA</text>`;
+    html+=`</g>`;
+  }
+  // GPS user dot
+  if(currentPosition){
+    const u=latLngToXY(p, currentPosition.lat, currentPosition.lng);
+    if(u){
+      html+=`<circle class="user-pulse" cx="${u.x}" cy="${u.y}" r="12"/>`;
+      html+=`<circle class="user-dot" cx="${u.x}" cy="${u.y}" r="6"/>`;
+    }
+  }
+  svg.innerHTML=html;
+  // Click handlers — open that attraction and show "back to map" chip
+  svg.querySelectorAll('.attr-marker').forEach(el=>{
+    el.onclick=()=>{
+      const id=el.dataset.attr;
+      activeFilter=null;
+      searchQuery='';
+      document.getElementById('search').value='';
+      document.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));
+      setView('list', {fromMap:true, focusId:id});
+    };
+  });
+
+  // Legend
+  const legend=document.getElementById('mapLegend');
+  legend.innerHTML=`
+    <div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>Thrill</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#10b981"></span>Família</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#3b82f6"></span>Kids</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#06b6d4"></span>Aquática</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#a855f7"></span>Show</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#0ea5e9"></span>Banheiro</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#64748b"></span>Fechada</div>
+    <div class="legend-item"><span class="legend-dot" style="background:#fbbf24;border:1px solid #fff"></span>Agendada</div>
+  `;
+}
+
+function pathCenter(path){
+  // naive center: average of coordinate pairs
+  const nums=path.match(/-?\d+\.?\d*/g).map(parseFloat);
+  let sx=0,sy=0,n=0;
+  for(let i=0;i<nums.length;i+=2){sx+=nums[i];sy+=nums[i+1];n++}
+  return {x:sx/n,y:sy/n};
+}
+function escapeHtml(s){return (s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c])}
+
+function latLngToXY(park, lat, lng){
+  const b=park.bounds;
+  if(lat<b.minLat-0.003||lat>b.maxLat+0.003||lng<b.minLng-0.003||lng>b.maxLng+0.003) return null;
+  const x=((lng-b.minLng)/(b.maxLng-b.minLng))*400;
+  const y=400-((lat-b.minLat)/(b.maxLat-b.minLat))*400;
+  return {x:Math.max(5,Math.min(395,x)), y:Math.max(5,Math.min(395,y))};
+}
+
+function haversine(lat1,lng1,lat2,lng2){
+  const R=6371000;const toRad=v=>v*Math.PI/180;
+  const dLat=toRad(lat2-lat1),dLng=toRad(lng2-lng1);
+  const a=Math.sin(dLat/2)**2+Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLng/2)**2;
+  return 2*R*Math.atan2(Math.sqrt(a),Math.sqrt(1-a));
+}
+
+function renderList(){
+  const p=getPark(currentPark);
+  const container=document.getElementById('attrContainer');
+  const q=searchQuery.toLowerCase().trim();
+  let items=p.attractions.slice();
+  if(q) items=items.filter(a=>
+    a.id.toLowerCase()===q ||
+    a.name.toLowerCase().includes(q) ||
+    a.land.toLowerCase().includes(q)
+  );
+  if(activeFilter==='pending') items=items.filter(a=>!attrState(p.id,a.id).done);
+  if(activeFilter==='scheduled') items=items.filter(a=>attrState(p.id,a.id).time);
+  if(activeFilter==='done') items=items.filter(a=>attrState(p.id,a.id).done);
+  // Sort: scheduled by time asc, then done last
+  items.sort((a,b)=>{
+    const sa=attrState(p.id,a.id), sb=attrState(p.id,b.id);
+    if(sa.done!==sb.done) return sa.done?1:-1;
+    if(sa.time && sb.time) return sa.time.localeCompare(sb.time);
+    if(sa.time) return -1;
+    if(sb.time) return 1;
+    return a.name.localeCompare(b.name);
+  });
+
+  if(items.length===0){
+    container.innerHTML='<div style="text-align:center;color:#64748b;padding:40px 0;font-size:.9rem">Nenhuma atra\u00e7\u00e3o encontrada.</div>';
+    return;
+  }
+
+  container.innerHTML=items.map(a=>{
+    const s=attrState(p.id,a.id);
+    let dist='';
+    if(currentPosition){
+      const d=haversine(currentPosition.lat,currentPosition.lng,a.lat,a.lng);
+      const km=d/1000;
+      const txt = d<500?`${Math.round(d)}m`:`${km.toFixed(1)}km`;
+      dist=`<span class="distance ${d<500?'near':''}">${txt}</span>`;
+    }
+    const closedBanner = a.closed ? `<div style="background:#7f1d1d;color:#fecaca;padding:6px 10px;border-radius:6px;font-size:.75rem;font-weight:700;margin-bottom:8px">${escapeHtml(a.closedNote||'Fechada')}</div>` : '';
+    const prio = (state.priorities?.[p.id]||{})[a.id] || '';
+    const prioRow = a.closed ? '' : `<div class="prio-row">
+      <button class="prio-btn ${prio==='must'?'active':''}" data-p="must" data-prio="${a.id}">${ico('star','ico-sm')} Must</button>
+      <button class="prio-btn ${prio==='yes'?'active':''}" data-p="yes" data-prio="${a.id}">${ico('check','ico-sm')} Sim</button>
+      <button class="prio-btn ${prio==='skip'?'active':''}" data-p="skip" data-prio="${a.id}">${ico('skip','ico-sm')} Pular</button>
+    </div>`;
+    return `
+      <div class="attr-card ${s.done?'done':''} ${prio==='skip'?'skipped':''}" data-card="${a.id}">
+        ${closedBanner}
+        <div class="attr-row1">
+          <button class="attr-check ${s.done?'checked':''}" data-check="${a.id}" aria-label="Marcar como feito"></button>
+          <div class="attr-info">
+            <div class="attr-name">${a.closed?`<svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="#fca5a5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg> `:''}${escapeHtml(a.name)}</div>
+            <div class="attr-meta">
+              <span class="attr-tag ${a.type}">${labelType(a.type)}</span>
+              <span class="attr-land">${escapeHtml(a.land)}</span>
+              ${dist}
+            </div>
+          </div>
+        </div>
+        ${prioRow}
+        <div class="attr-row2">
+          <div class="attr-row2-top">
+            <div class="field">
+              <label style="display:flex;align-items:center;gap:4px">${ico('clock','ico-sm')} Hora na fila</label>
+              <div style="display:flex;gap:4px;align-items:center">
+                <input type="time" data-time="${a.id}" value="${s.time||''}" style="flex:1;min-width:0">
+                ${s.time?`<button class="alarm-btn ${((state.alarms[p.id]||{})[a.id])?'armed':''}" data-alarm="${a.id}" title="Alarme">${ico((state.alarms[p.id]||{})[a.id]?'bell':'bellOff','ico-sm')}</button>`:''}
+              </div>
+            </div>
+            <div class="field">
+              <label style="display:flex;align-items:center;gap:4px">${ico('hourglass','ico-sm')} Espera estimada</label>
+              <input type="text" inputmode="numeric" placeholder="ex: 45 min" data-queue="${a.id}" value="${escapeHtml(s.queue||'')}">
+            </div>
+          </div>
+          <div class="field full">
+            <label style="display:flex;align-items:center;gap:4px">${ico('notes','ico-sm')} Notas</label>
+            <textarea class="attr-notes" data-notes="${a.id}" placeholder="Lightning Lane, quem vai, dicas...">${escapeHtml(s.notes||'')}</textarea>
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  // Bind
+  container.querySelectorAll('[data-check]').forEach(el=>{
+    el.onclick=()=>{
+      const id=el.dataset.check;
+      const s=attrState(currentPark,id);
+      s.done=!s.done;
+      saveState();renderAll();
+    };
+  });
+  container.querySelectorAll('[data-time]').forEach(el=>{
+    el.oninput=()=>{attrState(currentPark,el.dataset.time).time=el.value;saveState();renderStats();renderMap();renderList()};
+  });
+  container.querySelectorAll('[data-alarm]').forEach(el=>{
+    el.onclick=()=>toggleAlarm(currentPark,el.dataset.alarm);
+  });
+  container.querySelectorAll('[data-queue]').forEach(el=>{
+    el.oninput=()=>{attrState(currentPark,el.dataset.queue).queue=el.value;saveState()};
+  });
+  container.querySelectorAll('[data-notes]').forEach(el=>{
+    el.oninput=()=>{attrState(currentPark,el.dataset.notes).notes=el.value;saveState()};
+  });
+  container.querySelectorAll('.prio-btn').forEach(el=>{
+    el.onclick=()=>{
+      const id=el.dataset.prio, p=el.dataset.p;
+      if(!state.priorities[currentPark]) state.priorities[currentPark]={};
+      const cur=state.priorities[currentPark][id];
+      if(cur===p) delete state.priorities[currentPark][id];
+      else state.priorities[currentPark][id]=p;
+      saveState();renderList();maybeUpdatePlan();
+    };
+  });
+}
+
+function labelType(t){
+  return ({thrill:'Thrill',family:'Família',kids:'Kids',water:'Aquática',show:'Show'})[t]||t;
+}
+
+function renderAll(){
+  renderTabs();
+  renderHeader();
+  renderStats();
+  if(currentTab==='map') renderMap();
+  else if(currentTab==='list') renderList();
+}
+
+function setTab(tab, opts){
+  opts=opts||{};
+  const overlay=document.getElementById('planOverlay');
+  if(tab==='plan'){
+    prevTab=currentTab==='plan'?prevTab:currentTab;
+    currentTab='plan';
+    _applyTabChrome('plan');
+    overlay.classList.remove('hidden');
+    if(opts.day!=null){
+      currentDay=opts.day;
+    } else {
+      const today=new Date().toISOString().slice(0,10);
+      const trip=state.trip||TRIP_DEFAULT;
+      const ti=trip.findIndex(d=>d.date===today);
+      const fi=trip.findIndex(d=>d.parkId);
+      currentDay=ti>=0?ti:(fi>=0?fi:0);
+    }
+    renderPlanOverlay();
+    try{history.pushState({tab:'plan'},'')}catch(e){}
+    return;
+  }
+  overlay.classList.add('hidden');
+  currentTab=tab;
+  _applyTabChrome(tab);
+  if(tab==='home') renderHome();
+  else if(tab==='map'){ renderAll();document.getElementById('content').scrollTop=0; }
+  else if(tab==='list'){
+    renderAll();
+    if(opts.focusId){
+      setTimeout(()=>{
+        const card=document.querySelector('[data-card="'+opts.focusId+'"]');
+        if(card){
+          card.scrollIntoView({behavior:'smooth',block:'center'});
+          card.style.outline='2px solid #fbbf24';
+          card.style.outlineOffset='2px';
+          setTimeout(()=>{card.style.outline='';card.style.outlineOffset=''},2400);
+        }
+      },60);
+    }
+  }
+}
+function _applyTabChrome(tab){
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
+  const parkOnly=tab==='map'||tab==='list';
+  document.getElementById('parkTabs').classList.toggle('hidden',!parkOnly);
+  document.getElementById('parkHeader').classList.toggle('hidden',!parkOnly);
+  document.getElementById('statsBar').classList.toggle('hidden',!parkOnly);
+  document.getElementById('homeView').classList.toggle('hidden',tab!=='home');
+  document.getElementById('mapView').classList.toggle('hidden',tab!=='map');
+  document.getElementById('listView').classList.toggle('hidden',tab!=='list');
+}
+function setView(v,opts){ setTab(v,opts); }
+
+function renderHome(){
+  const el=document.getElementById('homeView');
+
+  const today=new Date().toISOString().slice(0,10);
+  const trip=state.trip||TRIP_DEFAULT;
+
+  // Countdown
+  const FLIGHT_DT=new Date('2026-04-27T23:15:00');
+  const TRIP_END=new Date('2026-05-11T23:59:59');
+  const now=new Date();
+  const msToFlight=FLIGHT_DT-now;
+  const msToEnd=TRIP_END-now;
+  const tripStartDate='2026-04-27';
+  const msFromRef=new Date('2026-01-01T00:00:00')-0; // progress reference
+  const totalWait=FLIGHT_DT-new Date('2026-01-01T00:00:00');
+  const elapsed=now-new Date('2026-01-01T00:00:00');
+  const progress=Math.min(100,Math.max(0,(elapsed/totalWait)*100));
+
+  function pad(n){return String(Math.floor(n)).padStart(2,'0')}
+  function unitHtml(val,lbl){return `<div class="cd-unit"><span class="cd-val" id="cd-${lbl}">${pad(val)}</span><span class="cd-lbl">${lbl}</span></div>`;}
+
+  let cdHtml='';
+  if(msToEnd<0){
+    cdHtml=`<div class="home-cd"><div class="cd-big-emoji">${ico('home2','ico-xl')}</div><div class="cd-msg">De volta ao Brasil!</div><div class="cd-d">Que viagem incrível!</div></div>`;
+  } else if(msToFlight<0 && msToEnd>0){
+    cdHtml=`<div class="home-cd"><div class="cd-big-emoji">${ico('coaster','ico-xl')}</div><div class="cd-msg">Vocês estão em Orlando!</div><div class="cd-d">Aproveitem cada segundo</div></div>`;
+  } else if(msToFlight>0 && msToFlight<24*60*60*1000){
+    // Dia do voo — countdown em HH:MM:SS
+    const h=Math.floor(msToFlight/3600000),m=Math.floor((msToFlight%3600000)/60000),s=Math.floor((msToFlight%60000)/1000);
+    cdHtml=`<div class="home-cd">
+      <div class="home-cd .cd-l" style="font-size:.78rem;color:rgba(255,255,255,.7);margin-bottom:10px;font-weight:600;display:flex;align-items:center;justify-content:center;gap:6px">${ico('plane','ico-sm')} Voo hoje às 23h15</div>
+      <div class="cd-units" id="cdUnits">
+        ${unitHtml(h,'horas')}
+        <div class="cd-sep">:</div>
+        ${unitHtml(m,'min')}
+        <div class="cd-sep">:</div>
+        ${unitHtml(s,'seg')}
+      </div>
+      <div class="cd-d">Decolagem em breve — boa viagem!</div>
+      <div class="cd-progress"><div class="cd-progress-bar" style="width:${progress.toFixed(1)}%"></div></div>
+    </div>`;
+  } else {
+    const d=Math.floor(msToFlight/86400000),h=Math.floor((msToFlight%86400000)/3600000),m=Math.floor((msToFlight%3600000)/60000);
+    cdHtml=`<div class="home-cd">
+      <div class="cd-units" id="cdUnits">
+        ${unitHtml(d,'dias')}
+        <div class="cd-sep">:</div>
+        ${unitHtml(h,'horas')}
+        <div class="cd-sep">:</div>
+        ${unitHtml(m,'min')}
+      </div>
+      <div class="cd-l" style="display:flex;align-items:center;justify-content:center;gap:6px">para embarcar ${ico('plane','ico-sm')} 27/abr às 23h15</div>
+      <div class="cd-progress"><div class="cd-progress-bar" style="width:${progress.toFixed(1)}%"></div></div>
+    </div>`;
+  }
+
+  // Dia atual / próximo com parque
+  const todayEntry=trip.find(d=>d.date===today);
+  const nextParkEntry=trip.find(d=>d.date>=today&&d.parkId);
+  const featured=todayEntry?.parkId?todayEntry:nextParkEntry;
+  let dayCardHtml='';
+  if(featured){
+    const p=getPark(featured.parkId);
+    const label=featured.date===today?'Hoje':'Próximo parque';
+    const mustChips=(featured.musts||[]).slice(0,3).map(id=>{
+      const a=p.attractions.find(x=>x.id===id);
+      if(!a) return '';
+      return `<div class="home-must" data-goto-park="${p.id}" data-goto-attr="${id}" style="cursor:pointer">${attrTypeIco(id,'ico')} <span>${escapeHtml(a.name)}</span> <span style="margin-left:auto;color:var(--tx4);font-size:.8rem">›</span></div>`;
+    }).join('');
+    dayCardHtml=`<div class="home-card" style="border-left:4px solid ${p.color}">
+      <div class="home-card-label">${label} · ${featured.dow} ${formatDate(featured.date)}</div>
+      <div class="home-park-row"><span class="home-park-dot" style="background:${p.color}"></span><span class="home-park-name">${escapeHtml(p.name)}</span></div>
+      ${featured.open?`<div class="home-park-time">${featured.open}${featured.earlyEntry?' · Early Entry':''} – ${featured.close}</div>`:''}
+      ${mustChips?`<div style="margin-bottom:4px">${mustChips}</div>`:''}
+      ${featured.note?`<div style="font-size:.75rem;color:#94a3b8;margin-top:6px">${escapeHtml(featured.note)}</div>`:''}
+      <button class="home-action" style="background:${p.color}" data-gotopark="${featured.parkId}">Ver parque</button>
+    </div>`;
+  }
+
+  // Stats do parque do dia (ou global se não tiver parque)
+  let totalDone=0,totalSched=0,totalAttrs=0;
+  const statPark=featured?getPark(featured.parkId):null;
+  const statParks=statPark?[statPark]:PARKS;
+  statParks.forEach(p=>{
+    p.attractions.forEach(a=>{
+      totalAttrs++;
+      const s=attrState(p.id,a.id);
+      if(s.done) totalDone++;
+      if(s.time) totalSched++;
+    });
+  });
+
+  const allUpcoming=(state.generalEvents||[])
+    .filter(e=>!e.date||e.date>=today)
+    .sort((a,b)=>(a.date||'').localeCompare(b.date||''))
+    .slice(0,8)
+    .map(e=>({key:'gen',date:e.date,time:e.time||'',notes:e.notes||'',text:e.text,emoji:e.emoji||'📌',id:e.id}));
+
+  const eventsHtml=allUpcoming.map(item=>{
+    const dayIdx=item.date?(state.trip||TRIP_DEFAULT).findIndex(d=>d.date===item.date):-1;
+    const ev=(state.generalEvents||[]).find(e=>e.id===item.id);
+    if(!ev) return '';
+    const dateLabel=item.date?`${item.date.slice(8,10)}/${item.date.slice(5,7)}`:'—';
+    return genEventCard(ev,{leftLabel:dateLabel,clickable:dayIdx>=0,gotoDay:dayIdx>=0?dayIdx:null});
+  }).join('');
+
+  el.innerHTML=`
+    ${cdHtml}
+    ${dayCardHtml}
+    <div class="home-stats" data-stat-park="${featured?.parkId||''}">
+      <div class="home-stat" data-filter="done"><div class="sn">${totalDone}</div><div class="sl">Feitas</div></div>
+      <div class="home-stat" data-filter="scheduled"><div class="sn">${totalSched}</div><div class="sl">Agendadas</div></div>
+      <div class="home-stat" data-filter="all"><div class="sn">${totalAttrs}</div><div class="sl">Total</div></div>
+    </div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding:0 2px">
+      <span style="font-size:.68rem;color:var(--tx4);text-transform:uppercase;letter-spacing:.5px;font-weight:700">Próximos eventos</span>
+      <button id="btnOpenAddGen" style="padding:5px 12px;background:#7c3aed;border:0;color:#fff;border-radius:6px;font-weight:700;font-size:.82rem;cursor:pointer">+ Adicionar</button>
+    </div>
+    ${eventsHtml||`<div style="font-size:.8rem;color:var(--tx4);padding:4px 0 10px">Nenhum evento próximo.</div>`}
+  `;
+
+  el.querySelectorAll('[data-gotopark]').forEach(btn=>{
+    btn.onclick=()=>{ currentPark=btn.dataset.gotopark; saveState(); setTab('map'); };
+  });
+  el.querySelectorAll('[data-filter]').forEach(card=>{
+    card.onclick=()=>{
+      const f=card.dataset.filter;
+      const parkId=el.querySelector('[data-stat-park]')?.dataset.statPark;
+      if(parkId) { currentPark=parkId; saveState(); }
+      activeFilter=f==='all'?null:f;
+      document.querySelectorAll('.filter-btn[data-f]').forEach(b=>b.classList.toggle('active',b.dataset.f===activeFilter));
+      setTab('list');
+    };
+  });
+  el.querySelectorAll('[data-goto-attr]').forEach(item=>{
+    item.onclick=()=>{
+      currentPark=item.dataset.gotoPark;
+      saveState();
+      setTab('list', {focusId:item.dataset.gotoAttr});
+    };
+  });
+  el.querySelectorAll('[data-goto-day]').forEach(item=>{
+    item.onclick=(e)=>{ if(!e.target.classList.contains('del-gen-ev')) setTab('plan',{day:+item.dataset.gotoDay}); };
+  });
+  el.querySelectorAll('[data-edit-gen]').forEach(card=>{
+    card.onclick=(e)=>{ if(!e.target.classList.contains('del-gen-ev')) openEditGenEventModal(+card.dataset.editGen); };
+  });
+  el.querySelectorAll('.del-gen-ev').forEach(btn=>{
+    btn.onclick=(e)=>{
+      e.stopPropagation();
+      state.generalEvents=(state.generalEvents||[]).filter(ev=>ev.id!==+btn.dataset.evid);
+      saveState();renderHome();
+    };
+  });
+  const btnOpen=el.querySelector('#btnOpenAddGen');
+  if(btnOpen) btnOpen.onclick=openAddGenModal;
+}
+
+function openAddGenModal(prefillDate){
+  const typeOpts=EV_TYPES.map(t=>`<option value="${t.v}">${t.emoji} ${t.label}</option>`).join('');
+  const box=document.createElement('div');
+  box.className='day-modal';
+  box.innerHTML=`<div class="day-modal-box">
+    <h3>Adicionar evento</h3>
+    <label>Data</label>
+    <input type="date" id="genDate" value="${prefillDate||''}" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;margin-bottom:10px;outline:none">
+    <label>Horário (opcional)</label>
+    <input type="time" id="genTime" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;margin-bottom:10px;outline:none">
+    <label>Tipo</label>
+    <select id="genType" style="margin-bottom:10px">${typeOpts}</select>
+    <label>Descrição</label>
+    <textarea id="genText" rows="2" placeholder="Ex: Jantar no Disney Springs, voo de volta..." style="resize:vertical;margin-bottom:10px"></textarea>
+    <label>Observações (opcional)</label>
+    <input type="text" id="genNotes" placeholder="Ex: Confirmação #1234, trazer documento..." style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;margin-bottom:14px;outline:none">
+    <div style="display:flex;gap:8px">
+      <button id="genSave" class="btn-primary" style="flex:1;padding:10px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Salvar</button>
+      <button id="genCancel" class="btn-cancel" style="padding:10px 16px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Cancelar</button>
+    </div>
+  </div>`;
+  document.body.appendChild(box);
+  box.querySelector('#genCancel').onclick=()=>box.remove();
+  box.addEventListener('click',e=>{if(e.target===box) box.remove();});
+  box.querySelector('#genSave').onclick=()=>{
+    const text=box.querySelector('#genText').value.trim();
+    if(!text){toast('Digite a descrição',true);return;}
+    const type=box.querySelector('#genType').value;
+    const t=EV_TYPES.find(x=>x.v===type)||EV_TYPES[0];
+    if(!state.generalEvents) state.generalEvents=[];
+    state.generalEvents.push({
+      id:Date.now(),
+      date:box.querySelector('#genDate').value,
+      time:box.querySelector('#genTime').value,
+      notes:box.querySelector('#genNotes').value.trim(),
+      text, type, emoji:t.emoji
+    });
+    saveState();box.remove();renderHome();
+    const ov=document.getElementById('planOverlay');
+    if(ov&&!ov.classList.contains('hidden')) renderDayBody();
+    toast('Evento adicionado');
+  };
+}
+
+// ====== PLAN / OPTIMIZER ======
+function cmpTime(a,b){return (a||'').localeCompare(b||'')}
+function timeToMin(t){if(!t) return -1;const [h,m]=t.split(':').map(Number);return h*60+m;}
+function waitMultiplier(t){
+  const m=timeToMin(t);
+  if(m<9*60)   return 0.10; // rope drop
+  if(m<11*60)  return 0.50; // manhã cedo
+  if(m<14*60)  return 1.00; // pico
+  if(m<17*60)  return 0.80; // tarde
+  if(m<19*60)  return 0.55; // fim de tarde
+  return 0.35;               // noite
+}
+function calcSlot(attrId, parkId, t){
+  const userQ=parseInt((attrState(parkId,attrId)||{}).queue)||0;
+  const d=WAIT_DATA[attrId]||{w:40,d:4};
+  const wait=userQ>0?userQ:Math.round(d.w*waitMultiplier(t));
+  return Math.max(15, wait+d.d+10); // mín 15 min por slot
+}
+function skipBlocked(t,evs){
+  let changed=true;
+  while(changed){
+    changed=false;
+    const tMin=timeToMin(t);
+    for(const ev of evs){
+      if(!ev.time) continue;
+      const s=timeToMin(ev.time), e=s+(ev.duration||30);
+      if(tMin>=s && tMin<e){t=addMin(ev.time,ev.duration||30);changed=true;break;}
+    }
+  }
+  return t;
+}
+function addMin(t,m){
+  if(!t) return t;
+  const [h,mi]=t.split(':').map(Number);
+  let total=h*60+mi+m;
+  if(total<0) total+=24*60;
+  const H=Math.floor(total/60)%24,M=total%60;
+  return String(H).padStart(2,'0')+':'+String(M).padStart(2,'0');
+}
+function formatDate(iso){
+  const [y,m,d]=iso.split('-');
+  return `${d}/${m}`;
+}
+function pickProximity(pool,used,steps){
+  const last=[...steps].reverse().find(s=>s.attr);
+  const lastPos=last?{x:last.attr.x,y:last.attr.y}:null;
+  const cands=pool.filter(a=>!used.has(a.id));
+  if(!cands.length) return null;
+  return cands.slice().sort((a,b)=>{
+    const da=lastPos?Math.hypot(a.x-lastPos.x,a.y-lastPos.y):0;
+    const db=lastPos?Math.hypot(b.x-lastPos.x,b.y-lastPos.y):0;
+    const sa=a.pri*250-da*0.6;
+    const sb=b.pri*250-db*0.6;
+    return sb-sa;
+  })[0];
+}
+
+function buildPlan(day){
+  if(!day.parkId || !day.open || !day.close) return [];
+  const park=getPark(day.parkId);
+  const opt=OPT[day.parkId]||{};
+  const prios=(state.priorities||{})[day.parkId]||{};
+  const musts=new Set(day.musts||[]);
+  const timedEvs=(day.events||[]).filter(e=>e.time);
+
+  // Atrações com horário marcado na lista → blocos fixos
+  const scheduledAttrs=park.attractions.filter(a=>{
+    const s=attrState(day.parkId,a.id);
+    return s.time && !a.closed;
+  });
+  const scheduledBlocks=scheduledAttrs.map(a=>{
+    const s=attrState(day.parkId,a.id);
+    return {time:s.time, duration:calcSlot(a.id,day.parkId,s.time), attrId:a.id};
+  });
+  const allBlocked=[...timedEvs,...scheduledBlocks];
+
+  const pool=park.attractions.filter(a=>prios[a.id]!=='skip' && !a.closed).map(a=>({
+    ...a,
+    pri: musts.has(a.id)?4:(prios[a.id]==='must'?3:(prios[a.id]==='yes'?2:1)),
+    rope:(opt.ropeOrder||[]).indexOf(a.id),
+    night:(opt.nightRides||[]).includes(a.id)
+  }));
+
+  const steps=[];
+  const used=new Set();
+
+  // Marca atrações já agendadas como usadas e injeta no plano
+  scheduledAttrs.forEach(a=>{
+    const s=attrState(day.parkId,a.id);
+    const estWait=parseInt(s.queue)||Math.round((WAIT_DATA[a.id]||{w:0}).w*waitMultiplier(s.time));
+    steps.push({time:s.time,kind:'ride',attr:a,wait:estWait,rideDur:(WAIT_DATA[a.id]||{d:4}).d,tip:'Agendado por você na lista'});
+    used.add(a.id);
+  });
+
+  steps.push({time:addMin(day.open,-30),kind:'tip',text:(day.earlyEntry?'Wyndham Early Entry: portões abrem 30min antes do público geral':'Chegue cedo — fila de entrada começa aqui')});
+  steps.push({time:addMin(day.open,-15),kind:'tip',text:'Coma ao longo do dia — snacks, quick service, popcorn, pretzels. Sem horário fixo de refeição.'});
+
+  const closedOnes = park.attractions.filter(a=>a.closed);
+  if(closedOnes.length){
+    steps.push({time:addMin(day.open,-10),kind:'tip',text:'Fechadas hoje: '+closedOnes.map(a=>a.name).join(' · ')});
+  }
+
+  const ropePool=[];
+  pool.filter(a=>musts.has(a.id)).forEach(a=>ropePool.push(a));
+  (opt.ropeOrder||[]).forEach(id=>{
+    const a=pool.find(x=>x.id===id);
+    if(a && !ropePool.find(x=>x.id===a.id)) ropePool.push(a);
+  });
+
+  let t=skipBlocked(day.open,allBlocked);
+  for(let i=0,added=0;i<ropePool.length && added<4 && cmpTime(t,day.close)<0;i++){
+    const a=ropePool[i];
+    if(used.has(a.id)) continue;
+    const slot=calcSlot(a.id,day.parkId,t);
+    const w=WAIT_DATA[a.id]||{w:0};
+    const estWait=Math.round(w.w*waitMultiplier(t));
+    steps.push({
+      time:t,kind:'ride',attr:a,wait:estWait,rideDur:(WAIT_DATA[a.id]||{d:4}).d,
+      tip:added===0?'Vá DIRETO — prioridade absoluta, espera mínima':'Rope drop — janela de ouro'
+    });
+    used.add(a.id);
+    added++;
+    t=skipBlocked(addMin(t,slot),allBlocked);
+  }
+
+  const afternoonStart='14:00';
+  while(cmpTime(t,afternoonStart)<0 && cmpTime(t,day.close)<0){
+    const next=pickProximity(pool,used,steps);
+    if(!next) break;
+    const slot=calcSlot(next.id,day.parkId,t);
+    const estWait=Math.round((WAIT_DATA[next.id]||{w:40}).w*waitMultiplier(t));
+    const tip=cmpTime(t,'12:00')>=0?'Meio-dia — filas no pico':'Manhã — filas subindo';
+    steps.push({time:t,kind:'ride',attr:next,wait:estWait,rideDur:(WAIT_DATA[next.id]||{d:4}).d,tip});
+    used.add(next.id);
+    t=skipBlocked(addMin(t,slot),allBlocked);
+  }
+
+  const nightStart=cmpTime(day.close,'19:30')<0?addMin(day.close,-90):'19:00';
+  while(cmpTime(t,nightStart)<0 && cmpTime(t,day.close)<0){
+    const next=pickProximity(pool,used,steps);
+    if(!next) break;
+    const slot=calcSlot(next.id,day.parkId,t);
+    const estWait=Math.round((WAIT_DATA[next.id]||{w:40}).w*waitMultiplier(t));
+    const tip=(cmpTime(t,'14:00')>=0&&cmpTime(t,'16:30')<=0)?'Tarde quente — prefira atrações indoor':'Tarde';
+    steps.push({time:t,kind:'ride',attr:next,wait:estWait,rideDur:(WAIT_DATA[next.id]||{d:4}).d,tip});
+    used.add(next.id);
+    t=skipBlocked(addMin(t,slot),allBlocked);
+  }
+
+  for(const id of (opt.nightRides||[])){
+    const a=pool.find(x=>x.id===id);
+    if(!a||used.has(a.id)) continue;
+    if(cmpTime(t,day.close)>=0) break;
+    const slot=calcSlot(a.id,day.parkId,t);
+    const estWait=Math.round((WAIT_DATA[a.id]||{w:20}).w*waitMultiplier(t));
+    steps.push({time:t,kind:'ride',attr:a,wait:estWait,rideDur:(WAIT_DATA[a.id]||{d:4}).d,tip:'Noite — espera cai bastante'});
+    used.add(a.id);
+    t=skipBlocked(addMin(t,slot),allBlocked);
+  }
+
+  while(cmpTime(t,day.close)<0){
+    const next=pickProximity(pool,used,steps);
+    if(!next) break;
+    const slot=calcSlot(next.id,day.parkId,t);
+    const estWait=Math.round((WAIT_DATA[next.id]||{w:20}).w*waitMultiplier(t));
+    steps.push({time:t,kind:'ride',attr:next,wait:estWait,tip:'Noite — filas curtas'});
+    used.add(next.id);
+    t=skipBlocked(addMin(t,slot),allBlocked);
+  }
+
+  // Shows
+  (opt.shows||[]).forEach(s=>{
+    const attr=park.attractions.find(a=>a.id===s.id);
+    if(!attr) return;
+    if(cmpTime(s.time,day.close)>0) return;
+    steps.push({time:s.time,kind:'show',attr,tip:s.note||'Chegue 20 min antes para pegar lugar bom'});
+  });
+
+  steps.push({time:day.close,kind:'tip',text:'Parque fecha — bom dia!'});
+  steps.sort((a,b)=>cmpTime(a.time,b.time));
+  return steps;
+}
+
+function renderPlanOverlay(){
+  const tabs=document.getElementById('dayTabs');
+  const trip=state.trip||TRIP_DEFAULT;
+  tabs.innerHTML=trip.map((d,i)=>{
+    const p=d.parkId?getPark(d.parkId):null;
+    const color=p?p.color:'#64748b';
+    const label=p?p.short:'—';
+    return `<button class="day-tab ${i===currentDay?'active':''}" data-day="${i}" style="--park-color:${color}">
+      <span class="d-dow">${d.dow}</span>
+      <span class="d-date">${d.date.slice(8,10)}/${d.date.slice(5,7)}</span>
+      <span class="d-park">${label}</span>
+    </button>`;
+  }).join('');
+  tabs.querySelectorAll('.day-tab').forEach(b=>{
+    b.onclick=()=>{currentDay=+b.dataset.day;renderPlanOverlay();};
+  });
+  // Scroll active tab into view
+  setTimeout(()=>{
+    const act=tabs.querySelector('.day-tab.active');
+    if(act) act.scrollIntoView({inline:'center',block:'nearest',behavior:'smooth'});
+  },30);
+  renderDayBody();
+}
+
+const EV_TYPES=[
+  {v:'ride',     label:'Atração',  emoji:'🎢', ico:'coaster'},
+  {v:'meal',     label:'Refeição', emoji:'🍽️', ico:'fork'},
+  {v:'show',     label:'Show',     emoji:'🎭', ico:'masks'},
+  {v:'shopping', label:'Compras',  emoji:'🛍️', ico:'bag'},
+  {v:'hotel',    label:'Hotel',    emoji:'🏨', ico:'bed'},
+  {v:'flight',   label:'Voo',        emoji:'✈️',  ico:'plane'},
+  {v:'celebrate',label:'Comemoração',emoji:'🎉', ico:'sparkles'},
+  {v:'tip',      label:'Nota',       emoji:'📝', ico:'notes'},
+];
+
+function openDayEditModal(){
+  const day=state.trip[currentDay];
+  const parkOptions=`<option value="">— Sem parque —</option>`+PARKS.map(p=>`<option value="${p.id}" ${day.parkId===p.id?'selected':''}>${p.name}</option>`).join('');
+  const park=day.parkId?getPark(day.parkId):null;
+  const mustChecks=park?park.attractions.map(a=>{
+    const checked=(day.musts||[]).includes(a.id);
+    return `<label class="must-check-row"><input type="checkbox" class="must-cb" data-must="${a.id}" ${checked?'checked':''}><span>${attrTypeIco(a.id,'ico')} ${escapeHtml(a.name)}</span></label>`;
+  }).join(''):'';
+
+  const box=document.createElement('div');
+  box.className='day-modal';
+  box.innerHTML=`<div class="day-modal-box">
+    <h3>Editar dia</h3>
+    <label>Data</label>
+    <input type="date" id="dmDate" value="${day.date}" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;margin-bottom:4px;outline:none">
+    <div id="dmDateWarn" style="font-size:.75rem;color:#ef4444;margin-bottom:10px;display:none"></div>
+    <label>Parque</label>
+    <select id="dmPark">${parkOptions}</select>
+    <label>Abertura</label>
+    <input type="time" id="dmOpen" value="${day.open||''}" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;margin-bottom:10px;outline:none">
+    <label>Fechamento</label>
+    <input type="time" id="dmClose" value="${day.close||''}" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;margin-bottom:10px;outline:none">
+    <label>Nota / observações</label>
+    <textarea id="dmNote" rows="2" placeholder="Check-in, lembretes...">${escapeHtml(day.note||'')}</textarea>
+    ${park?`<label>Must-do deste dia</label><div class="must-checks">${mustChecks}</div>`:''}
+    <div style="display:flex;gap:8px;margin-top:14px">
+      <button id="dmSave" class="btn-primary" style="flex:1;padding:10px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Salvar</button>
+      <button id="dmCancel" class="btn-cancel" style="padding:10px 16px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Cancelar</button>
+    </div>
+  </div>`;
+  document.body.appendChild(box);
+
+  const dateInput=box.querySelector('#dmDate');
+  const dateWarn=box.querySelector('#dmDateWarn');
+  dateInput.oninput=()=>{
+    const newDate=dateInput.value;
+    if(newDate===day.date){dateWarn.style.display='none';return;}
+    const conflict=state.trip.find((d,i)=>i!==currentDay&&d.date===newDate&&d.parkId);
+    if(conflict){
+      const p=getPark(conflict.parkId);
+      dateWarn.textContent=`⚠️ ${formatDate(newDate)} já tem ${p?.name||conflict.parkId} — escolha outra data.`;
+      dateWarn.style.display='block';
+    } else {
+      dateWarn.style.display='none';
+    }
+  };
+
+  box.querySelector('#dmCancel').onclick=()=>box.remove();
+  box.addEventListener('click',e=>{if(e.target===box) box.remove();});
+  box.querySelector('#dmSave').onclick=()=>{
+    const newDate=box.querySelector('#dmDate').value;
+    const conflict=newDate!==day.date&&state.trip.find((d,i)=>i!==currentDay&&d.date===newDate&&d.parkId);
+    if(conflict){toast('Data com parque já atribuído — escolha outra.',true);return;}
+    const d=state.trip[currentDay];
+    d.date=newDate||d.date;
+    d.parkId=box.querySelector('#dmPark').value||null;
+    d.open=box.querySelector('#dmOpen').value;
+    d.close=box.querySelector('#dmClose').value;
+    d.note=box.querySelector('#dmNote').value;
+    d.musts=[];
+    box.querySelectorAll('.must-cb:checked').forEach(cb=>d.musts.push(cb.dataset.must));
+    saveState();box.remove();renderDayBody();renderPlanOverlay();toast('Dia atualizado');
+  };
+}
+
+function openAddEventModal(day){
+  const typeOpts=EV_TYPES.map(t=>`<option value="${t.v}">${t.emoji} ${t.label}</option>`).join('');
+  const box=document.createElement('div');
+  box.className='day-modal';
+  box.innerHTML=`<div class="day-modal-box">
+    <h3>Adicionar evento</h3>
+    <label>Horário</label>
+    <input type="time" id="aevTime" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;margin-bottom:10px;outline:none">
+    <label>Tipo</label>
+    <select id="aevType" style="margin-bottom:10px">${typeOpts}</select>
+    <label>Duração (min)</label>
+    <input type="number" id="aevDur" min="5" max="480" step="5" value="30" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;margin-bottom:10px;outline:none">
+    <label>Descrição</label>
+    <textarea id="aevText" rows="2" placeholder="Ex: Almoço Be Our Guest, Lightning Lane..." style="resize:vertical;margin-bottom:14px"></textarea>
+    <div style="display:flex;gap:8px">
+      <button id="aevSave" class="btn-primary" style="flex:1;padding:10px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Salvar</button>
+      <button id="aevCancel" class="btn-cancel" style="padding:10px 16px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Cancelar</button>
+    </div>
+  </div>`;
+  document.body.appendChild(box);
+  box.querySelector('#aevCancel').onclick=()=>box.remove();
+  box.addEventListener('click',e=>{if(e.target===box)box.remove();});
+  box.querySelector('#aevSave').onclick=()=>{
+    const text=box.querySelector('#aevText').value.trim();
+    if(!text){toast('Digite a descrição',true);return;}
+    if(!state.trip[currentDay].events) state.trip[currentDay].events=[];
+    state.trip[currentDay].events.push({
+      id:Date.now(),
+      time:box.querySelector('#aevTime').value,
+      text,
+      type:box.querySelector('#aevType').value,
+      duration:parseInt(box.querySelector('#aevDur').value)||30
+    });
+    saveState();box.remove();renderDayBody();toast('Evento adicionado');
+  };
+}
+
+function renderDayBody(){
+  const trip=state.trip||TRIP_DEFAULT;
+  const day=trip[currentDay];
+  const body=document.getElementById('dayBody');
+  const park=day.parkId?getPark(day.parkId):null;
+  const opt=park?(OPT[day.parkId]||{}):{};
+  if(park) body.style.setProperty('--park-color',park.color);
+
+  const mustChips=(day.musts||[]).map(id=>{
+    const a=park&&park.attractions.find(x=>x.id===id);
+    if(!a) return '';
+    return `<span class="must-chip">${attrTypeIco(id,'ico')} ${escapeHtml(a.name)}</span>`;
+  }).join('');
+
+  const borderColor=park?park.color:'#64748b';
+  const titleLine=park?`${day.dow}, ${formatDate(day.date)} · ${park.name}`:`${day.dow}, ${formatDate(day.date)}`;
+
+  body.innerHTML=`
+    <div class="day-summary" style="border-left:4px solid ${borderColor}">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <h3>${titleLine}</h3>
+        <button class="day-edit-btn" id="btnEditDay">${ico('edit','ico-sm')} Editar</button>
+      </div>
+      ${day.note?`<div class="step-sub" style="margin-top:4px;color:#cbd5e1">${escapeHtml(day.note)}</div>`:''}
+      ${park&&(day.open||day.close)?`<div style="font-size:.78rem;color:#94a3b8;margin-top:6px">${day.open||'?'} – ${day.close||'?'}</div>`:''}
+      ${mustChips?`<div class="must-row" style="margin-top:10px"><span style="display:flex;align-items:center;gap:3px;font-size:.68rem;color:#fbbf24;font-weight:700;align-self:center;margin-right:2px">${ico('star','ico-sm')} MUST-DO:</span>${mustChips}</div>`:''}
+    </div>
+    ${opt.tips?`<div class="day-tips"><b>${ico('lightning','ico-sm')} Estratégia ${park.short}:</b> ${escapeHtml(opt.tips)}</div>`:''}
+    <button id="btnAddDayEv" style="display:block;width:100%;padding:10px;background:var(--bg3);border:1px solid var(--bd2);color:var(--tx3);border-radius:8px;font-weight:600;font-size:.85rem;cursor:pointer;margin-bottom:10px;text-align:center">${ico('plus','ico-sm')} Adicionar evento</button>
+    <div id="planSteps"></div>
+  `;
+
+  document.getElementById('btnEditDay').onclick=openDayEditModal;
+  document.getElementById('btnAddDayEv').onclick=()=>park?openAddEventModal(day):openAddGenModal(day.date);
+  renderSteps(buildPlan(day), park);
+}
+
+function renderSteps(plan,park){
+  const el=document.getElementById('planSteps');
+  const day=state.trip[currentDay];
+
+  const customEvs=(day.events||[]).map(e=>{
+    const t=EV_TYPES.find(x=>x.v===e.type)||EV_TYPES[0];
+    return {time:e.time,kind:e.type,custom:true,evId:e.id,text:e.text,emoji:t.emoji,icoName:t.ico,cls:e.type==='meal'?'meal':e.type==='tip'?'tip':e.type==='show'?'show':''};
+  });
+
+  const genEvs=(state.generalEvents||[]).filter(e=>e.date===day.date).map(e=>{
+    const t=EV_TYPES.find(x=>x.v===e.type)||EV_TYPES[0];
+    return {time:e.time||'',kind:e.type,gen:true,evId:e.id,text:e.text,emoji:t.emoji||'📌',cls:e.type==='meal'?'meal':e.type==='tip'?'tip':e.type==='show'?'show':''};
+  });
+
+  const allSteps=[...(plan||[]),...customEvs,...genEvs].sort((a,b)=>((a.time||'')).localeCompare(b.time||''));
+
+  if(!allSteps.length){
+    el.innerHTML='<div class="no-park" style="padding-bottom:0">Nenhum evento para este dia.</div>';
+    return;
+  }
+
+  el.innerHTML=allSteps.map(s=>{
+    const delBtn=(s.custom||s.gen)?`<button class="del-ev" data-evid="${s.evId}" data-evgen="${s.gen?'1':''}" title="Remover">✕</button>`:'';
+    if(s.kind==='tip'&&!s.custom&&!s.gen) return `<div class="plan-step"><div class="step-time">${s.time||''}</div><div class="step-card tip">${escapeHtml(s.text)}</div></div>`;
+    if(s.gen){
+      const ev=(state.generalEvents||[]).find(e=>e.id===s.evId);
+      if(!ev) return '';
+      const dateLabel=ev.date?`${ev.date.slice(8,10)}/${ev.date.slice(5,7)}`:'—';
+      return genEventCard(ev,{leftLabel:dateLabel});
+    }
+    if(s.custom){
+      const ev=(state.trip[currentDay].events||[]).find(e=>e.id===s.evId);
+      const dur=ev&&ev.duration?`<span style="font-size:.68rem;color:var(--tx3);margin-left:4px">· ${ev.duration} min</span>`:'';
+      return `<div class="plan-step">
+        <div class="step-time">${s.time||'—'}</div>
+        <div class="step-card ${s.cls}">
+          ${delBtn}
+          <div class="step-head"><span class="step-emoji">${s.emoji}</span>${escapeHtml(s.text)}${dur}</div>
+        </div>
+      </div>`;
+    }
+    if(s.kind==='meal') return `<div class="plan-step"><div class="step-time">${s.time}</div><div class="step-card meal">${escapeHtml(s.text)}</div></div>`;
+    const icon=iconOf(s.attr.id);
+    const cls=s.kind==='show'?'show':'';
+    const sc=attrState(park?park.id:'',s.attr.id);
+    const doneTag=sc.done?`<span style="display:inline-flex;align-items:center;color:#10b981;margin-left:6px">${ico('check','ico-sm')}</span>`:'';
+    const timeTag=sc.time?`<span style="display:inline-flex;align-items:center;gap:3px;font-size:.68rem;color:#fbbf24;margin-left:6px">${ico('clock','ico-sm')} ${sc.time}</span>`:'';
+    return `<div class="plan-step">
+      <div class="step-time">${s.time}</div>
+      <div class="step-card ${cls}" style="border-left:3px solid ${park?park.color:'#7c3aed'};cursor:pointer" data-attrid="${s.attr.id}" data-parkid="${park?park.id:''}">
+        <div class="step-head"><span class="step-emoji">${iconOf(s.attr.id).i}</span>${escapeHtml(s.attr.name)}${doneTag}${timeTag}</div>
+        <div class="step-sub">${escapeHtml(s.attr.land)}${s.wait>0?` · ${ico('hourglass','ico-sm')} ${s.wait} min fila`:''}${s.rideDur?` · ${ico('coaster','ico-sm')} ${s.rideDur} min`:''}${s.wait>0||s.rideDur?` · total ~${(s.wait||0)+s.rideDur+10} min`:''}</div>
+        ${s.tip?`<div class="step-tip-txt">${escapeHtml(s.tip)}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+
+  el.querySelectorAll('[data-attrid]').forEach(card=>{
+    card.onclick=()=>openAttrModal(card.dataset.parkid, card.dataset.attrid);
+  });
+  el.querySelectorAll('[data-edit-gen]').forEach(card=>{
+    card.onclick=(e)=>{ if(!e.target.classList.contains('del-ev')) openEditGenEventModal(+card.dataset.editGen); };
+  });
+  el.querySelectorAll('.del-ev').forEach(btn=>{
+    btn.onclick=(e)=>{
+      e.stopPropagation();
+      const id=+btn.dataset.evid;
+      if(btn.dataset.evgen){
+        state.generalEvents=(state.generalEvents||[]).filter(ev=>ev.id!==id);
+        saveState();renderDayBody();renderHome();
+      } else {
+        state.trip[currentDay].events=(state.trip[currentDay].events||[]).filter(ev=>ev.id!==id);
+        saveState();renderDayBody();
+      }
+      toast('Evento removido');
+    };
+  });
+}
+
+// ====== ALARMS ======
+function toggleAlarm(parkId, attrId){
+  if(!state.alarms[parkId]) state.alarms[parkId]={};
+  const armed=state.alarms[parkId][attrId];
+  if(armed){
+    delete state.alarms[parkId][attrId];
+    saveState();renderList();toast('Alarme removido');
+    return;
+  }
+  const s=attrState(parkId,attrId);
+  if(!s.time){toast('Defina um horário primeiro',true);return;}
+  const requestAndArm=()=>{
+    state.alarms[parkId][attrId]=true;
+    saveState();renderList();
+    const attr=getPark(parkId).attractions.find(a=>a.id===attrId);
+    toast(`Alarme às ${s.time} — ${attr?.name||attrId}`);
+  };
+  if(Notification.permission==='granted'){ requestAndArm(); }
+  else if(Notification.permission!=='denied'){
+    Notification.requestPermission().then(p=>{
+      if(p==='granted') requestAndArm();
+      else{ state.alarms[parkId][attrId]=true;saveState();renderList();toast('Alarme ativo (notificação negada — só vai aparecer no app)'); }
+    });
+  } else {
+    requestAndArm();
+    toast('Alarme ativo (notificações bloqueadas — aviso aparecerá no app)');
+  }
+}
+
+function checkAlarms(){
+  const now=new Date();
+  const cur=String(now.getHours()).padStart(2,'0')+':'+String(now.getMinutes()).padStart(2,'0');
+  PARKS.forEach(p=>{
+    const parkAlarms=state.alarms[p.id]||{};
+    Object.keys(parkAlarms).forEach(attrId=>{
+      const s=attrState(p.id,attrId);
+      if(s.time===cur){
+        const attr=p.attractions.find(a=>a.id===attrId);
+        const name=attr?.name||attrId;
+        // Fire
+        if(Notification.permission==='granted'){
+          new Notification('Orlando Trip — Hora da fila!',{body:`${name}\n${p.name}`});
+        }
+        toast(`ALARME: ${name}`,false);
+        delete state.alarms[p.id][attrId];
+        saveState();
+        if(currentTab==='list') renderList();
+      }
+    });
+  });
+}
+
+function genEventCard(ev, opts){
+  opts=opts||{};
+  const leftLabel=opts.leftLabel||'—';
+  const sub=[ev.time?`${ico('clock','ico-sm')} ${ev.time}`:'', ev.notes].filter(Boolean).join(' · ');
+  const border=opts.borderColor||'var(--tx4)';
+  const cursor=opts.clickable?';cursor:pointer':'';
+  const t=EV_TYPES.find(x=>x.v===ev.type);
+  const evIcon=ev.emoji||(t?.emoji)||'📌';
+  return `<div class="plan-step" ${opts.gotoDay!=null?`data-goto-day="${opts.gotoDay}"`:''} style="${opts.clickable?'cursor:pointer':''}">
+    <div class="step-time">${leftLabel}</div>
+    <div class="step-card" style="border-left:3px solid ${border};cursor:pointer" data-edit-gen="${ev.id}">
+      <button class="del-ev del-gen-ev" data-evid="${ev.id}" data-evgen="1" title="Remover">✕</button>
+      <div class="step-head"><span class="step-emoji">${evIcon}</span>${escapeHtml(ev.text)}</div>
+      ${sub?`<div class="step-sub">${sub}</div>`:''}
+    </div>
+  </div>`;
+}
+
+function openEditGenEventModal(evId){
+  const ev=(state.generalEvents||[]).find(e=>e.id===evId);
+  if(!ev) return;
+  const typeOpts=EV_TYPES.map(t=>`<option value="${t.v}" ${ev.type===t.v?'selected':''}>${t.emoji} ${t.label}</option>`).join('');
+  const box=document.createElement('div');
+  box.className='day-modal';
+  box.innerHTML=`<div class="day-modal-box">
+    <h3>Editar evento</h3>
+    <label>Data</label>
+    <input type="date" id="geDate" value="${ev.date||''}" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;margin-bottom:10px;outline:none">
+    <label>Horário</label>
+    <input type="time" id="geTime" value="${ev.time||''}" style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;margin-bottom:10px;outline:none">
+    <label>Tipo</label>
+    <select id="geType" style="margin-bottom:10px">${typeOpts}</select>
+    <label>Descrição</label>
+    <textarea id="geText" rows="2" style="resize:vertical;margin-bottom:10px">${escapeHtml(ev.text||'')}</textarea>
+    <label>Observações</label>
+    <input type="text" id="geNotes" value="${escapeHtml(ev.notes||'')}" placeholder="Confirmação, detalhes..." style="padding:8px 10px;background:var(--bg-in);border:1px solid var(--bd2);color:var(--tx);border-radius:6px;font-size:.85rem;width:100%;margin-bottom:14px;outline:none">
+    <div style="display:flex;gap:8px">
+      <button id="geSave" class="btn-primary" style="flex:1;padding:10px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Salvar</button>
+      <button id="geCancel" class="btn-cancel" style="padding:10px 16px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Cancelar</button>
+    </div>
+  </div>`;
+  document.body.appendChild(box);
+  box.querySelector('#geCancel').onclick=()=>box.remove();
+  box.addEventListener('click',e=>{if(e.target===box)box.remove();});
+  box.querySelector('#geSave').onclick=()=>{
+    const text=box.querySelector('#geText').value.trim();
+    if(!text){toast('Digite a descrição',true);return;}
+    const type=box.querySelector('#geType').value;
+    const t=EV_TYPES.find(x=>x.v===type)||EV_TYPES[0];
+    ev.date=box.querySelector('#geDate').value;
+    ev.time=box.querySelector('#geTime').value;
+    ev.type=type;
+    ev.emoji=t.emoji;
+    ev.text=text;
+    ev.notes=box.querySelector('#geNotes').value.trim();
+    saveState();box.remove();
+    renderHome();
+    const ov=document.getElementById('planOverlay');
+    if(ov&&!ov.classList.contains('hidden')) renderDayBody();
+    toast('Evento atualizado');
+  };
+}
+
+function maybeUpdatePlan(){
+  const overlay=document.getElementById('planOverlay');
+  if(!overlay||overlay.classList.contains('hidden')) return;
+  const day=state.trip[currentDay];
+  const park=day.parkId?getPark(day.parkId):null;
+  renderSteps(buildPlan(day),park);
+}
+
+// ====== ATTR MODAL (from plan) ======
+function openAttrModal(parkId, attrId){
+  const park=getPark(parkId);
+  const attr=park.attractions.find(a=>a.id===attrId);
+  if(!attr) return;
+  const s=attrState(parkId,attrId);
+  const prio=(state.priorities?.[parkId]||{})[attrId]||'';
+  const icon=iconOf(attrId);
+
+  const box=document.createElement('div');
+  box.className='day-modal';
+  box.innerHTML=`<div class="day-modal-box">
+    <h3><span style="display:inline-flex;align-items:center;gap:6px;vertical-align:middle">${attrTypeIco(attrId,'ico-lg')} ${escapeHtml(attr.name)}</span></h3>
+    <div style="font-size:.75rem;color:#94a3b8;margin-bottom:12px">${escapeHtml(attr.land)} · ${labelType(attr.type)}</div>
+    <label>Hora na fila</label>
+    <input type="time" id="amTime" value="${s.time||''}" style="padding:8px 10px;background:#0f172a;border:1px solid #334155;color:#e2e8f0;border-radius:6px;font-size:1rem;width:100%;margin-bottom:10px;outline:none">
+    <label>Espera estimada</label>
+    <input type="text" id="amQueue" inputmode="numeric" placeholder="ex: 45 min" value="${escapeHtml(s.queue||'')}" style="padding:8px 10px;background:#0f172a;border:1px solid #334155;color:#e2e8f0;border-radius:6px;font-size:1rem;width:100%;margin-bottom:10px;outline:none">
+    <label>Notas</label>
+    <textarea id="amNotes" rows="3" placeholder="Lightning Lane, quem vai, dicas..." style="resize:vertical">${escapeHtml(s.notes||'')}</textarea>
+    <label style="margin-top:4px;display:block">Prioridade</label>
+    <div style="display:flex;gap:6px;margin-bottom:14px;margin-top:6px">
+      <button class="prio-btn ${prio==='must'?'active':''}" data-p="must" style="flex:1">${ico('star','ico-sm')} Must</button>
+      <button class="prio-btn ${prio==='yes'?'active':''}" data-p="yes" style="flex:1">${ico('check','ico-sm')} Sim</button>
+      <button class="prio-btn ${prio==='skip'?'active':''}" data-p="skip" style="flex:1">${ico('skip','ico-sm')} Pular</button>
+    </div>
+    <div style="display:flex;gap:8px">
+      <button id="amSave" class="btn-primary" style="flex:1;padding:10px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Salvar</button>
+      <button id="amClear" style="padding:10px 14px;border:1px solid #ef4444;background:transparent;color:#ef4444;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Limpar</button>
+      <button id="amCancel" class="btn-cancel" style="padding:10px 16px;border:0;border-radius:8px;font-weight:700;font-size:.88rem;cursor:pointer">Fechar</button>
+    </div>
+  </div>`;
+  document.body.appendChild(box);
+
+  let selectedPrio=prio;
+  box.querySelectorAll('.prio-btn').forEach(b=>{
+    b.onclick=()=>{
+      selectedPrio=selectedPrio===b.dataset.p?'':b.dataset.p;
+      box.querySelectorAll('.prio-btn').forEach(x=>x.classList.toggle('active',x.dataset.p===selectedPrio));
+    };
+  });
+  box.querySelector('#amCancel').onclick=()=>box.remove();
+  box.querySelector('#amClear').onclick=()=>{
+    s.time='';s.queue='';s.notes='';s.done=false;
+    if(state.priorities[parkId]) delete state.priorities[parkId][attrId];
+    saveState();box.remove();renderDayBody();maybeUpdatePlan();toast('Atração limpa');
+  };
+  box.addEventListener('click',e=>{if(e.target===box) box.remove();});
+  box.querySelector('#amSave').onclick=()=>{
+    s.time=box.querySelector('#amTime').value;
+    s.queue=box.querySelector('#amQueue').value;
+    s.notes=box.querySelector('#amNotes').value;
+    if(!state.priorities[parkId]) state.priorities[parkId]={};
+    if(selectedPrio) state.priorities[parkId][attrId]=selectedPrio;
+    else delete state.priorities[parkId][attrId];
+    saveState();box.remove();
+    renderDayBody();toast('Atração atualizada');
+  };
+}
+
+// ====== GPS SIMULATION ======
+function simulateGPS(){
+  const p=getPark(currentPark);
+  // Posição simulada: centro do parque atual
+  const lat=(p.bounds.minLat+p.bounds.maxLat)/2;
+  const lng=(p.bounds.minLng+p.bounds.maxLng)/2;
+  currentPosition={lat,lng,acc:5,simulated:true};
+  const btn=document.getElementById('gpsBtn');
+  const status=document.getElementById('gpsStatus');
+  btn.classList.add('active');
+  status.className='gps-status ok';
+  status.innerHTML=`✅ <b>Simulação GPS</b> — você está no centro do ${p.name}. Precisão ~5m. <button onclick="stopSimGPS()" style="margin-left:8px;padding:2px 8px;background:#ef4444;border:0;color:#fff;border-radius:4px;font-size:.7rem;cursor:pointer">Parar</button>`;
+  renderAll();
+  // Move o ponto simulado suavemente
+  window._simInterval=setInterval(()=>{
+    const jitter=0.0001;
+    currentPosition.lat+=((Math.random()-.5)*jitter);
+    currentPosition.lng+=((Math.random()-.5)*jitter);
+    if(currentTab==='map') renderMap();
+    if(currentTab==='list') renderList();
+  },1500);
+}
+function stopSimGPS(){
+  clearInterval(window._simInterval);
+  currentPosition=null;
+  const btn=document.getElementById('gpsBtn');
+  const status=document.getElementById('gpsStatus');
+  btn.classList.remove('active');
+  status.className='gps-status';
+  status.textContent='GPS desativado. Toque em GPS para mostrar sua localização.';
+  renderAll();
+}
+
+// ====== GPS ======
+function toggleGPS(){
+  const btn=document.getElementById('gpsBtn');
+  const status=document.getElementById('gpsStatus');
+  if(gpsWatchId!==null){
+    navigator.geolocation.clearWatch(gpsWatchId);
+    gpsWatchId=null;
+    currentPosition=null;
+    btn.classList.remove('active');
+    status.className='gps-status';
+    status.textContent='GPS desativado. Toque em GPS para mostrar sua localização.';
+    renderAll();
+    return;
+  }
+  if(!navigator.geolocation){
+    status.className='gps-status err';
+    status.textContent='Seu navegador não suporta geolocalização.';
+    return;
+  }
+  status.className='gps-status';
+  status.textContent='Obtendo localização...';
+  gpsWatchId=navigator.geolocation.watchPosition(pos=>{
+    currentPosition={lat:pos.coords.latitude,lng:pos.coords.longitude,acc:pos.coords.accuracy};
+    btn.classList.add('active');
+    const p=getPark(currentPark);
+    const inside=latLngToXY(p, currentPosition.lat, currentPosition.lng);
+    status.className='gps-status ok';
+    status.innerHTML=inside
+      ? `Você está no ${p.name}. Precisão ~${Math.round(pos.coords.accuracy)}m.`
+      : `Localização ativa (fora do ${p.name}). Precisão ~${Math.round(pos.coords.accuracy)}m. Distâncias mostradas na lista.`;
+    renderAll();
+  }, err=>{
+    status.className='gps-status err';
+    status.textContent='Erro GPS: '+err.message+' (habilite permissão de localização no navegador)';
+    btn.classList.remove('active');
+    gpsWatchId=null;
+  }, {enableHighAccuracy:true, maximumAge:5000, timeout:15000});
+}
+
+// ====== MODAL / EXPORT / IMPORT ======
+function showModal(title,desc,text,onOk){
+  const m=document.getElementById('modal');
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('modalDesc').textContent=desc||'';
+  const ta=document.getElementById('modalText');
+  ta.value=text||'';
+  m.classList.add('show');
+  document.getElementById('modalOk').onclick=()=>{onOk(ta.value);m.classList.remove('show')};
+  document.getElementById('modalCancel').onclick=()=>m.classList.remove('show');
+}
+function toast(msg,err){
+  const t=document.getElementById('toast');
+  t.textContent=msg;
+  t.classList.toggle('err',!!err);
+  t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),1800);
+}
+
+function doExport(){
+  const blob=new Blob([JSON.stringify(state,null,2)],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download='orlando-trip-'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Backup exportado');
+}
+function doImport(){
+  showModal('Importar dados','Cole aqui o JSON exportado anteriormente:','',(val)=>{
+    try{
+      const obj=JSON.parse(val);
+      if(obj && obj.data){
+        state=obj;
+        currentPark=state.currentPark||PARKS[0].id;
+        saveState();renderAll();
+        toast('Dados importados');
+      } else throw new Error('JSON inválido');
+    }catch(e){toast('Erro: '+e.message,true)}
+  });
+}
+function doReset(){
+  showModal('Limpar dados do parque','Isso apaga horários, notas e checklist SÓ deste parque ('+getPark(currentPark).name+'). Digite APAGAR para confirmar:','',(val)=>{
+    if(val.trim().toUpperCase()==='APAGAR'){
+      state.data[currentPark]={};
+      saveState();renderAll();
+      toast('Parque limpo');
+    } else toast('Cancelado',true);
+  });
+}
+
+// ====== INIT ======
+// Theme
+(function(){
+  const saved=localStorage.getItem('orlando_theme');
+  if(saved==='light') document.body.classList.add('light');
+  const btn=document.getElementById('themeToggle');
+  function syncBtn(){btn.innerHTML=document.body.classList.contains('light')?ico('moon'):ico('sun');}
+  syncBtn();
+  btn.onclick=()=>{
+    document.body.classList.toggle('light');
+    localStorage.setItem('orlando_theme',document.body.classList.contains('light')?'light':'dark');
+    syncBtn();
+  };
+})();
+// Data menu
+(function(){
+  const btn=document.getElementById('dataMenuBtn');
+  const menu=document.getElementById('dataMenu');
+  btn.onclick=(e)=>{e.stopPropagation();menu.style.display=menu.style.display==='none'?'block':'none';};
+  document.addEventListener('click',()=>menu.style.display='none');
+  document.getElementById('dmExport').onclick=doExport;
+  document.getElementById('dmImport').onclick=doImport;
+  document.getElementById('dmReset').onclick=doReset;
+})();
+document.querySelectorAll('.tab-btn').forEach(b=>b.onclick=()=>setTab(b.dataset.tab));
+document.getElementById('backToMap').onclick=()=>setTab('map');
+document.getElementById('gpsBtn').onclick=(e)=>{
+  if(e.shiftKey||e.altKey){ simulateGPS(); return; }
+  toggleGPS();
+};
+document.getElementById('modal').addEventListener('click',e=>{
+  if(e.target.id==='modal') document.getElementById('modal').classList.remove('show');
+});
+window.addEventListener('popstate',()=>{
+  const overlay=document.getElementById('planOverlay');
+  if(overlay&&!overlay.classList.contains('hidden')){
+    overlay.classList.add('hidden');
+    setTab(prevTab);
+    return;
+  }
+  if(currentTab==='list') setTab('map');
+});
+history.replaceState({tab:'home'},'');
+document.getElementById('search').oninput=e=>{searchQuery=e.target.value;renderList()};
+document.getElementById('btnAdultMode').onclick=()=>{
+  if(!state.priorities) state.priorities={};
+  let n=0;
+  ADULT_SKIPS.forEach(id=>{
+    const pid=id.replace(/[0-9]+$/,''); // derive park prefix
+    const parkId = PARKS.find(p=>id.startsWith(p.id))?.id;
+    if(!parkId) return;
+    if(!state.priorities[parkId]) state.priorities[parkId]={};
+    state.priorities[parkId][id]='skip';
+    n++;
+  });
+  saveState();renderAll();maybeUpdatePlan();
+  toast(`Modo adulto: ${n} atrações marcadas como pular`);
+};
+document.getElementById('btnClearPrios').onclick=()=>{
+  state.priorities={};
+  saveState();renderAll();maybeUpdatePlan();
+  toast('Prioridades limpas');
+};
+document.querySelectorAll('.filter-btn[data-f]').forEach(b=>{
+  b.onclick=()=>{
+    const f=b.dataset.f;
+    activeFilter=(activeFilter===f)?null:f;
+    document.querySelectorAll('.filter-btn[data-f]').forEach(x=>x.classList.toggle('active',x.dataset.f===activeFilter));
+    renderList();
+  };
+});
+
+// Prevent accidental scroll bounce
+document.addEventListener('touchmove',e=>{
+  if(e.target.closest('.content,.modal-content,.park-tabs,.day-body,.day-tabs')) return;
+  e.preventDefault();
+},{passive:false});
+
+setInterval(checkAlarms, 30000);
+
+// Atualiza countdown em tempo real
+function tickCountdown(){
+  if(document.getElementById('cdUnits')){
+    const FLIGHT_DT=new Date('2026-04-27T23:15:00');
+    const TRIP_END=new Date('2026-05-11T23:59:59');
+    const now=new Date();
+    const ms=FLIGHT_DT-now;
+    const ended=TRIP_END-now<0;
+    const inTrip=ms<0&&!ended;
+    if(ended||inTrip) return;
+    const units=document.getElementById('cdUnits');
+    if(!units) return;
+    const isHours=ms<24*60*60*1000;
+    const d=Math.floor(ms/86400000),h=Math.floor((ms%86400000)/3600000),m=Math.floor((ms%3600000)/60000),s=Math.floor((ms%60000)/1000);
+    const vals=isHours?[['horas',h],['min',m],['seg',s]]:[['dias',d],['horas',h],['min',m]];
+    vals.forEach(([lbl,val])=>{
+      const el=document.getElementById('cd-'+lbl);
+      if(!el) return;
+      const str=String(Math.floor(val)).padStart(2,'0');
+      if(el.textContent!==str){el.textContent=str;el.classList.remove('flip');void el.offsetWidth;el.classList.add('flip');}
+    });
+  }
+}
+setInterval(tickCountdown,1000);
+setTab('home');
+</script>
+</body>
+</html>
