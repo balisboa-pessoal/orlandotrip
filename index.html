@@ -69,12 +69,12 @@ main{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;posi
 .content{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain}
 /* ===== MAP ===== */
 .map-expand-btn{position:absolute;top:20px;right:20px;z-index:5;background:var(--bg3);border:1px solid var(--bd2);color:var(--tx2);padding:6px 10px;border-radius:8px;cursor:pointer;font-size:.88rem;font-weight:600;box-shadow:0 2px 6px var(--sh);display:flex;align-items:center;gap:5px}
-.map-fs-overlay{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;flex-direction:column}
-.map-fs-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg2);border-bottom:1px solid var(--bd);flex-shrink:0}
+.map-fs-overlay{position:fixed;inset:0;z-index:200;background:#1e293b;display:flex;flex-direction:column}
+.map-fs-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#0f172a;border-bottom:1px solid rgba(255,255,255,.1);flex-shrink:0}
 .map-fs-title{font-weight:700;font-size:.95rem;color:var(--tx)}
-.map-fs-container{flex:1;overflow:hidden;position:relative;touch-action:none;cursor:grab}
+.map-fs-container{flex:1;overflow:hidden;position:relative;touch-action:none;cursor:grab;background:#1e293b}
 .map-fs-container:active{cursor:grabbing}
-.map-fs-svg{position:absolute;top:0;left:0;width:100%;height:100%;display:block;transform-origin:0 0;background:#1e293b}
+.map-fs-svg{position:absolute;top:0;left:0;width:400px;height:400px;display:block;transform-origin:0 0;background:#1e293b}
 .map-fs-info{position:absolute;bottom:44px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--bd2);border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:10px;min-width:220px;max-width:82vw;box-shadow:0 4px 20px rgba(0,0,0,.45);z-index:20;transition:opacity .15s}
 .map-fs-info.hidden{display:none}
 .map-fs-info-body{flex:1;min-width:0}
@@ -82,12 +82,12 @@ main{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;posi
 .map-fs-info-sub{font-size:.75rem;color:var(--tx3);margin-top:1px}
 .map-fs-info-btn{background:var(--park-color,#ec4899);color:#fff;border:none;border-radius:8px;padding:7px 13px;font-size:.82rem;font-weight:700;cursor:pointer;flex-shrink:0;white-space:nowrap}
 .map-fs-hint{padding:6px 16px;font-size:.68rem;color:var(--tx4);text-align:center;background:var(--bg2);flex-shrink:0}
-.map-wrap{position:relative;padding:12px 12px 90px;background:var(--bg)}
+.map-wrap{position:relative;padding:8px 12px 72px;background:var(--bg)}
 .map-svg{width:100%;height:auto;background:#1e293b;border-radius:12px;display:block;touch-action:manipulation}
-.map-filter-row{display:flex;gap:6px;padding:8px 0 4px;flex-wrap:wrap}
-.map-fs-filters{display:flex;gap:6px;padding:8px 12px;background:var(--bg2);border-bottom:1px solid var(--bd);flex-shrink:0;flex-wrap:wrap}
-.map-filter-btn{padding:5px 12px;border-radius:999px;border:1.5px solid var(--bd2);background:var(--bg3);color:var(--tx3);font-size:.78rem;font-weight:600;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
-.map-filter-btn.active{background:var(--park-color,#ec4899);border-color:var(--park-color,#ec4899);color:#fff}
+.map-filter-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
+.map-fs-filters{display:flex;gap:6px;padding:8px 12px;background:#0f172a;border-bottom:1px solid rgba(255,255,255,.1);flex-shrink:0;flex-wrap:wrap}
+.map-filter-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--bd2);background:var(--bg2);color:var(--tx3);font-size:1rem;cursor:pointer;transition:background .15s,border-color .15s;box-shadow:0 1px 4px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.map-filter-btn.active{background:var(--bg2);border-color:var(--park-color,#ec4899);border-width:2.5px;opacity:1}.map-filter-btn:not(.active){opacity:.4}
 .gps-status{font-size:.72rem;color:var(--tx3);margin-top:8px;padding:8px 10px;background:var(--bg3);border-radius:6px;border:1px solid var(--bd)}
 .gps-status.ok{color:#6ee7b7;background:#064e3b;border-color:#065f46}
 .gps-status.err{color:#fca5a5;background:#7f1d1d;border-color:#991b1b}
@@ -227,7 +227,7 @@ main{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;posi
 .must-check-row{display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--bg-in);border-radius:6px;cursor:pointer}
 .must-check-row input[type=checkbox]{width:16px;height:16px;accent-color:#7c3aed;flex:none}
 .must-check-row span{font-size:.8rem;color:var(--tx)}
-.day-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:flex-end;justify-content:center;z-index:110;padding:0}
+.day-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:flex;align-items:flex-end;justify-content:center;z-index:250;padding:0}
 .day-modal-box{background:var(--bg3);border-radius:16px 16px 0 0;position:relative;padding:18px;width:100%;max-width:480px;max-height:85vh;overflow-y:auto;overflow-x:hidden;border:1px solid var(--bd2)}
 .day-modal-box h3{font-size:1rem;margin-bottom:14px;font-weight:700;color:var(--txs)}
 .day-modal-box input,.day-modal-box select{max-width:100%;min-width:0;-webkit-appearance:none;appearance:none;box-sizing:border-box;min-height:42px}
@@ -369,14 +369,15 @@ svg.ico,svg.ico-sm,svg.ico-lg,svg.ico-xl{fill:none;stroke:currentColor;stroke-wi
   <div class="content" id="content">
     <div id="homeView" class="home-view"></div>
     <div id="mapView" class="map-wrap hidden">
+      <div class="map-filter-row" id="mapFilterRow">
+        <button class="map-filter-btn active" data-mf="attr" onclick="toggleMapFilter('attr')" title="Atrações">🎢</button>
+        <button class="map-filter-btn active" data-mf="wc" onclick="toggleMapFilter('wc')" title="Banheiros">🚻</button>
+        <button class="map-filter-btn" data-mf="ts" onclick="toggleMapFilter('ts')" title="Restaurantes">🍴</button>
+        <button class="map-filter-btn" data-mf="qs" onclick="toggleMapFilter('qs')" title="Lanchonetes">🥡</button>
+      </div>
       <button id="mapExpandBtn" class="map-expand-btn" title="Tela cheia"><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
       <svg class="map-svg" id="parkMap" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet"></svg>
       <div class="gps-status" id="gpsStatus">GPS desativado. Toque em GPS para mostrar sua localização no mapa (precisa estar perto do parque).</div>
-      <div class="map-filter-row" id="mapFilterRow">
-        <button class="map-filter-btn active" data-mf="attr" onclick="toggleMapFilter('attr')">🎢 Atrações</button>
-        <button class="map-filter-btn active" data-mf="wc" onclick="toggleMapFilter('wc')">🚻 Banheiros</button>
-        <button class="map-filter-btn active" data-mf="rest" onclick="toggleMapFilter('rest')">🍴 Restaurantes</button>
-      </div>
     </div>
     <div id="listView" class="attr-list hidden">
       <button class="back-chip hidden" id="backToMap">← Voltar ao mapa</button>
@@ -460,15 +461,16 @@ svg.ico,svg.ico-sm,svg.ico-lg,svg.ico-xl{fill:none;stroke:currentColor;stroke-wi
 <div id="mapFsOverlay" class="map-fs-overlay hidden">
   <div class="map-fs-header">
     <span id="mapFsTitle" class="map-fs-title"></span>
-    <button id="mapFsClose" class="am-close-btn" style="position:static;font-size:1.1rem">✕</button>
+    <button id="mapFsClose" class="am-close-btn" style="position:static;font-size:1.1rem;color:#f1f5f9;background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2)">✕</button>
   </div>
   <div class="map-fs-filters">
-    <button class="map-filter-btn active" data-mf="attr" onclick="toggleMapFilter('attr')">🎢 Atrações</button>
-    <button class="map-filter-btn active" data-mf="wc" onclick="toggleMapFilter('wc')">🚻 Banheiros</button>
-    <button class="map-filter-btn active" data-mf="rest" onclick="toggleMapFilter('rest')">🍴 Restaurantes</button>
+    <button class="map-filter-btn active" data-mf="attr" onclick="toggleMapFilter('attr')" title="Atrações">🎢</button>
+    <button class="map-filter-btn active" data-mf="wc" onclick="toggleMapFilter('wc')" title="Banheiros">🚻</button>
+    <button class="map-filter-btn" data-mf="ts" onclick="toggleMapFilter('ts')" title="Restaurantes">🍴</button>
+    <button class="map-filter-btn" data-mf="qs" onclick="toggleMapFilter('qs')" title="Lanchonetes">🥡</button>
   </div>
   <div id="mapFsContainer" class="map-fs-container">
-    <svg id="mapFsSvg" class="map-fs-svg" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet"></svg>
+    <svg id="mapFsSvg" class="map-fs-svg" viewBox="0 0 400 400" preserveAspectRatio="none"></svg>
   </div>
   <div id="mapFsInfo" class="map-fs-info hidden">
     <div class="map-fs-info-body">
@@ -477,7 +479,7 @@ svg.ico,svg.ico-sm,svg.ico-lg,svg.ico-xl{fill:none;stroke:currentColor;stroke-wi
     </div>
     <button id="mapFsInfoBtn" class="map-fs-info-btn hidden">Abrir</button>
   </div>
-  <div class="map-fs-hint">Pinça para zoom · arrasta para mover · duplo toque para resetar</div>
+
 </div>
 <div class="toast" id="toast"></div>
 
@@ -837,59 +839,76 @@ const ADULT_SKIPS = [
 // ====== BANHEIROS (aproximados — distribuídos pelas áreas principais) ======
 const RESTAURANTS = {
   mk:[
-    {x:225,y:65, n:"Be Our Guest"},
-    {x:200,y:112,n:"Cinderella's Royal Table"},
-    {x:158,y:162,n:"Liberty Tree Tavern"},
-    {x:75, y:165,n:"Pecos Bill"},
-    {x:320,y:178,n:"Cosmic Ray's"},
-    {x:118,y:218,n:"Skipper Canteen"},
-    {x:205,y:268,n:"The Plaza Restaurant"},
+    {x:225,y:65, n:"Be Our Guest",            t:"ts",res:true, best:"12h ou 17h",        spec:"Boeuf Bourguignon / Grey Stuff",          tip:"Reserve 60 dias antes — esgota em horas. Vale cada centavo pela imersão no castelo da Fera."},
+    {x:200,y:112,n:"Cinderella's Royal Table", t:"ts",res:true, best:"Qualquer horário",  spec:"Filet / frango assado",                   tip:"Caro, mas inclui foto com personagens e vista do castelo. Reserve no dia que abrir os 60 dias."},
+    {x:158,y:162,n:"Liberty Tree Tavern",      t:"ts",res:true, best:"Almoço 11h30",      spec:"Rodízio americano (peru, rosbife)",        tip:"Preço fixo, ideal para comer bastante. Ótimo custo-benefício para table service."},
+    {x:118,y:218,n:"Skipper Canteen",          t:"ts",res:false,best:"14h–16h",           spec:"Curry de Schweitzer Falls",               tip:"Raramente cheio, aceita walk-in. Temático e divertido, boa comida."},
+    {x:205,y:268,n:"The Plaza Restaurant",     t:"ts",res:true, best:"11h30",             spec:"Sanduíches / milk shakes",                tip:"Menor espera no final da tarde. Milk shakes são destaque."},
+    {x:75, y:165,n:"Pecos Bill",               t:"qs",res:false,best:"10h30 ou 14h30",    spec:"Nachos com chili / burrito bowl",         tip:"Toppings bar grátis! Pegue batatas e use molhos à vontade — hackzão clássico do MK."},
+    {x:320,y:178,n:"Cosmic Ray's",             t:"qs",res:false,best:"11h ou 14h30",      spec:"Frango rotisserie / burger",              tip:"Maior capacidade do MK, fila anda rápido. Bom custo-benefício."},
+    {x:168,y:95, n:"Pinocchio Village Haus",   t:"qs",res:false,best:"14h–15h",           spec:"Pizza / macarrão",                        tip:"Vista direta pra fila do Small World pela janela — entenda a espera enquanto come!"},
+    {x:270,y:148,n:"Columbia Harbour House",   t:"qs",res:false,best:"11h ou 15h",        spec:"Sandwich de lagosta / fish & chips",      tip:"Escondido e menos movimentado. Segundo andar quase sempre tem mesa livre."},
+    {x:185,y:278,n:"Casey's Corner",           t:"qs",res:false,best:"Qualquer horário",  spec:"Hot dogs / corn dog nuggets",             tip:"Rápido, gostoso e perfeito para comer andando na Main Street."},
+    {x:95, y:248,n:"Tortuga Tavern",           t:"qs",res:false,best:"12h30–13h30",       spec:"Taco bowl",                               tip:"Abre só em temporada de alta. Quando aberto, fila curta e comida ok."},
   ],
   ep:[
-    {x:330,y:165,n:"Space 220"},
-    {x:120,y:115,n:"Coral Reef"},
-    {x:90, y:195,n:"Garden Grill"},
-    {x:218,y:240,n:"Akershus"},
-    {x:165,y:260,n:"Le Cellier"},
-    {x:248,y:295,n:"Via Napoli"},
-    {x:318,y:262,n:"Teppan Edo"},
-    {x:288,y:298,n:"Rose & Crown"},
+    {x:330,y:165,n:"Space 220",           t:"ts",res:true, best:"Almoço",           spec:"Prato Lunar / cocktails temáticos",        tip:"Uma das experiências mais imersivas do WDW. A barra tem walk-up às vezes — vale tentar na hora."},
+    {x:120,y:115,n:"Coral Reef",          t:"ts",res:true, best:"Almoço 11h30",     spec:"Salmão / frutos do mar",                  tip:"Vista para o aquário gigante do The Seas. Peça mesa ao lado do vidro."},
+    {x:90, y:195,n:"Garden Grill",        t:"ts",res:true, best:"Jantar",           spec:"Rodízio americano com personagens",        tip:"Restaurante giratório com personagens. Preço fixo, ótimo para família."},
+    {x:218,y:240,n:"Akershus",            t:"ts",res:true, best:"Almoço",           spec:"Smörgåsbord norueguês",                   tip:"Princesas Disney! Mais barato que Cinderella's Royal Table com experiência parecida."},
+    {x:165,y:260,n:"Le Cellier",          t:"ts",res:true, best:"Almoço",           spec:"Filet canadense com molho de cogumelos",  tip:"Um dos mais disputados do WDW. Reserve 60 dias antes ou tente walk-up logo na abertura."},
+    {x:248,y:295,n:"Via Napoli",          t:"ts",res:true, best:"11h30 ou 21h",     spec:"Pizza napolitana no forno a lenha",       tip:"Pizza enorme — divide com a galera. A margherita é imbatível."},
+    {x:318,y:262,n:"Teppan Edo",          t:"ts",res:true, best:"Almoço",           spec:"Hibachi na chapa",                        tip:"Compartilha mesa com outros grupos, super divertido. Japão no EPCOT."},
+    {x:288,y:298,n:"Rose & Crown",        t:"ts",res:true, best:"18h (fogos)",      spec:"Fish & chips / shepherd's pie",           tip:"O pátio externo tem vista para os fogos do EPCOT. Reserve mesa ao ar livre."},
+    {x:145,y:148,n:"Sunshine Seasons",    t:"qs",res:false,best:"10h30 ou 14h30",   spec:"Bowl asiático / saladas / sanduíches",    tip:"Melhor custo-benefício do EPCOT. Enorme variedade, ingredientes frescos direto de The Land."},
+    {x:205,y:165,n:"Connections Café",    t:"qs",res:false,best:"Manhã / tarde",    spec:"Café / sanduíches (Starbucks temático)",  tip:"Starbucks dentro do parque. Ótimo para café antes de encarar o dia."},
+    {x:270,y:268,n:"Katsura Grill",       t:"qs",res:false,best:"11h–12h",          spec:"Soba fria / teriyaki / onigiri",          tip:"Escondido no jardim japonês. Fila curta, comida autêntica — joia pouco conhecida."},
+    {x:302,y:305,n:"Yorkshire Fish Shop", t:"qs",res:false,best:"11h–12h",          spec:"Fish & chips",                            tip:"Pequeníssimo, fila curta e um dos melhores fish & chips fora do Reino Unido."},
+    {x:228,y:310,n:"Les Halles Boulangerie",t:"qs",res:false,best:"Manhã ou 14h",   spec:"Croissant de amêndoas / croque monsieur", tip:"Melhor padaria do WDW. Faz fila mas voa. Chega antes das 10h para variedade completa."},
   ],
   hs:[
-    {x:205,y:222,n:"50's Prime Time Café"},
-    {x:175,y:222,n:"Sci-Fi Dine-In"},
-    {x:198,y:272,n:"Brown Derby"},
-    {x:80, y:132,n:"Oga's Cantina"},
-    {x:95, y:158,n:"Docking Bay 7"},
-    {x:235,y:132,n:"Woody's Lunch Box"},
+    {x:205,y:222,n:"50's Prime Time Café",t:"ts",res:true, best:"Almoço 11h30",     spec:"Frango da mamãe / milk shake",            tip:"Garçons ficam no personagem e são bem exigentes (de brincadeira!). Muito divertido."},
+    {x:175,y:222,n:"Sci-Fi Dine-In",      t:"ts",res:true, best:"Almoço",           spec:"Burgers / milk shakes",                   tip:"Comer dentro de um carro num drive-in temático dos anos 50. Experiência única."},
+    {x:198,y:272,n:"Brown Derby",         t:"ts",res:true, best:"Almoço",           spec:"Cobb salad original / filet",             tip:"O mais sofisticado do HS. Às vezes tem walk-up disponível."},
+    {x:80, y:132,n:"Oga's Cantina",       t:"ts",res:true, best:"Abertura ou 1h antes do fechamento",spec:"Drinks temáticos (Fuzzy Tauntaun, Jedi Mind Trick)",tip:"Sem reserva é quase impossível. Só drinks e petiscos, limite de 45min por visita."},
+    {x:95, y:158,n:"Docking Bay 7",       t:"qs",res:false,best:"10h30 ou 14h30",   spec:"Smoked Ribs / Ronto Roasters",            tip:"Melhor QS do HS. Porcão de carne defumada, preço ok. Vá antes do rush do almoço."},
+    {x:235,y:132,n:"Woody's Lunch Box",   t:"qs",res:false,best:"10h30 ou após 14h",spec:"Totchos (tater tots + nachos) / grilled cheese",tip:"Totchos são viciantes. Fila demorada mas vale — vá bem cedo ou após o rush."},
+    {x:245,y:218,n:"ABC Commissary",      t:"qs",res:false,best:"11h–12h",          spec:"Fish & chips / burger",                   tip:"Menos hype que Docking Bay 7, fila bem menor. Boa alternativa rápida."},
+    {x:215,y:248,n:"Backlot Express",     t:"qs",res:false,best:"14h–15h",          spec:"Burger / hot dog",                        tip:"Perto de Star Tours. Opção rápida quando os outros QS estão lotados."},
+    {x:158,y:178,n:"Catalina Eddie's",    t:"qs",res:false,best:"14h",              spec:"Pizza / salada",                          tip:"Pizza básica mas rápida em Sunset Blvd. Bom para uma pausa sem perder tempo."},
   ],
   ak:[
-    {x:185,y:202,n:"Tiffins"},
-    {x:215,y:218,n:"Flame Tree BBQ"},
-    {x:205,y:278,n:"Yak & Yeti"},
-    {x:112,y:158,n:"Satuli Canteen"},
-    {x:298,y:242,n:"Restaurantosaurus"},
+    {x:185,y:202,n:"Tiffins",            t:"ts",res:true, best:"Almoço",           spec:"Frutos do mar / pratos globais",          tip:"O mais sofisticado do AK. Arte única nas paredes, menu rotativo. Almoço é mais barato."},
+    {x:205,y:278,n:"Yak & Yeti",         t:"ts",res:true, best:"Almoço 11h30",     spec:"Mahi Mahi / fried rice asiático",         tip:"Boa atmosfera, comida consistente. Aceita walk-in com frequência."},
+    {x:215,y:218,n:"Flame Tree BBQ",     t:"qs",res:false,best:"11h ou 14h30",     spec:"Ribs com BBQ / half chicken",             tip:"Um dos melhores QS de todo o WDW. Porcão enorme, carne macia, área externa bonita à beira do lago."},
+    {x:112,y:158,n:"Satuli Canteen",     t:"qs",res:false,best:"10h30–11h",        spec:"Bowl de proteína / cheeseburger pod",     tip:"Melhor QS do AK — bowl personalizável, saboroso e bom preço. Fila grande no almoço."},
+    {x:298,y:242,n:"Restaurantosaurus",  t:"qs",res:false,best:"11h–12h",          spec:"Burger / nuggets",                        tip:"Funcional e temático de Dinoland. Bom para uma refeição rápida sem frescura."},
+    {x:172,y:188,n:"Harambe Market",     t:"qs",res:false,best:"11h ou 14h",       spec:"Frango africano grelhado / ribs",         tip:"4 barracas com pratos africanos diferentes. Frango grelhado é destaque. Ambiente ao ar livre."},
+    {x:245,y:158,n:"Trilo Bites",        t:"qs",res:false,best:"14h–15h",          spec:"Pondu (biscoito de queijo)",              tip:"Snack pequeno e rápido, perfeito para uma pausa entre atrações em Pandora."},
   ],
   usf:[
-    {x:120,y:108,n:"Leaky Cauldron"},
-    {x:215,y:188,n:"Finnegan's Bar"},
-    {x:168,y:258,n:"Today Café"},
-    {x:102,y:222,n:"Richter's Burger Co"},
-    {x:312,y:308,n:"Fast Food Boulevard"},
+    {x:215,y:188,n:"Finnegan's Bar",      t:"ts",res:false,best:"Almoço",           spec:"Fish & chips / shepherd's pie",           tip:"Bar irlandês temático, quase sempre aceita walk-in. Música ao vivo às vezes. Descontraído."},
+    {x:120,y:108,n:"Leaky Cauldron",      t:"qs",res:false,best:"10h30 ou após 14h",spec:"Great Feast / pastries / Butterbeer",     tip:"Melhor QS do USF. Tente o Great Feast para a refeição mais farta. Fila grande no almoço — vá cedo."},
+    {x:168,y:258,n:"Today Café",          t:"qs",res:false,best:"Manhã",            spec:"Café / pastéis / wraps",                  tip:"Temático do Today Show. Ótimo para café da manhã rápido antes das atrações."},
+    {x:102,y:222,n:"Richter's Burger Co", t:"qs",res:false,best:"14h–15h",          spec:"Burgers clássicos",                       tip:"Menos fila que o Leaky Cauldron. Boa alternativa para almoço rápido."},
+    {x:312,y:308,n:"Fast Food Boulevard", t:"qs",res:false,best:"11h ou 14h30",     spec:"Krusty Burger / Cletus' Chicken / pizza de Lisa",tip:"Springfield! Os fãs dos Simpsons amam. Vários itens temáticos, dá para explorar o menu."},
+    {x:248,y:142,n:"Bumblebee Man's",     t:"qs",res:false,best:"14h–15h",          spec:"Tacos temáticos",                         tip:"Kioske pequeníssimo. Tacos rápidos e baratos, bom para petiscar entre atrações."},
   ],
   ioa:[
-    {x:198,y:178,n:"Mythos Restaurant"},
-    {x:102,y:198,n:"Three Broomsticks"},
-    {x:185,y:268,n:"Thunder Falls Terrace"},
-    {x:195,y:108,n:"Confisco Grille"},
-    {x:272,y:322,n:"Green Eggs & Ham"},
+    {x:198,y:178,n:"Mythos Restaurant",     t:"ts",res:true, best:"Almoço",           spec:"Filet / salmão / risotto",                tip:"Eleito um dos melhores restaurantes de parque do mundo. Vista para o lago de Themepark. Reserve."},
+    {x:195,y:108,n:"Confisco Grille",       t:"ts",res:false,best:"Almoço",           spec:"Frango grelhado / hummus",                tip:"Aceita walk-in quase sempre. Boa alternativa se Mythos estiver cheio."},
+    {x:102,y:198,n:"Three Broomsticks",     t:"qs",res:false,best:"10h30 ou após 14h",spec:"Great Feast / Butterbeer / pumpkin juice",tip:"Mesmo menu do Leaky Cauldron, capacidade enorme. Fila anda rápido mesmo nos horários de pico."},
+    {x:185,y:268,n:"Thunder Falls Terrace", t:"qs",res:false,best:"11h ou 14h30",     spec:"Frango rotisserie / ribs",                tip:"Vista para a cachoeira do Jurassic World. Frango delicioso e bom preço — subestimado."},
+    {x:272,y:322,n:"Green Eggs & Ham",      t:"qs",res:false,best:"10h–11h",          spec:"Green Eggs & Ham (ovo verde, presunto)",  tip:"Kioske sazonal — quando aberto, fila curta pela manhã. Divertido para foto e curioso de provar."},
+    {x:248,y:195,n:"Comic Strip Café",      t:"qs",res:false,best:"14h–15h",          spec:"Pizza / pasta / Asian food",              tip:"4 seções com tipos de comida diferentes. Rápido e funcional, bom para o grupo que tem gostos variados."},
   ],
   epu:[
-    {x:198,y:272,n:"Café Kiwari"},
-    {x:88, y:158,n:"Donut Box"},
-    {x:268,y:132,n:"The Hopping Pot"},
-    {x:100,y:348,n:"Dark Universe Café"},
-    {x:310,y:295,n:"Isle of Berk Grill"},
+    {x:198,y:272,n:"Café Kiwari",       t:"ts",res:false,best:"Almoço",           spec:"Pratos africanos / caribenhos",            tip:"Parque novo (2025) — reserve por precaução até os dados de fluxo ficarem claros."},
+    {x:88, y:158,n:"Donut Box",          t:"qs",res:false,best:"Manhã",            spec:"Donuts temáticos",                         tip:"Ótimo para começar o dia com algo rápido e divertido."},
+    {x:268,y:132,n:"The Hopping Pot",    t:"qs",res:false,best:"Tarde",            spec:"Drinks / petiscos / Butterbeer",           tip:"Bar ao ar livre do Wizarding World EPU. Ótimo ponto de pausa."},
+    {x:100,y:348,n:"Dark Universe Café", t:"qs",res:false,best:"14h–15h",          spec:"Lanches temáticos de terror",              tip:"Parque novo — dados de fluxo ainda sendo mapeados."},
+    {x:310,y:295,n:"Isle of Berk Grill", t:"qs",res:false,best:"11h–12h",          spec:"Carnes grelhadas / How to Train Your Dragon theme",tip:"Área de HTTYD no parque novo. Experiência imersiva com boa comida."},
+    {x:200,y:108,n:"Stella's Bakery",    t:"qs",res:false,best:"Manhã",            spec:"Pastéis / café",                          tip:"Boa opção para o café da manhã antes de encarar as filas do parque novo."},
   ],
 };
 const RESTROOMS = {
@@ -1211,13 +1230,6 @@ function renderMap(){
     html+=`<text x="${r.x}" y="${r.y+4.5}" font-size="10" text-anchor="middle" pointer-events="none">🚻</text>`;
     html+=`</g>`;
   });
-  // Restaurants
-  (RESTAURANTS[p.id]||[]).forEach(r=>{
-    html+=`<g class="rest-marker" data-rest="${escapeHtml(r.n)}" style="cursor:pointer" opacity="0.9">`;
-    html+=`<circle cx="${r.x}" cy="${r.y}" r="8" fill="#f97316" stroke="#fff" stroke-width="1.5"/>`;
-    html+=`<text x="${r.x}" y="${r.y+4.5}" font-size="10" text-anchor="middle" pointer-events="none">🍴</text>`;
-    html+=`</g>`;
-  });
   // Attractions (emoji icon + short name label)
   p.attractions.forEach(a=>{
     const s=attrState(p.id,a.id);
@@ -1236,6 +1248,18 @@ function renderMap(){
     }
     if(s.done && !a.closed) html+=`<circle cx="${a.x+8}" cy="${a.y-6}" r="5" fill="#10b981" stroke="#fff" stroke-width="1"/><polyline points="${a.x+5},${a.y-6} ${a.x+7.5},${a.y-3.5} ${a.x+12},${a.y-9}" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
     // name shown via info bar on tap (fullscreen) or modal (small map)
+    html+=`</g>`;
+  });
+  // Restaurants (renderizados após atrações para ficar por cima)
+  (RESTAURANTS[p.id]||[]).forEach(r=>{
+    const isQs=r.t==='qs';
+    const rColor=isQs?'#0d9488':'#f97316';
+    const rEmoji=isQs?'🥡':'🍴';
+    const rCls=isQs?'qs-marker':'ts-marker';
+    html+=`<g class="rest-marker ${rCls}" data-rest="${escapeHtml(r.n)}" data-rtype="${r.t||'ts'}" style="cursor:pointer" opacity="0.9">`;
+    html+=`<rect x="${r.x-12}" y="${r.y-12}" width="24" height="24" fill="transparent"/>`;
+    html+=`<circle cx="${r.x}" cy="${r.y}" r="8" fill="${rColor}" stroke="#fff" stroke-width="1.5"/>`;
+    html+=`<text x="${r.x}" y="${r.y+4.5}" font-size="10" text-anchor="middle" pointer-events="none">${rEmoji}</text>`;
     html+=`</g>`;
   });
   // Entrance/gate marker
@@ -1268,15 +1292,23 @@ function renderMap(){
     };
   });
 
+  // Click handlers — restaurantes
+  svg.querySelectorAll('.rest-marker').forEach(el=>{
+    el.onclick=(e)=>{
+      e.stopPropagation();
+      openRestaurantSheet(el.dataset.rest, currentPark);
+    };
+  });
   applyMapFilter(svg);
 }
 
-const mapFilter={attr:true,wc:true,rest:true};
+const mapFilter={attr:true,wc:true,ts:false,qs:false};
 function applyMapFilter(svgEl){
   if(!svgEl) return;
   svgEl.querySelectorAll('.attr-marker').forEach(el=>el.style.display=mapFilter.attr?'':'none');
   svgEl.querySelectorAll('.wc-marker').forEach(el=>el.style.display=mapFilter.wc?'':'none');
-  svgEl.querySelectorAll('.rest-marker').forEach(el=>el.style.display=mapFilter.rest?'':'none');
+  svgEl.querySelectorAll('.ts-marker').forEach(el=>el.style.display=mapFilter.ts?'':'none');
+  svgEl.querySelectorAll('.qs-marker').forEach(el=>el.style.display=mapFilter.qs?'':'none');
 }
 function toggleMapFilter(type){
   mapFilter[type]=!mapFilter[type];
@@ -2265,6 +2297,43 @@ function renderTipsHtml(attrId){
   return '<div style="padding-top:4px">'+sec('Destaques','✨',t.h,'hi')+sec('Nas redondezas','📍',t.n,'nr')+sec('Hacks','🎯',t.k,'hk')+'</div>';
 }
 
+function openRestaurantSheet(name, parkId){
+  const p=getPark(parkId);
+  const rests=RESTAURANTS[parkId]||[];
+  const r=rests.find(x=>x.n===name)||{n:name};
+  const isDisney=['mk','ep','hs','ak'].includes(parkId);
+  const isQs=r.t==='qs';
+  const emoji=isQs?'🥡':'🍴';
+  const typeLabel=isQs?'Lanche rápido':'Restaurante';
+  const resLabel=r.res?'<span style="color:#ef4444;font-weight:700">Sim</span> — reserve com antecedência':'<span style="color:#10b981;font-weight:700">Não precisa</span>';
+  const appName=isDisney?'My Disney Experience':'Universal Orlando';
+  const row=(icon,label,val)=>`<div style="display:flex;gap:10px;padding:9px 0;border-bottom:1px solid var(--bd)">
+    <span style="font-size:1rem;flex-shrink:0;width:20px;text-align:center">${icon}</span>
+    <div><div style="font-size:.68rem;color:var(--tx4);text-transform:uppercase;letter-spacing:.5px;font-weight:700">${label}</div>
+    <div style="font-size:.84rem;color:var(--tx2);margin-top:2px;line-height:1.5">${val}</div></div></div>`;
+  const box=document.createElement('div');
+  box.className='day-modal';
+  box.innerHTML=`<div class="day-modal-box">
+    <button class="am-close-btn" id="rstClose">✕</button>
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-right:32px">
+      <div style="font-size:1.8rem;line-height:1">${emoji}</div>
+      <div>
+        <div style="font-size:1rem;font-weight:800;color:var(--tx);line-height:1.3">${escapeHtml(name)}</div>
+        <div style="font-size:.75rem;color:var(--tx3);margin-top:2px">${escapeHtml(p?.name||'')} · ${typeLabel}</div>
+      </div>
+    </div>
+    <div style="border-top:1px solid var(--bd)">
+      ${row('📋','Reserva',resLabel+(r.res?` · App: <strong>${appName}</strong>`:''))}
+      ${row('🕐','Melhor horário',escapeHtml(r.best||'Evite 12h–14h'))}
+      ${row('⭐','Especialidade',escapeHtml(r.spec||'—'))}
+      ${row('💡','Dica','<span style="border-bottom:none">'+(escapeHtml(r.tip||'—'))+'</span>')}
+    </div>
+  </div>`;
+  document.body.appendChild(box);
+  box.querySelector('#rstClose').onclick=()=>box.remove();
+  box.addEventListener('click',e=>{if(e.target===box) box.remove();});
+}
+
 function openAttrModal(parkId, attrId){
   const park=getPark(parkId);
   const attr=park.attractions.find(a=>a.id===attrId);
@@ -2579,18 +2648,26 @@ document.addEventListener('touchmove',e=>{
   }
   function touchDist(t1,t2){return Math.hypot(t2.clientX-t1.clientX,t2.clientY-t1.clientY);}
 
+  let tapStartX=0,tapStartY=0,tapStartT=0,tapMoved=false;
   fsContainer.addEventListener('touchstart',e=>{
     e.preventDefault();
     if(e.touches.length===2){
       lastDist=touchDist(e.touches[0],e.touches[1]);
+      tapMoved=true;
     } else if(e.touches.length===1){
       lastX=e.touches[0].clientX;lastY=e.touches[0].clientY;dragging=true;
+      tapStartX=e.touches[0].clientX;tapStartY=e.touches[0].clientY;
+      tapStartT=Date.now();tapMoved=false;
       const now=Date.now();if(now-lastTap<300) resetT();lastTap=now;
     }
   },{passive:false});
 
   fsContainer.addEventListener('touchmove',e=>{
     e.preventDefault();
+    if(e.touches.length===1){
+      const dx=e.touches[0].clientX-tapStartX,dy=e.touches[0].clientY-tapStartY;
+      if(Math.abs(dx)>6||Math.abs(dy)>6) tapMoved=true;
+    }
     if(e.touches.length===2){
       const d=touchDist(e.touches[0],e.touches[1]);
       if(lastDist>0){
@@ -2607,7 +2684,29 @@ document.addEventListener('touchmove',e=>{
 
   fsContainer.addEventListener('touchend',e=>{
     if(e.touches.length<2) lastDist=0;
-    if(e.touches.length===0) dragging=false;
+    if(e.touches.length===0){
+      dragging=false;
+      // Detecta tap (sem movimento, < 300ms)
+      if(!tapMoved && e.changedTouches.length===1 && Date.now()-tapStartT<350){
+        const t=e.changedTouches[0];
+        const el=document.elementFromPoint(t.clientX,t.clientY);
+        const marker=el?.closest('[data-attr],[data-rest],[data-wc]');
+        if(marker){
+          if(marker.dataset.attr){
+            const p=getPark(currentPark);
+            const a=p?.attractions.find(x=>x.id===marker.dataset.attr);
+            const sub=a?(TYPE_LABEL[a.type]||a.type)+(a.closed?' · Fechada':''):'';
+            showFsInfo(a?a.name:marker.dataset.attr,sub,marker.dataset.attr);
+          } else if(marker.dataset.rest){
+            openRestaurantSheet(marker.dataset.rest,currentPark);
+          } else if(marker.dataset.wc){
+            showFsInfo('Banheiro','🚻',null);
+          }
+        } else {
+          fsInfo.classList.add('hidden');
+        }
+      }
+    }
   });
 
   fsContainer.addEventListener('wheel',e=>{
@@ -2634,7 +2733,13 @@ document.addEventListener('touchmove',e=>{
     fsInfo.classList.remove('hidden');
   }
 
-  if(fsInfoBtn) fsInfoBtn.onclick=()=>{ if(_pendingAttr) openAttrModal(currentPark,_pendingAttr); };
+  if(fsInfoBtn) fsInfoBtn.onclick=()=>{
+    if(_pendingAttr){
+      const attr=_pendingAttr;
+      closeFs();
+      requestAnimationFrame(()=>openAttrModal(currentPark,attr));
+    }
+  };
 
   const TYPE_LABEL={'thrill':'🎢 Radical','family':'👨‍👩‍👧 Família','kids':'👧 Kids','water':'💦 Aquática','show':'🎭 Show','tour':'🚶 Tour'};
 
@@ -2645,12 +2750,13 @@ document.addEventListener('touchmove',e=>{
     fsSvg.setAttribute('viewBox','0 0 400 400');
     overlay.classList.remove('hidden');
     fsInfo.classList.add('hidden');
-    const rect=fsContainer.getBoundingClientRect();
-    scale=Math.min(rect.width,rect.height)/400;
-    tx=(rect.width-400*scale)/2;
-    ty=(rect.height-400*scale)/2;
-    applyT();
     document.body.style.overflow='hidden';
+    requestAnimationFrame(()=>{
+      const rect=fsContainer.getBoundingClientRect();
+      scale=rect.width/400;
+      tx=0; ty=0;
+      applyT();
+    });
     // Attraction markers → show info bar on tap
     fsSvg.querySelectorAll('[data-attr]').forEach(el=>{
       el.style.cursor='pointer';
@@ -2661,10 +2767,11 @@ document.addEventListener('touchmove',e=>{
         showFsInfo(a?a.name:el.dataset.attr, sub, el.dataset.attr);
       };
     });
-    // Restaurant markers → show info bar (no modal)
+    // Restaurant markers → bottom sheet via tap (handled in touchend)
+    // onclick para desktop
     fsSvg.querySelectorAll('[data-rest]').forEach(el=>{
       el.style.cursor='pointer';
-      el.onclick=(e)=>{ e.stopPropagation(); showFsInfo(el.dataset.rest,'🍴 Restaurante',null); };
+      el.onclick=(e)=>{ e.stopPropagation(); openRestaurantSheet(el.dataset.rest,currentPark); };
     });
     // WC markers → show info bar
     fsSvg.querySelectorAll('[data-wc]').forEach(el=>{
