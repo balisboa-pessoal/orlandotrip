@@ -68,11 +68,26 @@ main{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;posi
 .gps-btn:active{transform:scale(.96)}
 .content{flex:1;min-height:0;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior-y:contain}
 /* ===== MAP ===== */
+.map-expand-btn{position:absolute;top:20px;right:20px;z-index:5;background:var(--bg3);border:1px solid var(--bd2);color:var(--tx2);padding:6px 10px;border-radius:8px;cursor:pointer;font-size:.88rem;font-weight:600;box-shadow:0 2px 6px var(--sh);display:flex;align-items:center;gap:5px}
+.map-fs-overlay{position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;flex-direction:column}
+.map-fs-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--bg2);border-bottom:1px solid var(--bd);flex-shrink:0}
+.map-fs-title{font-weight:700;font-size:.95rem;color:var(--tx)}
+.map-fs-container{flex:1;overflow:hidden;position:relative;touch-action:none;cursor:grab}
+.map-fs-container:active{cursor:grabbing}
+.map-fs-svg{position:absolute;top:0;left:0;width:100%;height:100%;display:block;transform-origin:0 0;background:#1e293b}
+.map-fs-info{position:absolute;bottom:44px;left:50%;transform:translateX(-50%);background:var(--bg2);border:1px solid var(--bd2);border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:10px;min-width:220px;max-width:82vw;box-shadow:0 4px 20px rgba(0,0,0,.45);z-index:20;transition:opacity .15s}
+.map-fs-info.hidden{display:none}
+.map-fs-info-body{flex:1;min-width:0}
+.map-fs-info-name{font-size:.9rem;font-weight:700;color:var(--tx);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.map-fs-info-sub{font-size:.75rem;color:var(--tx3);margin-top:1px}
+.map-fs-info-btn{background:var(--park-color,#ec4899);color:#fff;border:none;border-radius:8px;padding:7px 13px;font-size:.82rem;font-weight:700;cursor:pointer;flex-shrink:0;white-space:nowrap}
+.map-fs-hint{padding:6px 16px;font-size:.68rem;color:var(--tx4);text-align:center;background:var(--bg2);flex-shrink:0}
 .map-wrap{position:relative;padding:12px 12px 90px;background:var(--bg)}
 .map-svg{width:100%;height:auto;background:#1e293b;border-radius:12px;display:block;touch-action:manipulation}
-.map-legend{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px;font-size:.7rem}
-.legend-item{display:flex;align-items:center;gap:4px;background:var(--bg3);padding:4px 8px;border-radius:999px;color:var(--tx2);border:1px solid var(--bd)}
-.legend-dot{width:8px;height:8px;border-radius:50%}
+.map-filter-row{display:flex;gap:6px;padding:8px 0 4px;flex-wrap:wrap}
+.map-fs-filters{display:flex;gap:6px;padding:8px 12px;background:var(--bg2);border-bottom:1px solid var(--bd);flex-shrink:0;flex-wrap:wrap}
+.map-filter-btn{padding:5px 12px;border-radius:999px;border:1.5px solid var(--bd2);background:var(--bg3);color:var(--tx3);font-size:.78rem;font-weight:600;cursor:pointer;transition:background .15s,color .15s,border-color .15s}
+.map-filter-btn.active{background:var(--park-color,#ec4899);border-color:var(--park-color,#ec4899);color:#fff}
 .gps-status{font-size:.72rem;color:var(--tx3);margin-top:8px;padding:8px 10px;background:var(--bg3);border-radius:6px;border:1px solid var(--bd)}
 .gps-status.ok{color:#6ee7b7;background:#064e3b;border-color:#065f46}
 .gps-status.err{color:#fca5a5;background:#7f1d1d;border-color:#991b1b}
@@ -354,9 +369,14 @@ svg.ico,svg.ico-sm,svg.ico-lg,svg.ico-xl{fill:none;stroke:currentColor;stroke-wi
   <div class="content" id="content">
     <div id="homeView" class="home-view"></div>
     <div id="mapView" class="map-wrap hidden">
+      <button id="mapExpandBtn" class="map-expand-btn" title="Tela cheia"><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
       <svg class="map-svg" id="parkMap" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet"></svg>
       <div class="gps-status" id="gpsStatus">GPS desativado. Toque em GPS para mostrar sua localização no mapa (precisa estar perto do parque).</div>
-      <div class="map-legend" id="mapLegend"></div>
+      <div class="map-filter-row" id="mapFilterRow">
+        <button class="map-filter-btn active" data-mf="attr" onclick="toggleMapFilter('attr')">🎢 Atrações</button>
+        <button class="map-filter-btn active" data-mf="wc" onclick="toggleMapFilter('wc')">🚻 Banheiros</button>
+        <button class="map-filter-btn active" data-mf="rest" onclick="toggleMapFilter('rest')">🍴 Restaurantes</button>
+      </div>
     </div>
     <div id="listView" class="attr-list hidden">
       <button class="back-chip hidden" id="backToMap">← Voltar ao mapa</button>
@@ -437,6 +457,28 @@ svg.ico,svg.ico-sm,svg.ico-lg,svg.ico-xl{fill:none;stroke:currentColor;stroke-wi
   </div>
 </div>
 
+<div id="mapFsOverlay" class="map-fs-overlay hidden">
+  <div class="map-fs-header">
+    <span id="mapFsTitle" class="map-fs-title"></span>
+    <button id="mapFsClose" class="am-close-btn" style="position:static;font-size:1.1rem">✕</button>
+  </div>
+  <div class="map-fs-filters">
+    <button class="map-filter-btn active" data-mf="attr" onclick="toggleMapFilter('attr')">🎢 Atrações</button>
+    <button class="map-filter-btn active" data-mf="wc" onclick="toggleMapFilter('wc')">🚻 Banheiros</button>
+    <button class="map-filter-btn active" data-mf="rest" onclick="toggleMapFilter('rest')">🍴 Restaurantes</button>
+  </div>
+  <div id="mapFsContainer" class="map-fs-container">
+    <svg id="mapFsSvg" class="map-fs-svg" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet"></svg>
+  </div>
+  <div id="mapFsInfo" class="map-fs-info hidden">
+    <div class="map-fs-info-body">
+      <div id="mapFsInfoName" class="map-fs-info-name"></div>
+      <div id="mapFsInfoSub" class="map-fs-info-sub"></div>
+    </div>
+    <button id="mapFsInfoBtn" class="map-fs-info-btn hidden">Abrir</button>
+  </div>
+  <div class="map-fs-hint">Pinça para zoom · arrasta para mover · duplo toque para resetar</div>
+</div>
 <div class="toast" id="toast"></div>
 
 <script>
@@ -793,6 +835,63 @@ const ADULT_SKIPS = [
 ];
 
 // ====== BANHEIROS (aproximados — distribuídos pelas áreas principais) ======
+const RESTAURANTS = {
+  mk:[
+    {x:225,y:65, n:"Be Our Guest"},
+    {x:200,y:112,n:"Cinderella's Royal Table"},
+    {x:158,y:162,n:"Liberty Tree Tavern"},
+    {x:75, y:165,n:"Pecos Bill"},
+    {x:320,y:178,n:"Cosmic Ray's"},
+    {x:118,y:218,n:"Skipper Canteen"},
+    {x:205,y:268,n:"The Plaza Restaurant"},
+  ],
+  ep:[
+    {x:330,y:165,n:"Space 220"},
+    {x:120,y:115,n:"Coral Reef"},
+    {x:90, y:195,n:"Garden Grill"},
+    {x:218,y:240,n:"Akershus"},
+    {x:165,y:260,n:"Le Cellier"},
+    {x:248,y:295,n:"Via Napoli"},
+    {x:318,y:262,n:"Teppan Edo"},
+    {x:288,y:298,n:"Rose & Crown"},
+  ],
+  hs:[
+    {x:205,y:222,n:"50's Prime Time Café"},
+    {x:175,y:222,n:"Sci-Fi Dine-In"},
+    {x:198,y:272,n:"Brown Derby"},
+    {x:80, y:132,n:"Oga's Cantina"},
+    {x:95, y:158,n:"Docking Bay 7"},
+    {x:235,y:132,n:"Woody's Lunch Box"},
+  ],
+  ak:[
+    {x:185,y:202,n:"Tiffins"},
+    {x:215,y:218,n:"Flame Tree BBQ"},
+    {x:205,y:278,n:"Yak & Yeti"},
+    {x:112,y:158,n:"Satuli Canteen"},
+    {x:298,y:242,n:"Restaurantosaurus"},
+  ],
+  usf:[
+    {x:120,y:108,n:"Leaky Cauldron"},
+    {x:215,y:188,n:"Finnegan's Bar"},
+    {x:168,y:258,n:"Today Café"},
+    {x:102,y:222,n:"Richter's Burger Co"},
+    {x:312,y:308,n:"Fast Food Boulevard"},
+  ],
+  ioa:[
+    {x:198,y:178,n:"Mythos Restaurant"},
+    {x:102,y:198,n:"Three Broomsticks"},
+    {x:185,y:268,n:"Thunder Falls Terrace"},
+    {x:195,y:108,n:"Confisco Grille"},
+    {x:272,y:322,n:"Green Eggs & Ham"},
+  ],
+  epu:[
+    {x:198,y:272,n:"Café Kiwari"},
+    {x:88, y:158,n:"Donut Box"},
+    {x:268,y:132,n:"The Hopping Pot"},
+    {x:100,y:348,n:"Dark Universe Café"},
+    {x:310,y:295,n:"Isle of Berk Grill"},
+  ],
+};
 const RESTROOMS = {
   mk: [{x:200,y:305},{x:100,y:220},{x:75,y:135},{x:180,y:85},{x:260,y:170},{x:330,y:210},{x:140,y:280}],
   ep: [{x:190,y:175},{x:290,y:150},{x:95,y:180},{x:155,y:300},{x:275,y:285},{x:90,y:320},{x:340,y:200}],
@@ -1107,9 +1206,16 @@ function renderMap(){
   html+=`<text x="200" y="18" fill="#fff" font-size="11" font-weight="700" text-anchor="middle" opacity="0.7">${escapeHtml(p.name)}</text>`;
   // Restrooms
   (RESTROOMS[p.id]||[]).forEach(r=>{
-    html+=`<g opacity="0.85">`;
-    html+=`<rect x="${r.x-7}" y="${r.y-5}" width="14" height="10" rx="3" fill="#0ea5e9" stroke="#fff" stroke-width="1"/>`;
-    html+=`<text x="${r.x}" y="${r.y+3.5}" font-size="6" font-weight="700" text-anchor="middle" fill="#fff" pointer-events="none" font-family="system-ui,sans-serif">WC</text>`;
+    html+=`<g class="wc-marker" data-wc="1" style="cursor:pointer" opacity="0.9">`;
+    html+=`<circle cx="${r.x}" cy="${r.y}" r="8" fill="#0ea5e9" stroke="#fff" stroke-width="1.5"/>`;
+    html+=`<text x="${r.x}" y="${r.y+4.5}" font-size="10" text-anchor="middle" pointer-events="none">🚻</text>`;
+    html+=`</g>`;
+  });
+  // Restaurants
+  (RESTAURANTS[p.id]||[]).forEach(r=>{
+    html+=`<g class="rest-marker" data-rest="${escapeHtml(r.n)}" style="cursor:pointer" opacity="0.9">`;
+    html+=`<circle cx="${r.x}" cy="${r.y}" r="8" fill="#f97316" stroke="#fff" stroke-width="1.5"/>`;
+    html+=`<text x="${r.x}" y="${r.y+4.5}" font-size="10" text-anchor="middle" pointer-events="none">🍴</text>`;
     html+=`</g>`;
   });
   // Attractions (emoji icon + short name label)
@@ -1129,10 +1235,7 @@ function renderMap(){
       html+=`<line x1="${a.x-8}" y1="${a.y-8}" x2="${a.x+8}" y2="${a.y+8}" stroke="#ef4444" stroke-width="2.5" stroke-linecap="round"/>`;
     }
     if(s.done && !a.closed) html+=`<circle cx="${a.x+8}" cy="${a.y-6}" r="5" fill="#10b981" stroke="#fff" stroke-width="1"/><polyline points="${a.x+5},${a.y-6} ${a.x+7.5},${a.y-3.5} ${a.x+12},${a.y-9}" fill="none" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
-    if(meta.s){
-      const labelText = a.closed ? '* '+meta.s : meta.s;
-      html+=`<text class="pin-label" x="${a.x}" y="${a.y+18}" fill="${a.closed?'#fca5a5':'#fff'}" font-size="6.5" font-weight="700" text-anchor="middle" paint-order="stroke" stroke="#0f172a" stroke-width="2" stroke-linejoin="round" pointer-events="none">${escapeHtml(labelText)}</text>`;
-    }
+    // name shown via info bar on tap (fullscreen) or modal (small map)
     html+=`</g>`;
   });
   // Entrance/gate marker
@@ -1165,18 +1268,22 @@ function renderMap(){
     };
   });
 
-  // Legend
-  const legend=document.getElementById('mapLegend');
-  legend.innerHTML=`
-    <div class="legend-item"><span class="legend-dot" style="background:#ef4444"></span>Thrill</div>
-    <div class="legend-item"><span class="legend-dot" style="background:#10b981"></span>Família</div>
-    <div class="legend-item"><span class="legend-dot" style="background:#3b82f6"></span>Kids</div>
-    <div class="legend-item"><span class="legend-dot" style="background:#06b6d4"></span>Aquática</div>
-    <div class="legend-item"><span class="legend-dot" style="background:#a855f7"></span>Show</div>
-    <div class="legend-item"><span class="legend-dot" style="background:#0ea5e9"></span>Banheiro</div>
-    <div class="legend-item"><span class="legend-dot" style="background:#64748b"></span>Fechada</div>
-    <div class="legend-item"><span class="legend-dot" style="background:#fbbf24;border:1px solid #fff"></span>Agendada</div>
-  `;
+  applyMapFilter(svg);
+}
+
+const mapFilter={attr:true,wc:true,rest:true};
+function applyMapFilter(svgEl){
+  if(!svgEl) return;
+  svgEl.querySelectorAll('.attr-marker').forEach(el=>el.style.display=mapFilter.attr?'':'none');
+  svgEl.querySelectorAll('.wc-marker').forEach(el=>el.style.display=mapFilter.wc?'':'none');
+  svgEl.querySelectorAll('.rest-marker').forEach(el=>el.style.display=mapFilter.rest?'':'none');
+}
+function toggleMapFilter(type){
+  mapFilter[type]=!mapFilter[type];
+  document.querySelectorAll('[data-mf="'+type+'"]').forEach(btn=>btn.classList.toggle('active',mapFilter[type]));
+  applyMapFilter(document.getElementById('parkMap'));
+  const fsSvg=document.getElementById('mapFsSvg');
+  if(fsSvg && fsSvg.innerHTML) applyMapFilter(fsSvg);
 }
 
 function pathCenter(path){
@@ -2436,6 +2543,150 @@ document.addEventListener('touchmove',e=>{
   if(e.target.closest('.content,.modal-content,.park-tabs,.day-body,.day-tabs')) return;
   e.preventDefault();
 },{passive:false});
+
+// ====== MAP FULLSCREEN + ZOOM/PAN ======
+(function(){
+  const expandBtn=document.getElementById('mapExpandBtn');
+  const overlay=document.getElementById('mapFsOverlay');
+  const fsSvg=document.getElementById('mapFsSvg');
+  const fsContainer=document.getElementById('mapFsContainer');
+  const fsClose=document.getElementById('mapFsClose');
+  const fsTitle=document.getElementById('mapFsTitle');
+  const fsInfo=document.getElementById('mapFsInfo');
+  const fsInfoName=document.getElementById('mapFsInfoName');
+  const fsInfoSub=document.getElementById('mapFsInfoSub');
+  const fsInfoBtn=document.getElementById('mapFsInfoBtn');
+  let _pendingAttr=null;
+
+  let scale=1,tx=0,ty=0;
+  let dragging=false,lastX=0,lastY=0;
+  let lastDist=0,lastTap=0;
+
+  function applyT(){fsSvg.style.transform=`translate(${tx}px,${ty}px) scale(${scale})`;}
+
+  function zoomAt(cx,cy,newScale){
+    newScale=Math.min(6,Math.max(0.8,newScale));
+    tx=cx-(cx-tx)*(newScale/scale);
+    ty=cy-(cy-ty)*(newScale/scale);
+    scale=newScale;
+    applyT();
+  }
+
+  function resetT(){scale=1;tx=0;ty=0;applyT();}
+
+  function midpoint(t1,t2){
+    return{x:(t1.clientX+t2.clientX)/2,y:(t1.clientY+t2.clientY)/2};
+  }
+  function touchDist(t1,t2){return Math.hypot(t2.clientX-t1.clientX,t2.clientY-t1.clientY);}
+
+  fsContainer.addEventListener('touchstart',e=>{
+    e.preventDefault();
+    if(e.touches.length===2){
+      lastDist=touchDist(e.touches[0],e.touches[1]);
+    } else if(e.touches.length===1){
+      lastX=e.touches[0].clientX;lastY=e.touches[0].clientY;dragging=true;
+      const now=Date.now();if(now-lastTap<300) resetT();lastTap=now;
+    }
+  },{passive:false});
+
+  fsContainer.addEventListener('touchmove',e=>{
+    e.preventDefault();
+    if(e.touches.length===2){
+      const d=touchDist(e.touches[0],e.touches[1]);
+      if(lastDist>0){
+        const mid=midpoint(e.touches[0],e.touches[1]);
+        const rect=fsContainer.getBoundingClientRect();
+        zoomAt(mid.x-rect.left,mid.y-rect.top,scale*(d/lastDist));
+      }
+      lastDist=d;dragging=false;
+    } else if(e.touches.length===1&&dragging){
+      tx+=e.touches[0].clientX-lastX;ty+=e.touches[0].clientY-lastY;
+      lastX=e.touches[0].clientX;lastY=e.touches[0].clientY;applyT();
+    }
+  },{passive:false});
+
+  fsContainer.addEventListener('touchend',e=>{
+    if(e.touches.length<2) lastDist=0;
+    if(e.touches.length===0) dragging=false;
+  });
+
+  fsContainer.addEventListener('wheel',e=>{
+    e.preventDefault();
+    const rect=fsContainer.getBoundingClientRect();
+    zoomAt(e.clientX-rect.left,e.clientY-rect.top,scale*(e.deltaY<0?1.15:0.87));
+  },{passive:false});
+
+  fsContainer.addEventListener('mousedown',e=>{dragging=true;lastX=e.clientX;lastY=e.clientY;});
+  fsContainer.addEventListener('mousemove',e=>{
+    if(!dragging) return;
+    tx+=e.clientX-lastX;ty+=e.clientY-lastY;lastX=e.clientX;lastY=e.clientY;applyT();
+  });
+  fsContainer.addEventListener('mouseup',()=>dragging=false);
+  fsContainer.addEventListener('mouseleave',()=>dragging=false);
+  fsContainer.addEventListener('dblclick',resetT);
+
+  function showFsInfo(name,sub,attrId){
+    fsInfoName.textContent=name;
+    fsInfoSub.textContent=sub;
+    _pendingAttr=attrId||null;
+    if(attrId){ fsInfoBtn.classList.remove('hidden'); }
+    else { fsInfoBtn.classList.add('hidden'); }
+    fsInfo.classList.remove('hidden');
+  }
+
+  if(fsInfoBtn) fsInfoBtn.onclick=()=>{ if(_pendingAttr) openAttrModal(currentPark,_pendingAttr); };
+
+  const TYPE_LABEL={'thrill':'🎢 Radical','family':'👨‍👩‍👧 Família','kids':'👧 Kids','water':'💦 Aquática','show':'🎭 Show','tour':'🚶 Tour'};
+
+  function openFs(){
+    const p=getPark(currentPark);
+    fsTitle.textContent=p.name;
+    fsSvg.innerHTML=document.getElementById('parkMap').innerHTML;
+    fsSvg.setAttribute('viewBox','0 0 400 400');
+    overlay.classList.remove('hidden');
+    fsInfo.classList.add('hidden');
+    const rect=fsContainer.getBoundingClientRect();
+    scale=Math.min(rect.width,rect.height)/400;
+    tx=(rect.width-400*scale)/2;
+    ty=(rect.height-400*scale)/2;
+    applyT();
+    document.body.style.overflow='hidden';
+    // Attraction markers → show info bar on tap
+    fsSvg.querySelectorAll('[data-attr]').forEach(el=>{
+      el.style.cursor='pointer';
+      el.onclick=(e)=>{
+        e.stopPropagation();
+        const a=p.attractions.find(x=>x.id===el.dataset.attr);
+        const sub=a?(TYPE_LABEL[a.type]||a.type)+(a.closed?' · Fechada':''):'';
+        showFsInfo(a?a.name:el.dataset.attr, sub, el.dataset.attr);
+      };
+    });
+    // Restaurant markers → show info bar (no modal)
+    fsSvg.querySelectorAll('[data-rest]').forEach(el=>{
+      el.style.cursor='pointer';
+      el.onclick=(e)=>{ e.stopPropagation(); showFsInfo(el.dataset.rest,'🍴 Restaurante',null); };
+    });
+    // WC markers → show info bar
+    fsSvg.querySelectorAll('[data-wc]').forEach(el=>{
+      el.onclick=(e)=>{ e.stopPropagation(); showFsInfo('Banheiro','🚻',null); };
+    });
+    // Apply current filter state to fullscreen SVG
+    applyMapFilter(fsSvg);
+    // Sync filter button active states
+    document.querySelectorAll('[data-mf]').forEach(btn=>btn.classList.toggle('active',mapFilter[btn.dataset.mf]));
+    // Tap on background → hide info bar
+    let _dragMoved=false;
+    fsContainer.addEventListener('pointerdown',()=>_dragMoved=false,{once:false});
+    fsContainer.addEventListener('pointermove',()=>_dragMoved=true,{once:false});
+    fsContainer.addEventListener('click',()=>{ if(!_dragMoved) fsInfo.classList.add('hidden'); });
+  }
+
+  function closeFs(){overlay.classList.add('hidden');document.body.style.overflow='';fsInfo.classList.add('hidden');}
+
+  expandBtn.onclick=openFs;
+  fsClose.onclick=closeFs;
+  document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!overlay.classList.contains('hidden')) closeFs();});
+})();
 
 setInterval(checkAlarms, 30000);
 
