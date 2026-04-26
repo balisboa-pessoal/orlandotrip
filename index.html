@@ -83,7 +83,8 @@ main{flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;posi
 .map-fs-info-btn{background:var(--park-color,#ec4899);color:#fff;border:none;border-radius:8px;padding:7px 13px;font-size:.82rem;font-weight:700;cursor:pointer;flex-shrink:0;white-space:nowrap}
 .map-fs-hint{padding:6px 16px;font-size:.68rem;color:var(--tx4);text-align:center;background:var(--bg2);flex-shrink:0}
 .map-wrap{position:relative;padding:8px 12px 72px;background:var(--bg)}
-.map-svg{width:100%;height:auto;background:#1e293b;border-radius:12px;display:block;touch-action:manipulation}
+.map-zoom-wrap{position:relative;overflow:hidden;border-radius:12px;touch-action:none}
+.map-svg{width:100%;height:auto;background:#1e293b;display:block;transform-origin:0 0}
 .map-filter-row{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:8px}
 .map-fs-filters{display:flex;gap:6px;padding:8px 12px;background:#0f172a;border-bottom:1px solid rgba(255,255,255,.1);flex-shrink:0;flex-wrap:wrap}
 .map-filter-btn{width:36px;height:36px;border-radius:50%;border:1.5px solid var(--bd2);background:var(--bg2);color:var(--tx3);font-size:1rem;cursor:pointer;transition:background .15s,border-color .15s;box-shadow:0 1px 4px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
@@ -375,8 +376,10 @@ svg.ico,svg.ico-sm,svg.ico-lg,svg.ico-xl{fill:none;stroke:currentColor;stroke-wi
         <button class="map-filter-btn" data-mf="ts" onclick="toggleMapFilter('ts')" title="Restaurantes">🍴</button>
         <button class="map-filter-btn" data-mf="qs" onclick="toggleMapFilter('qs')" title="Lanchonetes">🥡</button>
       </div>
-      <button id="mapExpandBtn" class="map-expand-btn" title="Tela cheia"><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
-      <svg class="map-svg" id="parkMap" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet"></svg>
+      <div id="mapZoomWrap" class="map-zoom-wrap">
+        <button id="mapExpandBtn" class="map-expand-btn" title="Tela cheia"><svg class="ico-sm" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 3 21 3 21 9"/><polyline points="9 21 3 21 3 15"/><line x1="21" y1="3" x2="14" y2="10"/><line x1="3" y1="21" x2="10" y2="14"/></svg></button>
+        <svg class="map-svg" id="parkMap" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet"></svg>
+      </div>
       <div class="gps-status" id="gpsStatus">GPS desativado. Toque em GPS para mostrar sua localização no mapa (precisa estar perto do parque).</div>
     </div>
     <div id="listView" class="attr-list hidden">
@@ -1179,7 +1182,7 @@ function renderTabs(){
     b.className='park-tab'+(p.id===currentPark?' active':'');
     b.textContent=p.short+' · '+p.name;
     b.style.setProperty('--park-color',p.color);
-    b.onclick=()=>{currentPark=p.id;saveState();renderAll()};
+    b.onclick=()=>{currentPark=p.id;saveState();renderAll();if(window._resetInlineMap) window._resetInlineMap();};
     tabs.appendChild(b);
   });
 }
@@ -2612,6 +2615,104 @@ document.addEventListener('touchmove',e=>{
   if(e.target.closest('.content,.modal-content,.park-tabs,.day-body,.day-tabs')) return;
   e.preventDefault();
 },{passive:false});
+
+
+// ====== MAPA INLINE ZOOM/PAN ======
+(function(){
+  const wrap=document.getElementById('mapZoomWrap');
+  const svg=document.getElementById('parkMap');
+  if(!wrap||!svg) return;
+  let scale=1,tx=0,ty=0;
+  let dragging=false,lastX=0,lastY=0;
+  let lastDist=0,lastTap=0;
+  let tapStartX=0,tapStartY=0,tapMoved=false;
+
+  function applyT(){
+    svg.style.transform=`translate(${tx}px,${ty}px) scale(${scale})`;
+  }
+  function clamp(){
+    const W=wrap.offsetWidth,H=wrap.offsetHeight;
+    const sw=W*scale,sh=H*scale;
+    tx=Math.min(0,Math.max(W-sw,tx));
+    ty=Math.min(0,Math.max(H-sh,ty));
+  }
+  function zoomAt(cx,cy,ns){
+    ns=Math.min(5,Math.max(1,ns));
+    tx=cx-(cx-tx)*(ns/scale);
+    ty=cy-(cy-ty)*(ns/scale);
+    scale=ns;
+    clamp();
+    applyT();
+  }
+  function resetT(){scale=1;tx=0;ty=0;applyT();}
+
+  function dist(a,b){return Math.hypot(b.clientX-a.clientX,b.clientY-a.clientY);}
+  function mid(a,b){return{x:(a.clientX+b.clientX)/2,y:(b.clientY+a.clientY)/2};}
+
+  wrap.addEventListener('touchstart',e=>{
+    if(e.touches.length===2){
+      e.preventDefault();
+      lastDist=dist(e.touches[0],e.touches[1]);
+      tapMoved=true;
+    } else if(e.touches.length===1){
+      if(scale>1) e.preventDefault();
+      lastX=e.touches[0].clientX;lastY=e.touches[0].clientY;
+      tapStartX=lastX;tapStartY=lastY;
+      dragging=true;tapMoved=false;
+      const now=Date.now();if(now-lastTap<300) resetT();lastTap=now;
+    }
+  },{passive:false});
+
+  wrap.addEventListener('touchmove',e=>{
+    if(e.touches.length===2){
+      e.preventDefault();
+      const d=dist(e.touches[0],e.touches[1]);
+      if(lastDist>0){
+        const m=mid(e.touches[0],e.touches[1]);
+        const r=wrap.getBoundingClientRect();
+        zoomAt(m.x-r.left,m.y-r.top,scale*(d/lastDist));
+      }
+      lastDist=d;dragging=false;
+    } else if(e.touches.length===1&&dragging&&scale>1){
+      e.preventDefault();
+      tx+=e.touches[0].clientX-lastX;ty+=e.touches[0].clientY-lastY;
+      lastX=e.touches[0].clientX;lastY=e.touches[0].clientY;
+      clamp();applyT();
+    }
+    if(e.touches.length===1){
+      const dx=e.touches[0].clientX-tapStartX,dy=e.touches[0].clientY-tapStartY;
+      if(Math.abs(dx)>6||Math.abs(dy)>6) tapMoved=true;
+    }
+  },{passive:false});
+
+  wrap.addEventListener('touchend',e=>{
+    if(e.touches.length<2) lastDist=0;
+    if(e.touches.length===0){
+      dragging=false;
+      // tap simples: roteia para marcador
+      if(!tapMoved&&e.changedTouches.length===1&&Date.now()-lastTap<350){
+        const t=e.changedTouches[0];
+        const el=document.elementFromPoint(t.clientX,t.clientY);
+        const marker=el?.closest('[data-attr],[data-rest],[data-wc]');
+        if(marker){
+          if(marker.dataset.attr) marker.onclick&&marker.onclick(new MouseEvent('click'));
+          else if(marker.dataset.rest) openRestaurantSheet(marker.dataset.rest,currentPark);
+          else if(marker.dataset.wc) {}
+        }
+      }
+    }
+  });
+
+  // Scroll com wheel no desktop
+  wrap.addEventListener('wheel',e=>{
+    e.preventDefault();
+    const r=wrap.getBoundingClientRect();
+    zoomAt(e.clientX-r.left,e.clientY-r.top,scale*(e.deltaY<0?1.15:0.87));
+  },{passive:false});
+
+  // Expõe reset para uso externo (ex: ao trocar de parque)
+  window._resetInlineMap=resetT;
+})();
 
 // ====== MAP FULLSCREEN + ZOOM/PAN ======
 (function(){
